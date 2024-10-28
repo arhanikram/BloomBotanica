@@ -16,9 +16,6 @@
             android:name=".PlantsActivity"
             android:exported="false" />
         <activity
-            android:name=".Plantlist"
-            android:exported="false" />
-        <activity
             android:name=".MainActivity"
             android:exported="false" />
     </application>
