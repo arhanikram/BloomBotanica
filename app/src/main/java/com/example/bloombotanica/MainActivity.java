@@ -16,25 +16,34 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        if(savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.main, new DashboardFragment())
+                    .commit();
+        }
+
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
             Fragment selectedFragment = null;
 
-            // Use if statements to determine which fragment to display
             if (item.getItemId() == R.id.dashboard) {
                 selectedFragment = new DashboardFragment();
             } else if (item.getItemId() == R.id.calendar) {
                 selectedFragment = new CalendarFragment();
-            } //add plants fragment
+            } else if(item.getItemId() == R.id.plants) {
+                selectedFragment = new PlantsFragment();
+            }
 
-            // Display the selected fragment
             if (selectedFragment != null) {
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.main, selectedFragment)
                         .commit();
             }
 
-            return true; // Return true to show the selected item as active
+            return true;
         });
+
+        //set dashboard as default so it auto opens on start
+        binding.bottomNavigationView.setSelectedItemId(R.id.dashboard);
 
     }
 }
