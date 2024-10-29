@@ -2,63 +2,50 @@ package com.example.bloombotanica;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link PlantsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.util.ArrayList;
+import java.util.List;
+
+// TODO: When database is implemented, add progress bars for plants with pending tasks
+// and update the RecyclerView to prioritize plants with tasks at the top.
+// - Use a field like `isTaskPending` in the database to track pending tasks.
+// - Show a progress bar in each plant's card if tasks are pending.
+// - Query the database to order plants by task completion status.
+
 public class PlantsFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public PlantsFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment PlantsFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static PlantsFragment newInstance(String param1, String param2) {
-        PlantsFragment fragment = new PlantsFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
+    @Nullable
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_plants, container, false);
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_plants, container, false);
+        // Mock data for testing
+        List<Plant> plantList = new ArrayList<>();
+        plantList.add(new Plant("Aloe Vera"));
+        plantList.add(new Plant("Snake Plant"));
+        plantList.add(new Plant("Fiddle Leaf Fig"));
+        plantList.add(new Plant("Aloe Vera"));
+        plantList.add(new Plant("Snake Plant"));
+        plantList.add(new Plant("Fiddle Leaf Fig"));
+        plantList.add(new Plant("Aloe Vera"));
+        plantList.add(new Plant("Snake Plant"));
+        plantList.add(new Plant("Fiddle Leaf Fig"));
+
+        // Set up RecyclerView
+        RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
+        recyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 2));
+        recyclerView.setAdapter(new PlantAdapter(plantList));
+
+        return view;
     }
 }

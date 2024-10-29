@@ -3,14 +3,13 @@ package com.example.bloombotanica;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.List;
 
 public class PlantAdapter extends RecyclerView.Adapter<PlantAdapter.PlantViewHolder> {
-
     private List<Plant> plantList;
 
     public PlantAdapter(List<Plant> plantList) {
@@ -20,7 +19,7 @@ public class PlantAdapter extends RecyclerView.Adapter<PlantAdapter.PlantViewHol
     @NonNull
     @Override
     public PlantViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_plant, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.plant_item, parent, false);
         return new PlantViewHolder(view);
     }
 
@@ -28,7 +27,16 @@ public class PlantAdapter extends RecyclerView.Adapter<PlantAdapter.PlantViewHol
     public void onBindViewHolder(@NonNull PlantViewHolder holder, int position) {
         Plant plant = plantList.get(position);
         holder.plantName.setText(plant.getName());
-        holder.statusIndicator.setImageResource(plant.getStatusIcon());
+
+        //dynamic height calculation to make card square
+        ViewGroup.LayoutParams layoutParams = holder.itemView.getLayoutParams();
+        int screenWidth = holder.itemView.getContext().getResources().getDisplayMetrics().widthPixels;
+        int numColumns = 2;
+        int itemSpacing = 16;
+
+        int itemWidth = (screenWidth - (numColumns + 1) * itemSpacing) / numColumns;
+        layoutParams.height = (int) (itemWidth * 0.80);
+        holder.itemView.setLayoutParams(layoutParams);
     }
 
     @Override
@@ -36,20 +44,12 @@ public class PlantAdapter extends RecyclerView.Adapter<PlantAdapter.PlantViewHol
         return plantList.size();
     }
 
-    public void addPlant(Plant plant) {
-        plantList.add(plant);
-        notifyDataSetChanged();
-    }
-
-    static class PlantViewHolder extends RecyclerView.ViewHolder {
+    public static class PlantViewHolder extends RecyclerView.ViewHolder {
         TextView plantName;
-        ImageView statusIndicator;
 
         public PlantViewHolder(@NonNull View itemView) {
             super(itemView);
-            plantName = itemView.findViewById(R.id.plant_name);
-            statusIndicator = itemView.findViewById(R.id.status_indicator);
+            plantName = itemView.findViewById(R.id.card_plant_name);
         }
     }
 }
-
