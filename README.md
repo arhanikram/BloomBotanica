@@ -1,5 +1,8 @@
 # 🌱 **BloomBotanica - Plant Care App**
 
+### By [Joao Pedro Marques](https://github.com/jp-marques), [Ethan D'Mello](https://github.com/ethan-dmello), Evan Ellig, [Arhan Ikram](https://github.com/arhanikram), and Zorah Jawadi
+
+
 **BloomBotanica** is an Android app designed to simplify plant care by providing users with a personalized dashboard, a calendar for task tracking, and a dedicated plant management interface. The app's vision is to be a reliable assistant for plant owners, reminding them of essential plant care tasks and organizing plant-related information in a user-friendly way.
 
 ### OR
