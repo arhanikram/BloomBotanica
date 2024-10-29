@@ -1,5 +1,9 @@
 package com.example.bloombotanica;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,6 +19,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        getWindow().setStatusBarColor(Color.TRANSPARENT); // Use Color.TRANSPARENT for a transparent status bar
+
+        SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+        boolean isFirstLaunch = sharedPreferences.getBoolean("isFirstLaunch", true);
+
+        if (isFirstLaunch) {
+            startActivity(new Intent(this, OnboardingActivity.class));
+            finish();
+        }
 
         if(savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()

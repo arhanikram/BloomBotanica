@@ -8,11 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link PlantsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+// TODO: When database is implemented, add progress bars for plants with pending tasks
+// and update the RecyclerView to prioritize plants with tasks at the top.
+// - Use a field like `isTaskPending` in the database to track pending tasks.
+// - Show a progress bar in each plant's card if tasks are pending.
+// - Query the database to order plants by task completion status.
+
 public class PlantsFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
