@@ -1,4 +1,4 @@
-package com.example.bloombotanica;
+package com.example.bloombotanica.ui;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.bloombotanica.R;
 import com.example.bloombotanica.databinding.FragmentCalendarBinding;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.DayViewDecorator;

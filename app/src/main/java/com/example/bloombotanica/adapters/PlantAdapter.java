@@ -1,4 +1,4 @@
-package com.example.bloombotanica;
+package com.example.bloombotanica.adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,13 +7,23 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.bloombotanica.R;
+import com.example.bloombotanica.models.UserPlant;
+
 import java.util.List;
 
 public class PlantAdapter extends RecyclerView.Adapter<PlantAdapter.PlantViewHolder> {
-    private List<Plant> plantList;
 
-    public PlantAdapter(List<Plant> plantList) {
-        this.plantList = plantList;
+    private List<UserPlant> userPlantList;
+    private OnPlantLongClickListener longClickListener;
+
+    public interface OnPlantLongClickListener {
+        void onPlantLongClick(View view, int position);
+    }
+
+    public PlantAdapter(List<UserPlant> userPlantList, OnPlantLongClickListener longClickListener) {
+        this.userPlantList = userPlantList;
+        this.longClickListener = longClickListener;
     }
 
     @NonNull
@@ -25,8 +35,8 @@ public class PlantAdapter extends RecyclerView.Adapter<PlantAdapter.PlantViewHol
 
     @Override
     public void onBindViewHolder(@NonNull PlantViewHolder holder, int position) {
-        Plant plant = plantList.get(position);
-        holder.plantName.setText(plant.getName());
+        UserPlant userPlant = userPlantList.get(position);
+        holder.plantName.setText(userPlant.getNickname());
 
         //dynamic height calculation to make card square
         ViewGroup.LayoutParams layoutParams = holder.itemView.getLayoutParams();
@@ -37,11 +47,20 @@ public class PlantAdapter extends RecyclerView.Adapter<PlantAdapter.PlantViewHol
         int itemWidth = (screenWidth - (numColumns + 1) * itemSpacing) / numColumns;
         layoutParams.height = (int) (itemWidth * 0.80);
         holder.itemView.setLayoutParams(layoutParams);
+
+        //set up long click listener for drag and drop
+        holder.itemView.setOnLongClickListener(v -> {
+            if (longClickListener != null) {
+                longClickListener.onPlantLongClick(v, position);
+            }
+            return true;
+        });
+
     }
 
     @Override
     public int getItemCount() {
-        return plantList.size();
+        return userPlantList.size();
     }
 
     public static class PlantViewHolder extends RecyclerView.ViewHolder {
