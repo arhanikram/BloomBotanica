@@ -1,13 +1,14 @@
 package com.example.bloombotanica.ui;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.content.ClipData;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,6 +30,7 @@ import com.example.bloombotanica.adapters.PlantAdapter;
 import com.example.bloombotanica.R;
 import com.example.bloombotanica.models.UserPlant;
 import com.example.bloombotanica.database.UserPlantDatabase;
+import com.example.bloombotanica.dialogs.DeletePlantDialog;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -44,7 +46,7 @@ import java.util.Locale;
 // - Show a progress bar in each plant's card if tasks are pending.
 // - Query the database to order plants by task completion status.
 
-public class PlantsFragment extends Fragment implements PlantAdapter.OnPlantLongClickListener {
+public class PlantsFragment extends Fragment implements PlantAdapter.OnPlantLongClickListener, DeletePlantDialog.DeletePlantListener, AddPlantDialogFragment.OnPlantAddedListener {
 
     private UserPlantDatabase userPlantDatabase;
     private PlantAdapter plantAdapter;
@@ -91,6 +93,13 @@ public class PlantsFragment extends Fragment implements PlantAdapter.OnPlantLong
            showAddPlantDialog();
         });
 
+        plantAdapter.setOnItemClickListener((position) -> {
+            UserPlant selectedPlant = userPlantList.get(position);
+            Intent intent = new Intent(getContext(), UserPlantProfileActivity.class);
+            intent.putExtra("userPlantId", selectedPlant.getId());
+            startActivity(intent);
+        });
+
         return view;
     }
 
@@ -111,9 +120,12 @@ public class PlantsFragment extends Fragment implements PlantAdapter.OnPlantLong
     }
 
     private void showAddPlantDialog() {
-        new AddPlantDialogFragment().show(getParentFragmentManager(), "AddPlantDialog");
+        AddPlantDialogFragment addPlantDialog = new AddPlantDialogFragment();
+        addPlantDialog.setTargetFragment(this, 0); // Set this fragment as the target
+        addPlantDialog.show(getParentFragmentManager(), "AddPlantDialog");
         Log.d("PlantsFragment", "showAddPlantDialog called");
     }
+
 
     public void addPlant(UserPlant newPlant) {
         userPlantList.add(newPlant);
@@ -214,15 +226,15 @@ public class PlantsFragment extends Fragment implements PlantAdapter.OnPlantLong
     }
 
     private void showDeleteConfirmationDialog(int position) {
-        new AlertDialog.Builder(requireContext())
-                .setTitle("Delete Plant")
-                .setMessage("Are you sure you want to delete this plant?")
-                .setPositiveButton("Yes", (dialog, which) -> {
-                    UserPlant plantToDelete = userPlantList.get(position);
-                    deletePlantFromDatabase(plantToDelete, position);
-                })
-                .setNegativeButton("No", null)
-                .show();
+        UserPlant plantToDelete = userPlantList.get(position);
+        DeletePlantDialog.showDeleteConfirmationDialog(requireContext(), userPlantDatabase, plantToDelete, position, this);
+    }
+
+    @Override
+    public void onDeleteComplete(int position) {
+        userPlantList.remove(position);
+        plantAdapter.notifyItemRemoved(position);
+        plantAdapter.notifyItemRangeChanged(position, userPlantList.size());
     }
 
     private void setDate() {
@@ -231,16 +243,31 @@ public class PlantsFragment extends Fragment implements PlantAdapter.OnPlantLong
         dateText.setText(currentDate);
     }
 
-    private void deletePlantFromDatabase(UserPlant plantToDelete, int position) {
-        new Thread(() -> {
-            userPlantDatabase.userPlantDao().delete(plantToDelete);
-            requireActivity().runOnUiThread(() -> {
-                userPlantList.remove(position);
-                plantAdapter.notifyItemRemoved(position);
-                plantAdapter.notifyItemRangeChanged(position, userPlantList.size());
-                Toast.makeText(requireContext(), "Plant deleted", Toast.LENGTH_SHORT).show();
-            });
-        }).start();
+    @Override
+    public void onPlantAdded(UserPlant newPlant) {
+        userPlantList.add(newPlant);
+        plantAdapter.notifyItemInserted(userPlantList.size() - 1);
+        loadUserPlants();
+        Log.d("PlantsFragment", "onPlantAdded: New plant added to RecyclerView");
     }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadUserPlants(); // Reload the list from the database to reflect any changes
+    }
+
+//    private void deletePlantFromDatabase(UserPlant plantToDelete, int position) {
+//        new Thread(() -> {
+//            userPlantDatabase.userPlantDao().delete(plantToDelete);
+//            requireActivity().runOnUiThread(() -> {
+//                userPlantList.remove(position);
+//                plantAdapter.notifyItemRemoved(position);
+//                plantAdapter.notifyItemRangeChanged(position, userPlantList.size());
+//                Toast.makeText(requireContext(), "Plant deleted", Toast.LENGTH_SHORT).show();
+//            });
+//        }).start();
+//    }
 
 }

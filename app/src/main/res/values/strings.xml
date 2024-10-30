@@ -14,4 +14,6 @@
     <string name="plant_nickname_hint">Enter your plant\'s nickname</string>
     <string name="add">Add</string>
     <string name="delete_plant">Delete Plant</string>
+    <string name="edit_user_plant">Edit plant</string>
+    <string name="delete_user_plant">Delete plant</string>
 </resources>

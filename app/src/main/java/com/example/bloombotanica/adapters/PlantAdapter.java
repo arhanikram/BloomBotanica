@@ -3,6 +3,7 @@ package com.example.bloombotanica.adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,6 +17,15 @@ public class PlantAdapter extends RecyclerView.Adapter<PlantAdapter.PlantViewHol
 
     private List<UserPlant> userPlantList;
     private OnPlantLongClickListener longClickListener;
+    private OnItemClickListener itemClickListener;
+
+    public interface OnItemClickListener {
+        void onItemClick(int position);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.itemClickListener = listener;
+    }
 
     public interface OnPlantLongClickListener {
         void onPlantLongClick(View view, int position);
@@ -55,6 +65,13 @@ public class PlantAdapter extends RecyclerView.Adapter<PlantAdapter.PlantViewHol
             }
             return true;
         });
+
+        holder.itemView.setOnClickListener(v -> {
+            if (itemClickListener != null) {
+                itemClickListener.onItemClick(position);
+            }
+        });
+
 
     }
 

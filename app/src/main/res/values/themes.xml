@@ -15,5 +15,9 @@
         <item name="android:windowTranslucentStatus">false</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="actionOverflowButtonStyle">@style/OverflowMenuStyle</item>
+    </style>
+    <style name="OverflowMenuStyle" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="android:tint">@color/black</item>
     </style>
 </resources>

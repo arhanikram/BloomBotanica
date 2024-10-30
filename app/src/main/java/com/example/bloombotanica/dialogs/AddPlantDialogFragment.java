@@ -1,9 +1,7 @@
 package com.example.bloombotanica.dialogs;
 
 import android.os.Bundle;
-
 import androidx.fragment.app.DialogFragment;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,20 +9,21 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import com.example.bloombotanica.R;
 import com.example.bloombotanica.models.UserPlant;
 import com.example.bloombotanica.database.UserPlantDatabase;
-import com.example.bloombotanica.ui.PlantsFragment;
-
 import java.util.Date;
 
 public class AddPlantDialogFragment extends DialogFragment {
 
     private UserPlantDatabase userpdb;
+
+    public interface OnPlantAddedListener {
+        void onPlantAdded(UserPlant newPlant);
+    }
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_add_plant_dialog, container, false);
 
         Log.d("AddPlantDialogFragment", "onCreateView called");
@@ -57,25 +56,14 @@ public class AddPlantDialogFragment extends DialogFragment {
             Log.d("AddPlantDialogFragment", "Inside thread to add plant to database");
             userpdb.userPlantDao().insert(newPlant);
             Log.d("AddPlantDialogFragment", "Database insert completed");
-            requireActivity().runOnUiThread(() -> {
-                try {
-                    PlantsFragment plantsFragment = (PlantsFragment) requireActivity()
-                            .getSupportFragmentManager()
-                            .findFragmentById(R.id.fragment_container); // Replace with your fragment container ID
 
-                    if (plantsFragment != null) {
-                        plantsFragment.addPlant(newPlant);
-                        Log.d("AddPlantDialogFragment", "Attempting to update UI in PlantsFragment");
-                    } else {
-                        Log.e("AddPlantDialogFragment", "PlantsFragment is null, cannot update UI");
-                    }
-                } catch (Exception e) {
-                    Log.e("AddPlantDialogFragment", "Error updating UI in PlantsFragment", e);
+            // Run on the main thread after adding to the database
+            requireActivity().runOnUiThread(() -> {
+                if (getTargetFragment() instanceof OnPlantAddedListener) {
+                    ((OnPlantAddedListener) getTargetFragment()).onPlantAdded(newPlant);
                 }
                 dismiss(); // Close the dialog
             });
         }).start();
-
     }
-
 }
