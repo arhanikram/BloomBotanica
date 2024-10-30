@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:layout_marginVertical="32dp"
     android:layout_marginHorizontal="16dp"
-    tools:context=".CalendarFragment">
+    tools:context=".ui.CalendarFragment">
 
     <com.prolificinteractive.materialcalendarview.MaterialCalendarView
         android:id="@+id/calendarView"

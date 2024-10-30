@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:layout_marginVertical="32dp"
     android:layout_marginHorizontal="16dp"
-    tools:context=".OnboardingActivity">
+    tools:context=".ui.OnboardingActivity">
 
     <TextView
         android:id="@+id/welcomeText"

@@ -1,4 +1,4 @@
-package com.example.bloombotanica;
+package com.example.bloombotanica.ui;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -11,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.example.bloombotanica.R;
 
 public class DashboardFragment extends Fragment {
 

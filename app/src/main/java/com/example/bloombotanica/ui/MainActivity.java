@@ -1,12 +1,14 @@
-package com.example.bloombotanica;
+package com.example.bloombotanica.ui;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.WindowCompat;
 import androidx.fragment.app.Fragment;
+
+import com.example.bloombotanica.R;
 import com.example.bloombotanica.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
@@ -19,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        getWindow().setStatusBarColor(Color.TRANSPARENT); // Use Color.TRANSPARENT for a transparent status bar
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
 
         SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
         boolean isFirstLaunch = sharedPreferences.getBoolean("isFirstLaunch", true);
@@ -31,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
         if(savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.main, new DashboardFragment())
+                    .replace(R.id.fragment_container, new DashboardFragment())
                     .commit();
         }
 
@@ -48,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
             if (selectedFragment != null) {
                 getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.main, selectedFragment)
+                        .replace(R.id.fragment_container, selectedFragment)
                         .commit();
             }
 

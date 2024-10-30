@@ -1,4 +1,4 @@
-package com.example.bloombotanica;
+package com.example.bloombotanica.ui;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,6 +11,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import com.example.bloombotanica.R;
 
 public class OnboardingActivity extends AppCompatActivity {
 

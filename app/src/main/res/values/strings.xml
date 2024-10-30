@@ -10,4 +10,8 @@
     <string name="enter_your_name">Enter your name</string>
     <string name="welcome_onboard">Welcome to the Plant Care App!</string>
     <string name="continue_txt">Continue</string>
+    <string name="add_plant">Add a new plant</string>
+    <string name="plant_nickname_hint">Enter your plant\'s nickname</string>
+    <string name="add">Add</string>
+    <string name="delete_plant">Delete Plant</string>
 </resources>

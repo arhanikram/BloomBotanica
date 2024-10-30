@@ -7,7 +7,7 @@
     android:padding="16dp"
     android:layout_marginVertical="32dp"
     android:layout_marginHorizontal="16dp"
-    tools:context=".DashboardFragment">
+    tools:context=".ui.DashboardFragment">
 
     <TextView
         android:id="@+id/welcomeMessage"
