@@ -18,11 +18,11 @@
                     android:id="@+id/date_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Monday\nOctober 28"
                     android:textSize="24sp"
                     android:textStyle="bold"
                     android:paddingHorizontal="32dp"
                     android:paddingBottom="8dp"/>
+
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_view"

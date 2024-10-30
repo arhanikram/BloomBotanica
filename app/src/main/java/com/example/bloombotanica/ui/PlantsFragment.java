@@ -19,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.os.Vibrator;
 import android.content.Context;
@@ -31,8 +32,11 @@ import com.example.bloombotanica.database.UserPlantDatabase;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 // TODO: When database is implemented, add progress bars for plants with pending tasks
 // and update the RecyclerView to prioritize plants with tasks at the top.
@@ -49,6 +53,8 @@ public class PlantsFragment extends Fragment implements PlantAdapter.OnPlantLong
     private View dimOverlay;
     private ImageView trashBin;
     private BottomNavigationView bottomNavigationView;
+    private TextView dateText;
+
 
     @Nullable
     @Override
@@ -57,6 +63,10 @@ public class PlantsFragment extends Fragment implements PlantAdapter.OnPlantLong
 
         //initialize user plant database
         userPlantDatabase = UserPlantDatabase.getInstance(requireContext());
+
+        //Set Date
+        dateText = view.findViewById(R.id.date_text);
+        setDate();
 
         //set up trash bin view
         trashBin = view.findViewById(R.id.trash_bin);
@@ -213,6 +223,12 @@ public class PlantsFragment extends Fragment implements PlantAdapter.OnPlantLong
                 })
                 .setNegativeButton("No", null)
                 .show();
+    }
+
+    private void setDate() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE\nMMMM d", Locale.getDefault());
+        String currentDate = dateFormat.format(Calendar.getInstance().getTime());
+        dateText.setText(currentDate);
     }
 
     private void deletePlantFromDatabase(UserPlant plantToDelete, int position) {
