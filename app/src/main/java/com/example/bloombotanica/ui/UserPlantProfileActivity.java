@@ -1,6 +1,10 @@
 package com.example.bloombotanica.ui;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -11,15 +15,28 @@ import androidx.appcompat.widget.Toolbar;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.room.Delete;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.provider.MediaStore;
+import android.widget.ImageView;
+import android.provider.MediaStore;
+import androidx.appcompat.app.AlertDialog;
+
 
 import com.example.bloombotanica.R;
 import com.example.bloombotanica.database.UserPlantDatabase;
 import com.example.bloombotanica.dialogs.DeletePlantDialog;
 import com.example.bloombotanica.models.UserPlant;
+
+import java.io.File;
+import java.io.FileOutputStream;
 
 public class UserPlantProfileActivity extends AppCompatActivity implements DeletePlantDialog.DeletePlantListener {
 
@@ -27,6 +44,11 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
     private int userPlantId;
     private TextView plantNickname;
     private UserPlant userPlant;
+    private ImageView plantImageView;
+    private static final int REQUEST_IMAGE_PICK = 1;
+    private static final int REQUEST_IMAGE_CAPTURE = 2;
+
+
 
 
     @Override
@@ -39,6 +61,9 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        Log.d("UserPlantProfileActivity", "onCreate called");
+        Log.d("UserPlantProfileActivity", "UserPlantId: " + userPlantId);
 
         plantNickname = findViewById(R.id.userplant_nickname);
 
@@ -65,16 +90,30 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
 
         toolbar.setNavigationOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
 
+        plantImageView = findViewById(R.id.user_plant_profile_img);
+        plantImageView.setOnClickListener(v -> showImageSourceDialog());
+
+
     }
 
     private void fetchUserPlant() {
+        Log.d("UserPlantProfileActivity", "Fetching user plant with ID: " + userPlantId);
         new Thread(() -> {
             userPlant = userPlantDatabase.userPlantDao().getUserPlantById(userPlantId);
             runOnUiThread(() -> {
                 if (userPlant != null) {
+                    Log.d("UserPlantProfileActivity", "User plant found: " + userPlant.getNickname());
                     plantNickname.setText(userPlant.getNickname());
-
+                    // Load image from internal storage
+                    if (userPlant.getImagePath() != null) {
+                        Log.d("UserPlantProfileActivity", "Loading image from path: " + userPlant.getImagePath());
+                        Bitmap bitmap = BitmapFactory.decodeFile(userPlant.getImagePath());
+                        plantImageView.setImageBitmap(bitmap);
+                    } else {
+                        Log.d("UserPlantProfileActivity", "No image path found for user plant");
+                    }
                 } else {
+                    Log.d("UserPlantProfileActivity", "User plant not found");
                     Toast.makeText(UserPlantProfileActivity.this, "User plant not found", Toast.LENGTH_SHORT).show();
                     finish();
                 }
@@ -111,4 +150,143 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
         Toast.makeText(this, "Plant deleted successfully", Toast.LENGTH_SHORT).show();
         finish(); // Close the activity after deletion
     }
+
+    private void showImageSourceDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Select Image Source")
+                .setItems(new String[]{"Take a Picture", "Choose from Gallery"}, (dialog, which) -> {
+                    if (which == 0) {
+                        // Take a picture
+                        openCamera();
+                    } else if (which == 1) {
+                        // Choose from gallery
+                        openImagePicker();
+                    }
+                })
+                .show();
+    }
+
+    private void openImagePicker() {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        intent.setType("image/*"); // Only show images
+        startActivityForResult(intent, REQUEST_IMAGE_PICK);
+    }
+
+
+    private void openCamera() {
+        // Check if the CAMERA permission is granted
+        Log.d("UserPlantProfileActivity", "openCamera: Checking camera permission");
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+            // Request the CAMERA permission
+            Log.d("UserPlantProfileActivity", "openCamera: Requesting camera permission");
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 100);
+        } else {
+            // Permission already granted, proceed to open the camera
+            Log.d("UserPlantProfileActivity", "openCamera: Permission granted, launching camera");
+            launchCamera();
+        }
+    }
+
+    // Launch the camera intent
+    private void launchCamera() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
+        } else {
+            Toast.makeText(this, "Camera not available", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 100) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted, open the camera
+                Log.d("UserPlantProfileActivity", "onRequestPermissionsResult: Permission granted, launching camera");
+                launchCamera();
+            } else {
+                // Permission denied, show a message to the user
+                Log.d("UserPlantProfileActivity", "onRequestPermissionsResult: Permission denied");
+                Toast.makeText(this, "Camera permission is required to take a photo", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+
+
+    private String saveImageToInternalStorage(Bitmap bitmap) {
+        try {
+            String filename = "plant_image_" + userPlantId + ".png";
+            Log.d("UserPlantProfileActivity", "saveImageToInternalStorage: Saving image as " + filename);
+            FileOutputStream fos = openFileOutput(filename, MODE_PRIVATE);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+            fos.close();
+            String filePath = new File(getFilesDir(), filename).getAbsolutePath();
+            Log.d("UserPlantProfileActivity", "saveImageToInternalStorage: Image saved at " + filePath);
+            return filePath;
+        } catch (Exception e) {
+            Log.e("UserPlantProfileActivity", "saveImageToInternalStorage: Error saving image", e);
+            Toast.makeText(this, "Failed to save image", Toast.LENGTH_SHORT).show();
+            return null;
+        }
+    }
+
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && data != null) {
+            if (requestCode == REQUEST_IMAGE_PICK) {
+                Log.d("UserPlantProfileActivity", "onActivityResult: Image picked from gallery");
+                Uri selectedImageUri = data.getData();
+                handleImageResult(selectedImageUri);
+            } else if (requestCode == REQUEST_IMAGE_CAPTURE) {
+                Log.d("UserPlantProfileActivity", "onActivityResult: Photo captured from camera");
+                Bitmap photo = (Bitmap) data.getExtras().get("data");
+                if (photo != null) {
+                    Log.d("UserPlantProfileActivity", "onActivityResult: Saving captured photo");
+                    String imagePath = saveImageToInternalStorage(photo);
+                    if (imagePath != null) {
+                        Log.d("UserPlantProfileActivity", "onActivityResult: Photo saved at " + imagePath);
+                        plantImageView.setImageBitmap(photo);
+                        saveImagePathToDatabase(imagePath);
+                    } else {
+                        Log.e("UserPlantProfileActivity", "onActivityResult: Failed to save captured photo");
+                    }
+                }
+            }
+        } else {
+            Log.e("UserPlantProfileActivity", "onActivityResult: Result not OK or data is null");
+        }
+    }
+
+
+    private void handleImageResult(Uri imageUri) {
+        try {
+            Log.d("UserPlantProfileActivity", "handleImageResult: Loading image from URI " + imageUri);
+            Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
+            String imagePath = saveImageToInternalStorage(bitmap);
+            if (imagePath != null) {
+                Log.d("UserPlantProfileActivity", "handleImageResult: Image saved at " + imagePath);
+                plantImageView.setImageBitmap(bitmap);
+                saveImagePathToDatabase(imagePath);
+            } else {
+                Log.e("UserPlantProfileActivity", "handleImageResult: Failed to save image");
+            }
+        } catch (Exception e) {
+            Log.e("UserPlantProfileActivity", "handleImageResult: Error loading image", e);
+            Toast.makeText(this, "Failed to load image", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+
+    private void saveImagePathToDatabase(String imagePath) {
+        new Thread(() -> userPlantDatabase.userPlantDao().updateImagePath(userPlantId, imagePath)).start();
+    }
+
 }

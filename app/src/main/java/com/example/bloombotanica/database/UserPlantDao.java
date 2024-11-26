@@ -27,4 +27,7 @@ public interface UserPlantDao {
     @Query("SELECT * FROM user_plants")
     List<UserPlant> getAllUserPlants();
 
+    @Query("UPDATE user_plants SET image_path = :imagePath WHERE id = :id")
+    void updateImagePath(int id, String imagePath);
+
 }

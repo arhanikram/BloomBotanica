@@ -1,5 +1,6 @@
 package com.example.bloombotanica.models;
 
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 import java.util.Date;
@@ -12,6 +13,8 @@ public class UserPlant {
     private String nickname;
     private Date dateAdded;  // Ensure a type converter is used for Date
     private Date lastWatered; // Ensure a type converter is used for Date
+    @ColumnInfo(name = "image_path")
+    private String imagePath; // New field to store the image path
 
     public UserPlant(int plantCareId, String nickname, Date dateAdded, Date lastWatered) {
         this.plantCareId = plantCareId;
@@ -36,6 +39,7 @@ public class UserPlant {
     public Date getLastWatered() {
         return lastWatered;
     }
+    public String getImagePath() { return imagePath; }
 
     // Setters
     public void setId(int id) {
@@ -53,4 +57,5 @@ public class UserPlant {
     public void setLastWatered(Date lastWatered) {
         this.lastWatered = lastWatered;
     }
+    public void setImagePath(String imagePath) { this.imagePath = imagePath; }
 }
