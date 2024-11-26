@@ -20,11 +20,25 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="UserPlantProfileActivity"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/user_plant_profile_toolbar"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"
         tools:ignore="HardcodedText" />
 <!--    text gets changed in UserPlantProfileActivity.java so hardcode is okay  -->
+
+
+<!--    placeholder image, will maybe add images for every plant later-->
+    <ImageView
+        android:id="@+id/user_plant_profile_img"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_marginTop="32dp"
+        android:src="@drawable/aloe_vera"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/userplant_nickname" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

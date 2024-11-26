@@ -53,7 +53,7 @@ public abstract class PlantCareDatabase extends RoomDatabase {
             List<PlantCare> insertedPlants = plantCareDao().getAllPlants();
             Log.d("PlantCareDatabase", "Inserted records count: " + insertedPlants.size());
             for (PlantCare plant : insertedPlants) {
-                Log.d("PlantCareDatabase", "Plant: " + plant.getPlantName() +
+                Log.d("PlantCareDatabase", "Plant: " + plant.getCommonName() +
                         ", Scientific Name: " + plant.getScientificName() +
                         ", Watering Frequency: " + plant.getWateringFrequency() +
                         ", Sunlight: " + plant.getSunlight() +

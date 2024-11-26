@@ -16,4 +16,6 @@
     <string name="delete_plant">Delete Plant</string>
     <string name="edit_user_plant">Edit plant</string>
     <string name="delete_user_plant">Delete plant</string>
+    <string name="plant_scientific_name_hint">What kind of plant is it?</string>
+    <string name="add_plant_title">Add plant</string>
 </resources>

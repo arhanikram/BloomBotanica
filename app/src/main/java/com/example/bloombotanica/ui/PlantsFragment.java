@@ -258,16 +258,5 @@ public class PlantsFragment extends Fragment implements PlantAdapter.OnPlantLong
         loadUserPlants(); // Reload the list from the database to reflect any changes
     }
 
-//    private void deletePlantFromDatabase(UserPlant plantToDelete, int position) {
-//        new Thread(() -> {
-//            userPlantDatabase.userPlantDao().delete(plantToDelete);
-//            requireActivity().runOnUiThread(() -> {
-//                userPlantList.remove(position);
-//                plantAdapter.notifyItemRemoved(position);
-//                plantAdapter.notifyItemRangeChanged(position, userPlantList.size());
-//                Toast.makeText(requireContext(), "Plant deleted", Toast.LENGTH_SHORT).show();
-//            });
-//        }).start();
-//    }
 
 }

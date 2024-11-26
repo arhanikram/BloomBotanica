@@ -23,7 +23,7 @@ public class BloomBotanicaApp extends Application {
 //                Log.d("DatabaseContent", "No records found in the PlantCare database.");
 //            } else {
 //                for (PlantCare plant : plants) {
-//                    Log.d("DatabaseContent", "Plant: " + plant.getPlantName() +
+//                    Log.d("DatabaseContent", "Plant: " + plant.getCommonName() +
 //                            ", Scientific Name: " + plant.getScientificName() +
 //                            ", Watering Frequency: " + plant.getWateringFrequency() +
 //                            ", Sunlight: " + plant.getSunlight() +
