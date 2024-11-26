@@ -53,6 +53,10 @@ public class PlantSuggestionAdapter extends RecyclerView.Adapter<PlantSuggestion
         holder.itemView.setOnClickListener(v -> listener.onSuggestionClick(plantName));
     }
 
+    public List<PlantCare> getSuggestions() {
+        return suggestions;
+    }
+
     @Override
     public int getItemCount() {
         return suggestions.size();

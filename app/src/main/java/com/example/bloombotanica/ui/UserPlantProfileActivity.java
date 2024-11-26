@@ -31,16 +31,20 @@ import androidx.appcompat.app.AlertDialog;
 
 
 import com.example.bloombotanica.R;
+import com.example.bloombotanica.database.PlantCareDatabase;
 import com.example.bloombotanica.database.UserPlantDatabase;
 import com.example.bloombotanica.dialogs.DeletePlantDialog;
 import com.example.bloombotanica.models.UserPlant;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.Date;
+import java.util.Calendar;
 
 public class UserPlantProfileActivity extends AppCompatActivity implements DeletePlantDialog.DeletePlantListener {
 
     private UserPlantDatabase userPlantDatabase;
+    private PlantCareDatabase plantCaredb;
     private int userPlantId;
     private TextView plantNickname;
     private UserPlant userPlant;
@@ -68,6 +72,7 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
         plantNickname = findViewById(R.id.userplant_nickname);
 
         userPlantDatabase = UserPlantDatabase.getInstance(this);
+        plantCaredb = PlantCareDatabase.getInstance(this);
 
         userPlantId = getIntent().getIntExtra("userPlantId", -1);
         if (userPlantId != -1) {
@@ -289,4 +294,32 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
         new Thread(() -> userPlantDatabase.userPlantDao().updateImagePath(userPlantId, imagePath)).start();
     }
 
+    //this isnt used yet but will be used when we implement a button
+    //to update the plant's watering date on plant profile
+
+    private void markPlantAsWatered(UserPlant plant) {
+        // Mark the plant as watered in the database
+        new Thread(() -> {
+            try {
+                int wateringFrequency = plantCaredb.plantCareDao().getWateringFrequencyById(plant.getPlantCareId());
+                Log.d("UserPlantProfileActivity", "markPlantAsWatered: Watering frequency: " + wateringFrequency);
+
+                Date today = new Date();
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(today);
+                calendar.add(Calendar.DAY_OF_YEAR, wateringFrequency);
+                Date nextWateringDate = calendar.getTime();
+
+                userPlantDatabase.userPlantDao().updateWateringDates(userPlantId, today, nextWateringDate);
+                runOnUiThread(() -> {
+                    Toast.makeText(this, "Plant watered successfully!", Toast.LENGTH_SHORT).show();
+                    Log.d("markPlantAsWatered", "Next Watering Date: " + nextWateringDate);
+                });
+
+            } catch (Exception e) {
+                Log.e("markPlantAsWatered", "Error updating watering information", e);
+            }
+        }).start();
+
+    }
 }

@@ -7,6 +7,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -29,6 +30,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.Calendar;
 
 public class AddPlantDialogFragment extends DialogFragment implements PlantSuggestionAdapter.SuggestionClickListener {
 
@@ -91,11 +93,35 @@ public class AddPlantDialogFragment extends DialogFragment implements PlantSugge
 
         addPlantButton.setOnClickListener(v -> {
             String plantNickname = plantNicknameInput.getText().toString();
-            if (!plantNickname.isEmpty()) {
-                addPlantToDatabase(plantNickname);
-            } else {
-                Toast.makeText(getContext(), "Please enter a plant nickname", Toast.LENGTH_SHORT).show();
+            String plantName = plantNameSelector.getText().toString();
+
+            // Retrieve the current list of suggestions from the adapter
+            List<PlantCare> suggestions = suggestionsAdapter.getSuggestions();
+            boolean isPlantNameValid = false;
+            for (PlantCare plant : suggestions) {
+                if (plant.getCommonOrScientificName(plantName).equalsIgnoreCase(plantName)) {
+                    isPlantNameValid = true;
+                    break;
+                }
             }
+
+            if (plantNickname.isEmpty()) {
+                Toast.makeText(getContext(), "Please enter a plant nickname", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (plantName.isEmpty()) {
+                Toast.makeText(getContext(), "Please select a plant from the suggestions", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (!isPlantNameValid) {
+                Toast.makeText(getContext(), "Please select a valid plant name from the suggestions", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // if both fields are valid - proceed to add the plant
+            addPlantToDatabase(plantNickname, plantName);
         });
 
         return view;
@@ -148,12 +174,25 @@ public class AddPlantDialogFragment extends DialogFragment implements PlantSugge
         }
     }
 
-    private void addPlantToDatabase(String plantNickname) {
-        UserPlant newPlant = new UserPlant(1, plantNickname, new Date(), new Date());
-
-        Log.d("AddPlantDialogFragment", "addPlantToDatabase called");
-
+    private void addPlantToDatabase(String plantNickname, String plantName) {
         new Thread(() -> {
+            Log.d("AddPlantDialogFragment", "addPlantToDatabase called");
+            PlantCare plant = plantCaredb.plantCareDao().searchPlants(plantName).get(0);
+            int wateringFrequency = plant.getWateringFrequency();
+
+            Date today = new Date();
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(today);
+            calendar.add(Calendar.DAY_OF_YEAR, wateringFrequency);
+
+            //checking next water date and date added in logs
+            Log.d("AddPlantDialogFragment", "Next watering date: " + calendar.getTime());
+            Log.d("AddPlantDialogFragment", "Date added: " + today);
+
+            UserPlant newPlant = new UserPlant(plant.getId(), plantNickname, today, today);
+            newPlant.setNextWateringDate(calendar.getTime());
+            Log.d("AddPlantDialogFragment", "New plant created");
+
             Log.d("AddPlantDialogFragment", "Inside thread to add plant to database");
             userpdb.userPlantDao().insert(newPlant);
             Log.d("AddPlantDialogFragment", "Database insert completed");

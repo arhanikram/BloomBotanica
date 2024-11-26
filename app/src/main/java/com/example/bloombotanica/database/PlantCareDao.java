@@ -21,13 +21,16 @@ public interface PlantCareDao {
     @Query("SELECT * FROM plant_care")
     List<PlantCare> getAllPlants();
 
-//    @Query("SELECT * FROM plant_care WHERE commonName LIKE '%' || :query || '%'")
-//    List<PlantCare> searchByCommonName(String query);
-//
-//    @Query("SELECT * FROM plant_care WHERE scientificName LIKE '%' || :query || '%'")
-//    List<PlantCare> searchByScientificName(String query);
+    @Query("SELECT * FROM plant_care WHERE commonName LIKE '%' || :query || '%'")
+    List<PlantCare> searchByCommonName(String query);
+
+    @Query("SELECT * FROM plant_care WHERE scientificName LIKE '%' || :query || '%'")
+    List<PlantCare> searchByScientificName(String query);
 
     @Query("SELECT * FROM plant_care WHERE commonName LIKE '%' || :query || '%' OR scientificName LIKE '%' || :query || '%'")
     List<PlantCare> searchPlants(String query);
+
+    @Query("SELECT wateringFrequency FROM plant_care WHERE id = :plantCareId")
+    int getWateringFrequencyById(int plantCareId);
 
 }

@@ -10,7 +10,7 @@ import androidx.room.TypeConverters;
 import com.example.bloombotanica.utils.Converters;
 import com.example.bloombotanica.models.UserPlant;
 
-@Database(entities = {UserPlant.class}, version = 2, exportSchema = false)
+@Database(entities = {UserPlant.class}, version = 1, exportSchema = false)
 @TypeConverters({Converters.class})
 public abstract class UserPlantDatabase extends RoomDatabase {
 

@@ -8,6 +8,7 @@ import androidx.room.Update;
 
 import com.example.bloombotanica.models.UserPlant;
 
+import java.util.Date;
 import java.util.List;
 
 @Dao
@@ -29,5 +30,9 @@ public interface UserPlantDao {
 
     @Query("UPDATE user_plants SET image_path = :imagePath WHERE id = :id")
     void updateImagePath(int id, String imagePath);
+
+    @Query("UPDATE user_plants SET lastWatered = :today, nextWateringDate = :nextWateringDate WHERE id = :id")
+    void updateWateringDates(int id, Date today, Date nextWateringDate);
+
 
 }

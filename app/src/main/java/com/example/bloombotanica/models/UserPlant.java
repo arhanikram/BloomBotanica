@@ -15,6 +15,7 @@ public class UserPlant {
     private Date lastWatered; // Ensure a type converter is used for Date
     @ColumnInfo(name = "image_path")
     private String imagePath; // New field to store the image path
+    private Date nextWateringDate; // New field to store the next watering date
 
     public UserPlant(int plantCareId, String nickname, Date dateAdded, Date lastWatered) {
         this.plantCareId = plantCareId;
@@ -40,6 +41,7 @@ public class UserPlant {
         return lastWatered;
     }
     public String getImagePath() { return imagePath; }
+    public Date getNextWateringDate() { return nextWateringDate; }
 
     // Setters
     public void setId(int id) {
@@ -58,4 +60,5 @@ public class UserPlant {
         this.lastWatered = lastWatered;
     }
     public void setImagePath(String imagePath) { this.imagePath = imagePath; }
+    public void setNextWateringDate(Date nextWateringDate) { this.nextWateringDate = nextWateringDate; }
 }
