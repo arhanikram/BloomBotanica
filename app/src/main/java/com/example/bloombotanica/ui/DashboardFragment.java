@@ -138,11 +138,20 @@ public class DashboardFragment extends Fragment {
                 }
                 reader.close();
 
-                parseWeatherData(response.toString());
+                //handling if user quickly leaves dashboard after trying to fetch weather data
+                if(isAdded()) {
+                    parseWeatherData(response.toString());
+                    Log.d("DashboardFragment", "Weather data fetched successfully");
+                } else {
+                    Log.e("DashboardFragment", "Fragment is not added to the activity");
+                }
             } catch (Exception e) {
                 Log.e("DashboardFragment", "Error fetching weather data", e);
-                requireActivity().runOnUiThread(() ->
-                        Toast.makeText(getContext(), "Failed to fetch weather data", Toast.LENGTH_SHORT).show());
+//                requireActivity().runOnUiThread(() ->
+//                        Toast.makeText(getContext(), "Failed to fetch weather data", Toast.LENGTH_SHORT).show());
+                //this was causing an error when you open the app and instantly open another fragment before it processes weather data,
+                //it would crash due to the ui update with requireactivity so i just commented it out
+                //if it crashes it will show in logcat we dont really need a toast
             }
         }).start();
     }
