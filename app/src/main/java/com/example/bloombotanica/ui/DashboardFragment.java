@@ -24,9 +24,11 @@ import android.widget.Toast;
 
 import com.example.bloombotanica.R;
 import com.example.bloombotanica.adapters.TaskAdapter;
+import com.example.bloombotanica.database.PlantCareDatabase;
 import com.example.bloombotanica.database.TaskDao;
 import com.example.bloombotanica.database.UserPlantDao;
 import com.example.bloombotanica.database.UserPlantDatabase;
+import com.example.bloombotanica.models.PlantCare;
 import com.example.bloombotanica.models.Task;
 import com.example.bloombotanica.models.UserPlant;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -41,6 +43,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -174,12 +177,23 @@ public class DashboardFragment extends Fragment {
             UserPlantDao userPlantDao = UserPlantDatabase.getInstance(getContext()).userPlantDao();
             Pair<Date, Date> dayRange = getStartAndEndOfDay(new Date());
 
-            List<Task> todayTasks = taskDao.getIncompleteTasks();
-            List<Task> allTasks = taskDao.getIncompleteTasks();
+            //for testing purposes, show all pending tasks instead of only tasks for today
+             List<Task> todayTasks = taskDao.getIncompleteTasks(); //TESTING
+             //to show only tasks for today, uncomment the following line and comment the line above
+//            List<Task> todayTasks = taskDao.getTasksForDate(dayRange.first, dayRange.second); //FINAL implementation
+            List<Task> overdueTasks = taskDao.getOverdueTasks(new Date());
+
+            // Combine today's tasks and overdue tasks
+            List<Task> combinedTasks = new ArrayList<>();
+            if (overdueTasks != null) combinedTasks.addAll(overdueTasks);
+            if (todayTasks != null) combinedTasks.addAll(todayTasks);
 
             taskDao.removeTasksForDeletedPlants();
 
-            Log.d("DashboardFragment", "Loaded tasks: " + todayTasks);
+            //log all tasks
+            for (Task task : combinedTasks) {
+                Log.d("DashboardFragment", "All tasks: " + task.toString());
+            }
 
             if (todayTasks == null) {
                 todayTasks = new ArrayList<>();
@@ -187,7 +201,8 @@ public class DashboardFragment extends Fragment {
 
             List<Task> finalTodayTasks = todayTasks;
 
-            allTasks.sort((task1, task2) -> {
+            // Sort tasks: overdue first, then by due date
+            combinedTasks.sort((task1, task2) -> {
                 if (task1.isOverdue() && !task2.isOverdue()) {
                     return -1;
                 } else if (!task1.isOverdue() && task2.isOverdue()) {
@@ -197,17 +212,18 @@ public class DashboardFragment extends Fragment {
                 }
             });
 
+
             if (isAdded()) {
                 requireActivity().runOnUiThread(() -> {
-                    taskAdapter = new TaskAdapter(allTasks, this::markTaskAsCompleted, userPlantDao);
+                    taskAdapter = new TaskAdapter(combinedTasks, this::markTaskAsCompleted, userPlantDao);
                     tasksRecyclerView.setAdapter(taskAdapter);
 
-                    if (finalTodayTasks.isEmpty()) {
+                    if (combinedTasks.isEmpty()) {
                         tasksRecyclerView.setVisibility(View.GONE);
                         taskCount.setText(getString(R.string.task_count, 0));
                     } else {
                         tasksRecyclerView.setVisibility(View.VISIBLE);
-                        taskCount.setText(getString(R.string.task_count, finalTodayTasks.size()));
+                        taskCount.setText(getString(R.string.task_count, combinedTasks.size()));
                     }
                 });
             }
@@ -216,8 +232,47 @@ public class DashboardFragment extends Fragment {
 
     private void markTaskAsCompleted(Task task) {
         new Thread(() -> {
-            UserPlantDatabase.getInstance(getContext()).taskDao().markTaskAsCompleted(task.getId());
-            loadTasks();
+            TaskDao taskDao = UserPlantDatabase.getInstance(getContext()).taskDao();
+            UserPlantDao userPlantDao = UserPlantDatabase.getInstance(getContext()).userPlantDao();
+            PlantCareDatabase plantCareDatabase = PlantCareDatabase.getInstance(getContext());
+
+            //mark current task as completed
+            taskDao.markTaskAsCompleted(task.getId());
+
+            //get related user plant
+            UserPlant plant = userPlantDao.getUserPlantById(task.getUserPlantId());
+            if(plant != null) {
+                //get plantcare details
+                PlantCare plantCare = plantCareDatabase.plantCareDao().getPlantCareById(plant.getPlantCareId());
+                if(plantCare != null) {
+                    //get watering frequency
+                    int wateringFrequency = plantCare.getWateringFrequency();
+
+                    Date currentDate = new Date();
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTime(currentDate);
+                    calendar.add(Calendar.DAY_OF_YEAR, wateringFrequency);
+
+                    //renew the task with new due date
+                    Task newTask = new Task(
+                            task.getUserPlantId(),
+                            task.getTaskType(),
+                            calendar.getTime(),
+                            false
+                    );
+
+                    //insert new task into the database
+                    taskDao.insert(newTask);
+
+                    Log.d("DashboardFragment", "New task created for plant: " + plant.getNickname() + "..." + newTask.toString());
+                } else {
+                    Log.e("DashboardFragment", "PlantCare details not found for plant: " + plant.getNickname());
+                }
+            } else {
+                Log.e("DashboardFragment", "UserPlant not found for task: " + task.getId());
+            }
+
+            requireActivity().runOnUiThread(this::loadTasks);
         }).start();
     }
 }

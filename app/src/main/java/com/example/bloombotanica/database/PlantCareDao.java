@@ -33,4 +33,6 @@ public interface PlantCareDao {
     @Query("SELECT wateringFrequency FROM plant_care WHERE id = :plantCareId")
     int getWateringFrequencyById(int plantCareId);
 
+    @Query("SELECT * FROM plant_care WHERE id = :id")
+    PlantCare getPlantCareById(int id);
 }
