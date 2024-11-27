@@ -24,9 +24,35 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp"
+        android:textSize="24sp"
+        android:textStyle="bold"
         tools:ignore="HardcodedText" />
 <!--    text gets changed in UserPlantProfileActivity.java so hardcode is okay  -->
 
+    <TextView
+        android:id="@+id/plant_common_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Plant Name"
+        app:layout_constraintTop_toBottomOf="@+id/userplant_nickname"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp"
+        android:textSize="18sp"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/plant_sci_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Plant Scientific Name"
+        app:layout_constraintTop_toBottomOf="@id/plant_common_name"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp"
+        android:textSize="14sp"
+        android:textStyle="italic"
+        tools:ignore="HardcodedText" />
 
 <!--    placeholder image, will maybe add images for every plant later-->
 <!--    <ImageView-->
@@ -44,12 +70,69 @@
         android:id="@+id/user_plant_profile_img"
         android:layout_width="250dp"
         android:layout_height="250dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="16dp"
         android:scaleType="centerCrop"
         android:src="@drawable/baseline_photo_camera_24"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/userplant_nickname" />
+        app:layout_constraintTop_toBottomOf="@id/plant_sci_name" />
+
+
+    <ProgressBar
+        android:id="@+id/circular_progress"
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        android:indeterminate="false"
+        android:progress="80"
+        android:max="100"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:progressDrawable="@drawable/circular_progress_drawable"
+        android:rotation="270"
+        app:layout_constraintTop_toBottomOf="@id/user_plant_profile_img"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/journal_button"
+        android:layout_marginTop="16dp" />
+
+
+    <ImageButton
+        android:id="@+id/water_button"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:contentDescription="@string/mark_as_watered"
+        android:src="@drawable/water_drop_svgrepo_com"
+        app:layout_constraintTop_toTopOf="@id/circular_progress"
+        app:layout_constraintBottom_toBottomOf="@id/circular_progress"
+        app:layout_constraintStart_toStartOf="@id/circular_progress"
+        app:layout_constraintEnd_toEndOf="@id/circular_progress"
+        android:background="@null"/>
+
+    <TextView
+        android:id="@+id/last_watered_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="last watered"
+        app:layout_constraintTop_toBottomOf="@id/circular_progress"
+        app:layout_constraintStart_toStartOf="@id/circular_progress"
+        app:layout_constraintEnd_toEndOf="@id/circular_progress"
+        android:layout_margin="8dp"
+        android:textSize="14sp" />
+
+
+    <ImageButton
+        android:id="@+id/journal_button"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:contentDescription="Journal/Logbook"
+        android:src="@drawable/notes_svgrepo_com"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/user_plant_profile_img"
+        app:layout_constraintStart_toEndOf="@id/circular_progress"
+        android:background="@null"
+        android:layout_marginTop="32dp"
+        tools:ignore="HardcodedText" />
+<!--    ^^temp until we fully implement journal-->
+
+
 
 
 

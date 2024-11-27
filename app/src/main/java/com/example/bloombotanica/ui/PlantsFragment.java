@@ -75,7 +75,7 @@ public class PlantsFragment extends Fragment implements PlantAdapter.OnPlantLong
         trashBin.setVisibility(View.GONE);
 
         //find dim overlay
-       // dimOverlay = requireActivity().findViewById(R.id.dim_overlay);
+        dimOverlay = requireActivity().findViewById(R.id.dim_overlay);
 
         bottomNavigationView = requireActivity().findViewById(R.id.bottomNavigationView);
 

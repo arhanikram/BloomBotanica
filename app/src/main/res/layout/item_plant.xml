@@ -19,7 +19,7 @@
 
     <!-- Plant Name -->
     <TextView
-        android:id="@+id/plant_name"
+        android:id="@+id/plant_common_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Plant Name"

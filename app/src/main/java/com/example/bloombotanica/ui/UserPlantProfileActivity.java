@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,13 +22,13 @@ import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.room.Delete;
+
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.widget.ImageView;
-import android.provider.MediaStore;
+
 import androidx.appcompat.app.AlertDialog;
 
 
@@ -34,6 +36,7 @@ import com.example.bloombotanica.R;
 import com.example.bloombotanica.database.PlantCareDatabase;
 import com.example.bloombotanica.database.UserPlantDatabase;
 import com.example.bloombotanica.dialogs.DeletePlantDialog;
+import com.example.bloombotanica.models.PlantCare;
 import com.example.bloombotanica.models.UserPlant;
 
 import java.io.File;
@@ -46,14 +49,14 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
     private UserPlantDatabase userPlantDatabase;
     private PlantCareDatabase plantCaredb;
     private int userPlantId;
-    private TextView plantNickname;
+    private TextView plantNickname, plantName, plantSciName, lastWateredText;
     private UserPlant userPlant;
+    private PlantCare plantCare;
     private ImageView plantImageView;
     private static final int REQUEST_IMAGE_PICK = 1;
     private static final int REQUEST_IMAGE_CAPTURE = 2;
-
-
-
+    private ProgressBar circularProgress;
+    private ImageButton waterButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +73,12 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
         Log.d("UserPlantProfileActivity", "UserPlantId: " + userPlantId);
 
         plantNickname = findViewById(R.id.userplant_nickname);
+        plantName = findViewById(R.id.plant_common_name);
+        plantSciName = findViewById(R.id.plant_sci_name);
+        lastWateredText = findViewById(R.id.last_watered_text);
+
+        circularProgress = findViewById(R.id.circular_progress);
+        waterButton = findViewById(R.id.water_button);
 
         userPlantDatabase = UserPlantDatabase.getInstance(this);
         plantCaredb = PlantCareDatabase.getInstance(this);
@@ -97,7 +106,14 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
 
         plantImageView = findViewById(R.id.user_plant_profile_img);
         plantImageView.setOnClickListener(v -> showImageSourceDialog());
-
+        waterButton.setOnClickListener(v -> {
+            if(userPlant != null) {
+                markPlantAsWatered(userPlant);
+                updateWaterProgress();
+            } else {
+                Toast.makeText(this, "Plant not loaded yet", Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 
@@ -105,10 +121,25 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
         Log.d("UserPlantProfileActivity", "Fetching user plant with ID: " + userPlantId);
         new Thread(() -> {
             userPlant = userPlantDatabase.userPlantDao().getUserPlantById(userPlantId);
+            //get plant name from plant care database
+            plantCare = plantCaredb.plantCareDao().getPlantCareById(userPlant.getPlantCareId());
             runOnUiThread(() -> {
                 if (userPlant != null) {
                     Log.d("UserPlantProfileActivity", "User plant found: " + userPlant.getNickname());
                     plantNickname.setText(userPlant.getNickname());
+                    plantName.setText(plantCare.getCommonName());
+                    plantSciName.setText(plantCare.getScientificName());
+                    int daysSinceLastWatered = calculateDaysSinceLastWatered(userPlant.getLastWatered());
+                    if (daysSinceLastWatered == 0) {
+                        lastWateredText.setText(R.string.last_watered_today);
+                    } else if (daysSinceLastWatered == 1) {
+                        lastWateredText.setText(R.string.last_watered_yesterday);
+                    } else {
+                        lastWateredText.setText(getString(R.string.last_watered, daysSinceLastWatered));
+                    }
+
+                    updateWaterProgress();
+
                     // Load image from internal storage
                     if (userPlant.getImagePath() != null) {
                         Log.d("UserPlantProfileActivity", "Loading image from path: " + userPlant.getImagePath());
@@ -177,7 +208,6 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
         startActivityForResult(intent, REQUEST_IMAGE_PICK);
     }
 
-
     private void openCamera() {
         // Check if the CAMERA permission is granted
         Log.d("UserPlantProfileActivity", "openCamera: Checking camera permission");
@@ -203,7 +233,6 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
         }
     }
 
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -219,8 +248,6 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
             }
         }
     }
-
-
 
     private String saveImageToInternalStorage(Bitmap bitmap) {
         try {
@@ -238,8 +265,6 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
             return null;
         }
     }
-
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -269,7 +294,6 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
         }
     }
 
-
     private void handleImageResult(Uri imageUri) {
         try {
             Log.d("UserPlantProfileActivity", "handleImageResult: Loading image from URI " + imageUri);
@@ -288,15 +312,12 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
         }
     }
 
-
-
     private void saveImagePathToDatabase(String imagePath) {
         new Thread(() -> userPlantDatabase.userPlantDao().updateImagePath(userPlantId, imagePath)).start();
     }
 
     //this isnt used yet but will be used when we implement a button
     //to update the plant's watering date on plant profile
-
     private void markPlantAsWatered(UserPlant plant) {
         // Mark the plant as watered in the database
         new Thread(() -> {
@@ -311,9 +332,16 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
                 Date nextWateringDate = calendar.getTime();
 
                 userPlantDatabase.userPlantDao().updateWateringDates(userPlantId, today, nextWateringDate);
+
+                // Update in-memory userPlant object
+                plant.setLastWatered(today);
+                plant.setNextWateringDate(nextWateringDate);
+
                 runOnUiThread(() -> {
                     Toast.makeText(this, "Plant watered successfully!", Toast.LENGTH_SHORT).show();
                     Log.d("markPlantAsWatered", "Next Watering Date: " + nextWateringDate);
+                    updateWaterProgress();
+                    lastWateredText.setText(R.string.last_watered_today);
                 });
 
             } catch (Exception e) {
@@ -322,4 +350,38 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
         }).start();
 
     }
+
+    private void updateWaterProgress() {
+        new Thread(() -> {
+            if (userPlant != null) {
+                try {
+                    Date today = new Date();
+                    Date nextWateringDate = userPlant.getNextWateringDate();
+
+                    // Calculate progress
+                    long totalDuration = nextWateringDate.getTime() - userPlant.getLastWatered().getTime();
+                    long remainingDuration = nextWateringDate.getTime() - today.getTime();
+                    int progress = (int) (100 - (remainingDuration * 100 / totalDuration));
+
+                    // Ensure progress is between 0 and 100
+                    progress = Math.max(0, Math.min(progress, 100));
+
+                    // Update progress bar on main thread
+                    int finalProgress = progress;
+                    runOnUiThread(() -> circularProgress.setProgress(finalProgress));
+
+                } catch (Exception e) {
+                    Log.e("updateWaterProgress", "Error updating progress bar", e);
+                }
+            }
+        }).start();
+    }
+
+    private int calculateDaysSinceLastWatered(Date lastWatered) {
+        Date today = new Date();
+        long differenceInMillis = today.getTime() - lastWatered.getTime();
+        return (int) (differenceInMillis / (1000 * 60 * 60 * 24)); // Convert milliseconds to days
+    }
+
+
 }

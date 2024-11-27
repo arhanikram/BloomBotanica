@@ -14,5 +14,7 @@
     <color name="green">#32CD32</color>
     <color name="red">#FF4500</color>
     <color name="weather_card_background">#FDF6E3</color>
+    <color name="healthy_green">#4CAF50</color>
+    <color name="unhealthy">#A52A2A</color>
 
 </resources>

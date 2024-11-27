@@ -29,5 +29,10 @@
     <string name="settings">Settings</string>
     <string name="take_picture">Take Picture</string>
     <string name="placeholder">" "</string>
+    <string name="camera">Camera</string>
+    <string name="mark_as_watered">Mark as watered</string>
+    <string name="last_watered_today">Last watered today</string>
+    <string name="last_watered_yesterday">Last watered yesterday</string>
+    <string name="last_watered">Last watered %1$d days ago</string>
 
 </resources>

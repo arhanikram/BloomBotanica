@@ -33,6 +33,7 @@ import com.example.bloombotanica.models.Task;
 import com.example.bloombotanica.models.UserPlant;
 import com.example.bloombotanica.utils.TaskUtils;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 
 import org.json.JSONException;
@@ -121,6 +122,7 @@ public class DashboardFragment extends Fragment {
                 "https://api.openweathermap.org/data/2.5/weather?lat=%s&lon=%s&units=metric&appid=%s",
                 latitude, longitude, apiKey);
 
+        Log.d("DashboardFragment", "Fetching weather data from: " + weatherUrl);
         new Thread(() -> {
             try {
                 URL url = new URL(weatherUrl);
