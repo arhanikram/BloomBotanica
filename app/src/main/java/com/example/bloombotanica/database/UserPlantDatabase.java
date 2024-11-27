@@ -7,16 +7,18 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 
+import com.example.bloombotanica.models.Task;
 import com.example.bloombotanica.utils.Converters;
 import com.example.bloombotanica.models.UserPlant;
 
-@Database(entities = {UserPlant.class}, version = 1, exportSchema = false)
+@Database(entities = {UserPlant.class, Task.class}, version = 1, exportSchema = false)
 @TypeConverters({Converters.class})
 public abstract class UserPlantDatabase extends RoomDatabase {
 
     private static UserPlantDatabase instance;
 
     public abstract UserPlantDao userPlantDao();
+    public abstract TaskDao taskDao();
 
     public static synchronized UserPlantDatabase getInstance(Context context) {
         if (instance == null) {

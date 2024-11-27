@@ -18,11 +18,18 @@
         android:textStyle="bold"
         android:paddingBottom="16dp" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/plantCareToDoList"
+    <TextView
+        android:id="@+id/taskCount"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:padding="16dp" />
+        android:layout_height="wrap_content"
+        android:text="Tasks: %1$d"
+        android:layout_marginTop="8dp"
+        android:textSize="16sp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/tasksRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp" />
 
 </LinearLayout>

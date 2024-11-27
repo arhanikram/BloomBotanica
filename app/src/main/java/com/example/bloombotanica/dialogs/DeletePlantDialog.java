@@ -9,11 +9,16 @@ import com.example.bloombotanica.models.UserPlant;
 
 public class DeletePlantDialog {
 
+    private static UserPlantDatabase userpdb;
+
     public interface DeletePlantListener {
         void onDeleteComplete(int position);
     }
 
     public static void showDeleteConfirmationDialog(Context context, UserPlantDatabase database, UserPlant plantToDelete, int position, DeletePlantListener listener) {
+
+        userpdb = UserPlantDatabase.getInstance(context);
+
         new AlertDialog.Builder(context)
                 .setTitle("Delete Plant")
                 .setMessage("Are you sure you want to delete this plant?")
@@ -28,6 +33,7 @@ public class DeletePlantDialog {
                                 Toast.makeText(context, "Plant deleted", Toast.LENGTH_SHORT).show();
                             });
                         }
+                        userpdb.taskDao().removeTasksForDeletedPlants();
                     }).start();
                 })
                 .setNegativeButton("No", null)

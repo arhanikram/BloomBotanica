@@ -21,6 +21,7 @@ import com.example.bloombotanica.R;
 import com.example.bloombotanica.adapters.PlantSuggestionAdapter;
 import com.example.bloombotanica.database.PlantCareDatabase;
 import com.example.bloombotanica.models.PlantCare;
+import com.example.bloombotanica.models.Task;
 import com.example.bloombotanica.models.UserPlant;
 import com.example.bloombotanica.database.UserPlantDatabase;
 
@@ -174,6 +175,15 @@ public class AddPlantDialogFragment extends DialogFragment implements PlantSugge
         }
     }
 
+    private void createTask(int userPlantId, Date nextDueDate, String taskType) {
+        new Thread(() -> {
+            Task newTask = new Task(userPlantId, taskType, nextDueDate, false);
+            UserPlantDatabase.getInstance(getContext()).taskDao().insert(newTask);
+            Log.d("AddPlantDialogFragment", "Task created: ID=" + userPlantId + ", Type=" + taskType + ", DueDate=" + nextDueDate);
+
+        }).start();
+    }
+
     private void addPlantToDatabase(String plantNickname, String plantName) {
         new Thread(() -> {
             Log.d("AddPlantDialogFragment", "addPlantToDatabase called");
@@ -193,10 +203,14 @@ public class AddPlantDialogFragment extends DialogFragment implements PlantSugge
             newPlant.setNextWateringDate(calendar.getTime());
             Log.d("AddPlantDialogFragment", "New plant created");
 
-            Log.d("AddPlantDialogFragment", "Inside thread to add plant to database");
             userpdb.userPlantDao().insert(newPlant);
             Log.d("AddPlantDialogFragment", "Database insert completed");
 
+            UserPlant insertedPlant = userpdb.userPlantDao().getUserPlantByNickname(plantNickname);
+
+            createTask(insertedPlant.getId(), calendar.getTime(), "Water");
+
+            Log.d("AddPlantDialogFragment", "Task created");
             // Run on the main thread after adding to the database
             requireActivity().runOnUiThread(() -> {
                 if (getTargetFragment() instanceof OnPlantAddedListener) {

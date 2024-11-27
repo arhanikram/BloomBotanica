@@ -25,6 +25,9 @@ public interface UserPlantDao {
     @Query("SELECT * FROM user_plants WHERE id = :id")
     UserPlant getUserPlantById(int id);
 
+    @Query("SELECT * FROM user_plants WHERE nickname = :nickname")
+    UserPlant getUserPlantByNickname(String nickname);
+
     @Query("SELECT * FROM user_plants")
     List<UserPlant> getAllUserPlants();
 

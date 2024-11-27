@@ -18,4 +18,8 @@
     <string name="delete_user_plant">Delete plant</string>
     <string name="plant_scientific_name_hint">What kind of plant is it?</string>
     <string name="add_plant_title">Add plant</string>
+    <string name="mark_as_done">Mark as Done</string>
+    <string name="task_count">Pending Tasks: %1$d</string>
+    <string name="task_icon">Icon for the task type</string>
+    <string name="mark_done">Mark task as done</string>
 </resources>
