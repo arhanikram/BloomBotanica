@@ -12,22 +12,19 @@
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="56dp" />
+        android:layout_marginBottom="80dp" />
 
-    <!-- Bottom Navigation View anchored at the bottom -->
+
+    <!-- Bottom Navigation View -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
+        android:backgroundTint="@color/white"
+        app:itemIconSize="24dp"
+        app:itemIconTint="@color/black"
+        app:itemTextColor="@color/black"
+        app:labelVisibilityMode="labeled"
         app:menu="@menu/bottom_nav_menu" />
-
-    <View
-        android:id="@+id/dim_overlay"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/dim_overlay"
-        android:visibility="invisible"
-        />
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

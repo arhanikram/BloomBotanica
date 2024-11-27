@@ -25,5 +25,8 @@
     <string name="temperature_placeholder">--°C</string>
     <string name="humidity_placeholder">--%</string>
     <string name="sunlight_placeholder">--%</string>
+    <string name="settings">Settings</string>
+    <string name="take_picture">Take Picture</string>
+    <string name="placeholder">" "</string>
 
 </resources>
