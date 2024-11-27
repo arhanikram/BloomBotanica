@@ -22,4 +22,5 @@
     <string name="task_count">Pending Tasks: %1$d</string>
     <string name="task_icon">Icon for the task type</string>
     <string name="mark_done">Mark task as done</string>
+    <string name="empty_task_calendar">Nothing to see here!</string>
 </resources>

@@ -1,0 +1,5 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="oval">
+    <solid android:color="#80C3E88D" /> <!-- Light green with transparency -->
+    <stroke android:width="2dp" android:color="#C3E88D" /> <!-- Solid green border -->
+    <size android:width="40dp" android:height="40dp" /> <!-- Adjust size to fit your date cell -->
+</shape>

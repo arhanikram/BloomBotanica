@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:layout_marginVertical="32dp"
-    android:layout_marginHorizontal="16dp"
-    tools:context=".ui.CalendarFragment">
+    android:layout_marginHorizontal="16dp">
 
+    <!-- Material Calendar -->
     <com.prolificinteractive.materialcalendarview.MaterialCalendarView
         android:id="@+id/calendarView"
         android:layout_width="match_parent"
@@ -15,7 +16,32 @@
         app:mcv_showOtherDates="all"
         app:mcv_selectionColor="@color/purple_200"
         app:mcv_weekDayTextAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-        app:mcv_dateTextAppearance="@style/TextAppearance.MaterialComponents.Body1"/>
+        app:mcv_dateTextAppearance="@style/TextAppearance.MaterialComponents.Body1"
+        />
 
+    <!-- Divider -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider"
+        android:layout_marginVertical="8dp" />
 
-</FrameLayout>
+    <TextView
+        android:id="@+id/emptyTaskMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/empty_task_calendar"
+        android:gravity="center"
+        android:visibility="gone"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="4dp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/taskRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:scrollbars="vertical" />
+</LinearLayout>
