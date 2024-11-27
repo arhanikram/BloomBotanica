@@ -16,12 +16,14 @@ public class UserPlant {
     @ColumnInfo(name = "image_path")
     private String imagePath; // New field to store the image path
     private Date nextWateringDate; // New field to store the next watering date
+    private boolean isWatered; // New field to track if the plant has been watered
 
-    public UserPlant(int plantCareId, String nickname, Date dateAdded, Date lastWatered) {
+    public UserPlant(int plantCareId, String nickname, Date dateAdded, Date lastWatered, boolean isWatered) {
         this.plantCareId = plantCareId;
         this.nickname = nickname;
         this.dateAdded = dateAdded;
         this.lastWatered = lastWatered;
+        this.isWatered = isWatered;
     }
 
     // Getters
@@ -42,6 +44,7 @@ public class UserPlant {
     }
     public String getImagePath() { return imagePath; }
     public Date getNextWateringDate() { return nextWateringDate; }
+    public boolean isWatered() { return isWatered; }
 
     // Setters
     public void setId(int id) {
@@ -61,4 +64,5 @@ public class UserPlant {
     }
     public void setImagePath(String imagePath) { this.imagePath = imagePath; }
     public void setNextWateringDate(Date nextWateringDate) { this.nextWateringDate = nextWateringDate; }
+    public void setWatered(boolean watered) { isWatered = watered; }
 }

@@ -34,5 +34,6 @@
     <string name="last_watered_today">Last watered today</string>
     <string name="last_watered_yesterday">Last watered yesterday</string>
     <string name="last_watered">Last watered %1$d days ago</string>
+    <string name="never_watered">Plant added, water it!</string>
 
 </resources>

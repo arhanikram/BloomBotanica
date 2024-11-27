@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.example.bloombotanica.R;
 import com.example.bloombotanica.adapters.PlantSuggestionAdapter;
 import com.example.bloombotanica.database.PlantCareDatabase;
+import com.example.bloombotanica.models.JournalEntry;
 import com.example.bloombotanica.models.PlantCare;
 import com.example.bloombotanica.models.Task;
 import com.example.bloombotanica.models.UserPlant;
@@ -199,7 +200,7 @@ public class AddPlantDialogFragment extends DialogFragment implements PlantSugge
             Log.d("AddPlantDialogFragment", "Next watering date: " + calendar.getTime());
             Log.d("AddPlantDialogFragment", "Date added: " + today);
 
-            UserPlant newPlant = new UserPlant(plant.getId(), plantNickname, today, today);
+            UserPlant newPlant = new UserPlant(plant.getId(), plantNickname, today, null, false);
             newPlant.setNextWateringDate(calendar.getTime());
             Log.d("AddPlantDialogFragment", "New plant created");
 
@@ -209,6 +210,13 @@ public class AddPlantDialogFragment extends DialogFragment implements PlantSugge
             UserPlant insertedPlant = userpdb.userPlantDao().getUserPlantByNickname(plantNickname);
 
             createTask(insertedPlant.getId(), calendar.getTime(), "Water");
+
+            //log the plant added date in journal
+            JournalEntry entry = new JournalEntry();
+            entry.setPlantId(insertedPlant.getId());
+            entry.setTimestamp(today);
+            entry.setNote("Plant added");
+            userpdb.journalEntryDao().insert(entry);
 
             Log.d("AddPlantDialogFragment", "Task created");
             // Run on the main thread after adding to the database
