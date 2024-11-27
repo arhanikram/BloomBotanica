@@ -1,19 +1,37 @@
-<?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!-- Dashboard -->
     <item
         android:id="@+id/dashboard"
         android:title="@string/dashboard"
         android:icon="@drawable/dashboard_svgrepo_com"
-        />
+        android:orderInCategory="1" />
+
+    <!-- Calendar -->
     <item
         android:id="@+id/calendar"
         android:title="@string/calendar"
         android:icon="@drawable/calendar_icon"
-        />
+        android:orderInCategory="2" />
+
+    <!-- Placeholder for FAB -->
+    <item
+        android:id="@+id/camera"
+        android:icon="@drawable/ic_camera"
+        android:title="camerabutton"
+        android:orderInCategory="3" />
+
+    <!-- Plants -->
     <item
         android:id="@+id/plants"
         android:title="@string/plants"
         android:icon="@drawable/leaf_svgrepo_com"
-        />
+        android:orderInCategory="4" />
+
+    <!-- Settings -->
+    <item
+        android:id="@+id/settings"
+        android:title="@string/settings"
+        android:icon="@drawable/ic_settings"
+        android:orderInCategory="5" />
 </menu>

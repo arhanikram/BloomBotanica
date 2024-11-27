@@ -10,4 +10,9 @@
     <color name="dim_overlay">#80000000</color>
     <color name="gray">#FF888888</color>
     <color name="red_tint">#FF0000</color>
+    <color name="brown">#A0522D</color>
+    <color name="green">#32CD32</color>
+    <color name="red">#FF4500</color>
+    <color name="weather_card_background">#FDF6E3</color>
+
 </resources>
