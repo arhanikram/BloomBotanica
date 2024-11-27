@@ -4,7 +4,6 @@
     <string name="plants">Plants</string>
     <string name="home">Home</string>
     <string name="dashboard">Dashboard</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="welcome_username">Welcome, %1$s</string>
     <string name="enter_your_name">Enter your name</string>
@@ -22,4 +21,9 @@
     <string name="task_count">Pending Tasks: %1$d</string>
     <string name="task_icon">Icon for the task type</string>
     <string name="mark_done">Mark task as done</string>
+    <string name="weather_date_placeholder">Loading...</string>
+    <string name="temperature_placeholder">--°C</string>
+    <string name="humidity_placeholder">--%</string>
+    <string name="sunlight_placeholder">--%</string>
+
 </resources>
