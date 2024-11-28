@@ -51,7 +51,9 @@ public class CalendarFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = FragmentCalendarBinding.inflate(inflater, container, false);
+        if (binding == null) {
+            binding = FragmentCalendarBinding.inflate(inflater, container, false);
+        }
         taskDao = UserPlantDatabase.getInstance(requireContext()).taskDao();
         userPlantDao = UserPlantDatabase.getInstance(requireContext()).userPlantDao();
         return binding.getRoot();
@@ -60,27 +62,29 @@ public class CalendarFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        if(binding != null) {
 
-        MaterialCalendarView calendarView = binding.calendarView;
-        RecyclerView taskRecyclerView = binding.taskRecyclerView;
+            MaterialCalendarView calendarView = binding.calendarView;
+            RecyclerView taskRecyclerView = binding.taskRecyclerView;
 
-        // Set up RecyclerView with TaskListAdapter
-        taskRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-        taskListAdapter = new TaskListAdapter(tasksForSelectedDay, userPlantDao);
-        taskRecyclerView.setAdapter(taskListAdapter);
+            // Set up RecyclerView with TaskListAdapter
+            taskRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+            taskListAdapter = new TaskListAdapter(tasksForSelectedDay, userPlantDao);
+            taskRecyclerView.setAdapter(taskListAdapter);
 
-        // Fetch task dates and decorate calendar
-        fetchTaskDates();
-        calendarView.addDecorator(new TaskDayDecorator(requireContext(), taskDates));
+            // Fetch task dates and decorate calendar
+            fetchTaskDates();
+            calendarView.addDecorator(new TaskDayDecorator(requireContext(), taskDates));
 
-        calendarView.setDateSelected(CalendarDay.today(), true);
-        fetchTasksForDate(new Date());
+            calendarView.setDateSelected(CalendarDay.today(), true);
+            fetchTasksForDate(new Date());
 
-        // Listen for date selection
-        calendarView.setOnDateChangedListener((widget, date, selected) -> {
-            widget.invalidateDecorators();
-            fetchTasksForDate(date.getDate());
-        });
+            // Listen for date selection
+            calendarView.setOnDateChangedListener((widget, date, selected) -> {
+                widget.invalidateDecorators();
+                fetchTasksForDate(date.getDate());
+            });
+        }
     }
 
     private void fetchTaskDates() {
@@ -111,7 +115,9 @@ public class CalendarFragment extends Fragment {
             }
 
             requireActivity().runOnUiThread(() -> {
-                binding.calendarView.invalidateDecorators(); // Refresh decorators
+                if(binding != null) {
+                    binding.calendarView.invalidateDecorators(); // Refresh decorators
+                }
             });
         }).start();
     }
