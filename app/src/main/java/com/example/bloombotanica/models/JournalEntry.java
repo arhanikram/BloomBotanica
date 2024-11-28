@@ -13,10 +13,12 @@ public class JournalEntry {
     private int plantId; // Foreign key to UserPlant
     @ColumnInfo(name = "timestamp")
     private Date timestamp;
-    @ColumnInfo(name = "note")
-    private String note;
-    @ColumnInfo(name = "image_path")
-    private String imagePath;
+    @ColumnInfo(name = "title")
+    private String title;
+    @ColumnInfo(name = "body")
+    private String body;
+    @ColumnInfo(name = "image_paths")
+    private String imagePaths;
     @ColumnInfo(name = "care_type")
     private String careType;
 
@@ -30,11 +32,14 @@ public class JournalEntry {
     public Date getTimestamp() { return timestamp; }
     public void setTimestamp(Date timestamp) { this.timestamp = timestamp; }
 
-    public String getNote() { return note; }
-    public void setNote(String note) { this.note = note; }
+    public String getTitle() { return title; }
+    public void setTitle(String title) { this.title = title; }
 
-    public String getImagePath() { return imagePath; }
-    public void setImagePath(String imagePath) { this.imagePath = imagePath; }
+    public String getBody() { return body; }
+    public void setBody(String body) { this.body = body; }
+
+    public String getImagePaths() { return imagePaths; }
+    public void setImagePaths(String imagePaths) { this.imagePaths = imagePaths; }
 
     public String getCareType() { return careType; }
     public void setCareType(String careType) { this.careType = careType; }

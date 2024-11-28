@@ -5,6 +5,8 @@ import android.util.Log;
 import com.example.bloombotanica.database.PlantCareDatabase;
 import com.example.bloombotanica.database.TaskDao;
 import com.example.bloombotanica.database.UserPlantDao;
+import com.example.bloombotanica.database.UserPlantDatabase;
+import com.example.bloombotanica.models.JournalEntry;
 import com.example.bloombotanica.models.PlantCare;
 import com.example.bloombotanica.models.Task;
 import com.example.bloombotanica.models.UserPlant;
@@ -33,6 +35,12 @@ public class TaskUtils {
                     calendar.setTime(nextDueDate);
                     calendar.add(Calendar.DAY_OF_YEAR, wateringFrequency);
 
+                    Date today = new Date();
+                    plant.setLastWatered(today);
+                    plant.setNextWateringDate(calendar.getTime());
+                    plant.setWatered(true);
+
+
                     // Create a new task with the updated due date
                     Task newTask = new Task(
                             task.getUserPlantId(),
@@ -44,6 +52,17 @@ public class TaskUtils {
                     // Insert the new task into the database
                     taskDao.insert(newTask);
 
+                    plant.setLastWatered(today);
+
+                    UserPlantDatabase userPlantDatabase = UserPlantDatabase.getInstance(null);
+
+                    JournalEntry entry = new JournalEntry();
+                    entry.setPlantId(plant.getId());
+                    entry.setTimestamp(today);
+                    entry.setTitle("Watered");
+                    userPlantDatabase.journalEntryDao().insert(entry);
+
+                    userPlantDao.updateWateringDates(plant.getId(), today, plant.getNextWateringDate());
                     Log.d("TaskUtils", "New task created for plant: " + plant.getNickname() + " - " + newTask.toString());
                 } else {
                     Log.e("TaskUtils", "PlantCare details not found for plant: " + plant.getNickname());

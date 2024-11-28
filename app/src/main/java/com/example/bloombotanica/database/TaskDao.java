@@ -31,5 +31,8 @@ public interface TaskDao {
     @Query("DELETE FROM tasks WHERE userPlantId NOT IN (SELECT id FROM user_plants)")
     void removeTasksForDeletedPlants();
 
+    @Query("SELECT * FROM tasks WHERE userPlantId = :userPlantId AND taskType = :taskType AND isCompleted = 0")
+    Task getTaskForUserPlantAndType(int userPlantId, String taskType);
+
 }
 

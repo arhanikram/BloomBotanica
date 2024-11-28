@@ -215,7 +215,7 @@ public class AddPlantDialogFragment extends DialogFragment implements PlantSugge
             JournalEntry entry = new JournalEntry();
             entry.setPlantId(insertedPlant.getId());
             entry.setTimestamp(today);
-            entry.setNote("Plant added");
+            entry.setTitle("Plant added");
             userpdb.journalEntryDao().insert(entry);
 
             Log.d("AddPlantDialogFragment", "Task created");

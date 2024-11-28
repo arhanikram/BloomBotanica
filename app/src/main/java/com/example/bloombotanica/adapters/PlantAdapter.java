@@ -14,7 +14,6 @@ import com.example.bloombotanica.models.UserPlant;
 import java.util.List;
 
 public class PlantAdapter extends RecyclerView.Adapter<PlantAdapter.PlantViewHolder> {
-
     private List<UserPlant> userPlantList;
     private OnPlantLongClickListener longClickListener;
     private OnItemClickListener itemClickListener;

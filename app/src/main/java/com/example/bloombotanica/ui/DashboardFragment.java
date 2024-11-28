@@ -247,6 +247,8 @@ public class DashboardFragment extends Fragment {
         UserPlantDao userPlantDao = UserPlantDatabase.getInstance(getContext()).userPlantDao();
         PlantCareDatabase plantCareDatabase = PlantCareDatabase.getInstance(getContext());
 
-        TaskUtils.renewTask(task, taskDao, userPlantDao, plantCareDatabase, this::loadTasks);
+        TaskUtils.renewTask(task, taskDao, userPlantDao, plantCareDatabase, () -> {
+            loadTasks();
+        });
     }
 }

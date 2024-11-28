@@ -150,7 +150,7 @@ public class PlantsFragment extends Fragment implements PlantAdapter.OnPlantLong
         trashBin.setOnDragListener((v, event) -> {
             if (event.getAction() == DragEvent.ACTION_DROP) {
                 showDeleteConfirmationDialog(position);
-
+                trashBinHoverOff();
             } else if (event.getAction() == DragEvent.ACTION_DRAG_ENDED) {
                 hideTrashBin();
                 hideDimOverlay();

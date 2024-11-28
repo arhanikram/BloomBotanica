@@ -1,6 +1,6 @@
 package com.example.bloombotanica.adapters;
 
-import android.graphics.BitmapFactory;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bloombotanica.R;
 import com.example.bloombotanica.models.JournalEntry;
+import com.example.bloombotanica.ui.LogDetailActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -18,9 +19,15 @@ import java.util.Locale;
 
 public class JournalEntryAdapter extends RecyclerView.Adapter<JournalEntryAdapter.ViewHolder> {
     private List<JournalEntry> entries;
+    private onLogLongClickListener longClickListener;
 
-    public JournalEntryAdapter(List<JournalEntry> entries) {
+    public interface onLogLongClickListener {
+        void onLogLongClick(View view, int position);
+    }
+
+    public JournalEntryAdapter(List<JournalEntry> entries, onLogLongClickListener longClickListener) {
         this.entries = entries;
+        this.longClickListener = longClickListener;
     }
 
     public void updateEntries(List<JournalEntry> newEntries) {
@@ -45,16 +52,24 @@ public class JournalEntryAdapter extends RecyclerView.Adapter<JournalEntryAdapte
 
         if (entry.getCareType() != null) {
             //we will clean this string up after, it works now
-            holder.note.setText("Care: " + entry.getCareType());
-            holder.image.setVisibility(View.GONE); // No image for care logs
+            holder.title.setText(entry.getTitle());
         } else {
-            holder.note.setText(entry.getNote());
-            if (entry.getImagePath() != null) {
-                holder.image.setImageBitmap(BitmapFactory.decodeFile(entry.getImagePath()));
-            } else {
-                holder.image.setVisibility(View.GONE);
-            }
+            holder.title.setText(entry.getTitle());
         }
+        holder.itemView.setOnClickListener(v -> {
+            // Handle item click
+            Intent intent = new Intent(v.getContext(), LogDetailActivity.class);
+            intent.putExtra("entryId", entry.getId());
+            intent.putExtra("plantId", entry.getPlantId());
+            v.getContext().startActivity(intent);
+        });
+
+        holder.itemView.setOnLongClickListener(v -> {
+            if(longClickListener != null) {
+                longClickListener.onLogLongClick(v, position);
+            }
+            return true;
+        });
     }
 
 
@@ -63,15 +78,13 @@ public class JournalEntryAdapter extends RecyclerView.Adapter<JournalEntryAdapte
         return entries.size();
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView timestamp, note;
-        ImageView image;
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        TextView timestamp, title;
 
-        ViewHolder(View view) {
+        public ViewHolder(View view) {
             super(view);
             timestamp = view.findViewById(R.id.journal_entry_timestamp);
-            note = view.findViewById(R.id.journal_entry_note);
-            image = view.findViewById(R.id.journal_entry_image);
+            title = view.findViewById(R.id.journal_entry_title);
         }
     }
 }

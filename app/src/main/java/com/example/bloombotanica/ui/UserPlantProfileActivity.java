@@ -34,11 +34,15 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.example.bloombotanica.R;
 import com.example.bloombotanica.database.PlantCareDatabase;
+import com.example.bloombotanica.database.TaskDao;
+import com.example.bloombotanica.database.UserPlantDao;
 import com.example.bloombotanica.database.UserPlantDatabase;
 import com.example.bloombotanica.dialogs.DeletePlantDialog;
 import com.example.bloombotanica.models.JournalEntry;
 import com.example.bloombotanica.models.PlantCare;
+import com.example.bloombotanica.models.Task;
 import com.example.bloombotanica.models.UserPlant;
+import com.example.bloombotanica.utils.TaskUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -58,6 +62,8 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
     private static final int REQUEST_IMAGE_CAPTURE = 2;
     private ProgressBar circularProgress;
     private ImageButton waterButton, journalButton;
+    private TaskDao taskDao;
+    private Task task;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +105,7 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
         Toolbar toolbar = findViewById(R.id.user_plant_profile_toolbar);
         setSupportActionBar(toolbar);
 
-        if(getSupportActionBar() != null) {
+        if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle("");
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
@@ -109,7 +115,7 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
         plantImageView = findViewById(R.id.user_plant_profile_img);
         plantImageView.setOnClickListener(v -> showImageSourceDialog());
         waterButton.setOnClickListener(v -> {
-            if(userPlant != null) {
+            if (userPlant != null) {
                 markPlantAsWatered(userPlant);
                 updateWaterProgress();
             } else {
@@ -329,19 +335,15 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
 
     //looks messy but it works
     private void markPlantAsWatered(UserPlant plant) {
-        // Mark the plant as watered in the database
+        // Use TaskUtils.renewTask to handle task completion and plant watering updates
         new Thread(() -> {
             try {
                 int wateringFrequency = plantCaredb.plantCareDao().getWateringFrequencyById(plant.getPlantCareId());
-                Log.d("UserPlantProfileActivity", "markPlantAsWatered: Watering frequency: " + wateringFrequency);
-
-                //check to see if user already watered today
                 Date today = new Date();
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(today);
                 calendar.add(Calendar.DAY_OF_YEAR, wateringFrequency);
                 Date nextWateringDate = calendar.getTime();
-
                 //first time watering plant
                 if (plant.getLastWatered() == null) {
 
@@ -349,6 +351,7 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
                     plant.setLastWatered(today);
                     plant.setNextWateringDate(nextWateringDate);
                     plant.setWatered(true);
+                    userPlantDatabase.userPlantDao().updateWateringDates(userPlantId, today, nextWateringDate);
 
                     runOnUiThread(() -> {
                         Toast.makeText(this, "Plant watered successfully!", Toast.LENGTH_SHORT).show();
@@ -356,6 +359,14 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
                         updateWaterProgress();
                         lastWateredText.setText(R.string.last_watered_today);
                     });
+
+                    JournalEntry entry = new JournalEntry();
+                    entry.setPlantId(plant.getId());
+                    entry.setTimestamp(today);
+                    entry.setTitle("Watered");
+                    userPlantDatabase.journalEntryDao().insert(entry);
+
+                    Log.d("markPlantAsWatered", "First time watering plant");
                 } else {
                     Calendar currentDate = Calendar.getInstance();
                     int currentDay = currentDate.get(Calendar.DAY_OF_YEAR);
@@ -367,44 +378,50 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
                     int lastWateredYear = currentDate.get(Calendar.YEAR);
 
                     if (currentDay == lastWateredDay && currentYear == lastWateredYear) {
-                        //if user already watered today
+                        //if plant already watered today
+                        Log.d("markPlantAsWatered", "Plant already watered today");
                         runOnUiThread(() -> Toast.makeText(this, "Plant already watered today", Toast.LENGTH_SHORT).show());
                         return;
                     } else {
+                        Log.d("markPlantAsWatered", "Plant not watered today");
+                        TaskDao taskDao = UserPlantDatabase.getInstance(this).taskDao();
+                        UserPlantDao userPlantDao = UserPlantDatabase.getInstance(this).userPlantDao();
+                        PlantCareDatabase plantCareDatabase = PlantCareDatabase.getInstance(this);
+
+                        task = taskDao.getTaskForUserPlantAndType(plant.getId(), "Water");
+
+                        Log.d("markPlantAsWatered", "currently watering: " + task.toString());
+
                         // Update in-memory userPlant object
                         plant.setLastWatered(today);
                         plant.setNextWateringDate(nextWateringDate);
+                        plant.setWatered(true);
 
-                        runOnUiThread(() -> {
-                            Toast.makeText(this, "Plant watered successfully!", Toast.LENGTH_SHORT).show();
-                            Log.d("markPlantAsWatered", "Next Watering Date: " + nextWateringDate);
-                            updateWaterProgress();
-                            lastWateredText.setText(R.string.last_watered_today);
+                        TaskUtils.renewTask(task, taskDao, userPlantDao, plantCareDatabase, () -> {
+                            runOnUiThread(() -> {
+                                // Update UI to reflect changes
+                                updateWaterProgress(); // Update the watering progress bar
+                                lastWateredText.setText(R.string.last_watered_today); // Update "last watered" text
+                                Toast.makeText(this, "Plant watered successfully!", Toast.LENGTH_SHORT).show();
+                            });
                         });
                     }
                 }
-                userPlantDatabase.userPlantDao().updateWateringDates(userPlantId, today, nextWateringDate);
-
-                //log the action in journal entry
-                JournalEntry entry = new JournalEntry();
-                entry.setPlantId(userPlantId);
-                entry.setTimestamp(today);
-                entry.setCareType("Watered");
-                userPlantDatabase.journalEntryDao().insert(entry);
-
             } catch (Exception e) {
-                Log.e("markPlantAsWatered", "Error updating watering information", e);
+                Log.e("markPlantAsWatered", "Error while marking plant as watered", e);
             }
         }).start();
-
     }
+
 
     private void updateWaterProgress() {
         if (userPlant.getLastWatered() == null) {
+            Log.d("updateWaterProgress", "Last watered date is null");
             return;
         }
         new Thread(() -> {
             if (userPlant != null) {
+                Log.d("updateWaterProgress", "Updating progress bar");
                 try {
                     Date today = new Date();
                     Date nextWateringDate = userPlant.getNextWateringDate();
@@ -420,7 +437,7 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
                     // Update progress bar on main thread
                     int finalProgress = progress;
                     runOnUiThread(() -> circularProgress.setProgress(finalProgress));
-
+                    Log.d("updateWaterProgress", "Progress updated to " + finalProgress);
                 } catch (Exception e) {
                     Log.e("updateWaterProgress", "Error updating progress bar", e);
                 }
@@ -432,9 +449,11 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
 
         //if plant has never been watered (just added plant)
         if (lastWatered == null) {
+            Log.d("calculateDaysSinceLastWatered", "Last watered date is null");
             return 0;
         }
 
+        Log.d("calculateDaysSinceLastWatered", "Calculating days since last watered");
         Date today = new Date();
         long differenceInMillis = today.getTime() - lastWatered.getTime();
         return (int) (differenceInMillis / (1000 * 60 * 60 * 24)); // Convert milliseconds to days
