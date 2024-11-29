@@ -22,6 +22,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.bloombotanica.database.PlantCareDatabase;
 import com.example.bloombotanica.dialogs.AddPlantDialogFragment;
 import com.example.bloombotanica.adapters.PlantAdapter;
 import com.example.bloombotanica.R;
@@ -47,6 +48,7 @@ public class PlantsFragment extends Fragment implements PlantAdapter.OnPlantLong
     private ImageView trashBin;
     private BottomNavigationView bottomNavigationView;
     private TextView dateText;
+    private PlantCareDatabase plantCareDatabase;
 
     @Nullable
     @Override
@@ -55,6 +57,7 @@ public class PlantsFragment extends Fragment implements PlantAdapter.OnPlantLong
 
         // Initialize user plant database
         userPlantDatabase = UserPlantDatabase.getInstance(requireContext());
+        plantCareDatabase = PlantCareDatabase.getInstance(requireContext());
 
         // Set up trash bin view
         trashBin = view.findViewById(R.id.trash_bin);
@@ -62,6 +65,7 @@ public class PlantsFragment extends Fragment implements PlantAdapter.OnPlantLong
 
         // Find dim overlay
         dimOverlay = requireActivity().findViewById(R.id.dim_overlay);
+
 
         // Set up Bottom Navigation View
         bottomNavigationView = requireActivity().findViewById(R.id.bottomNavigationView);
@@ -71,15 +75,14 @@ public class PlantsFragment extends Fragment implements PlantAdapter.OnPlantLong
         LinearLayoutManager layoutManager = new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(layoutManager);
 
+        plantAdapter = new PlantAdapter(userPlantList, plantCareDatabase, this);
 // Pass the OnItemClickListener directly when initializing the adapter
-        plantAdapter = new PlantAdapter(userPlantList, this, new PlantAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(int position) {
-                UserPlant selectedPlant = userPlantList.get(position);
-                Intent intent = new Intent(getContext(), UserPlantProfileActivity.class);
-                intent.putExtra("userPlantId", selectedPlant.getId());
-                startActivity(intent);
-            }
+        plantAdapter.setOnItemClickListener((position) -> {
+            UserPlant selectedPlant = userPlantList.get(position);
+            Intent intent = new Intent(getContext(), UserPlantProfileActivity.class);
+            intent.putExtra("userPlantId", selectedPlant.getId());
+            startActivity(intent);
+
         });
 
         recyclerView.setAdapter(plantAdapter);
