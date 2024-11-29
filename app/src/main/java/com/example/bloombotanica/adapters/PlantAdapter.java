@@ -1,5 +1,8 @@
+
 package com.example.bloombotanica.adapters;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bloombotanica.R;
+import com.example.bloombotanica.database.PlantCareDatabase;
+import com.example.bloombotanica.models.PlantCare;
 import com.example.bloombotanica.models.UserPlant;
 
 import java.util.List;
@@ -17,6 +22,8 @@ public class PlantAdapter extends RecyclerView.Adapter<PlantAdapter.PlantViewHol
     private List<UserPlant> userPlantList;
     private OnPlantLongClickListener longClickListener;
     private OnItemClickListener itemClickListener;
+    private PlantCareDatabase plantcaredat;
+    private String plantCommonName;
 
     public interface OnItemClickListener {
         void onItemClick(int position);
@@ -30,9 +37,11 @@ public class PlantAdapter extends RecyclerView.Adapter<PlantAdapter.PlantViewHol
         void onPlantLongClick(View view, int position);
     }
 
-    public PlantAdapter(List<UserPlant> userPlantList, OnPlantLongClickListener longClickListener) {
+    public PlantAdapter(List<UserPlant> userPlantList, PlantCareDatabase plantcaredat, OnPlantLongClickListener longClickListener) {
         this.userPlantList = userPlantList;
         this.longClickListener = longClickListener;
+        this.plantcaredat = plantcaredat;
+
     }
 
     @NonNull
@@ -45,17 +54,15 @@ public class PlantAdapter extends RecyclerView.Adapter<PlantAdapter.PlantViewHol
     @Override
     public void onBindViewHolder(@NonNull PlantViewHolder holder, int position) {
         UserPlant userPlant = userPlantList.get(position);
+
         holder.plantName.setText(userPlant.getNickname());
+        new Thread(() -> {
+            PlantCare plantCare = plantcaredat.plantCareDao().getPlantCareById(userPlant.getPlantCareId());
+            new Handler(Looper.getMainLooper()).post(() -> {
+                holder.plantCommonName.setText(plantCare.getCommonName());
+            });
 
-        //dynamic height calculation to make card square
-        ViewGroup.LayoutParams layoutParams = holder.itemView.getLayoutParams();
-        int screenWidth = holder.itemView.getContext().getResources().getDisplayMetrics().widthPixels;
-        int numColumns = 2;
-        int itemSpacing = 16;
-
-        int itemWidth = (screenWidth - (numColumns + 1) * itemSpacing) / numColumns;
-        layoutParams.height = (int) (itemWidth * 0.80);
-        holder.itemView.setLayoutParams(layoutParams);
+        }).start();
 
         //set up long click listener for drag and drop
         holder.itemView.setOnLongClickListener(v -> {
@@ -81,10 +88,12 @@ public class PlantAdapter extends RecyclerView.Adapter<PlantAdapter.PlantViewHol
 
     public static class PlantViewHolder extends RecyclerView.ViewHolder {
         TextView plantName;
+        TextView plantCommonName;
 
         public PlantViewHolder(@NonNull View itemView) {
             super(itemView);
             plantName = itemView.findViewById(R.id.card_plant_name);
+            plantCommonName = itemView.findViewById(R.id.plant_common_name);
         }
     }
 }

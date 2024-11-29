@@ -1,0 +1,49 @@
+<resources>
+    <string name="app_name">Bloom Botanica</string>
+    <string name="calendar">Calendrier</string>
+    <string name="plants">Plantes</string>
+    <string name="home">Accueil</string>
+    <string name="dashboard">Tableau de bord</string>
+    <string name="hello_blank_fragment">Bonjour fragment vide</string>
+    <string name="welcome_username">Bienvenue, %1$s</string>
+    <string name="enter_your_name">Entrez votre nom</string>
+    <string name="welcome_onboard">Bienvenue sur Bloom Botanica!</string>
+    <string name="continue_txt">Continuer</string>
+    <string name="add_plant">Ajouter une nouvelle plante</string>
+    <string name="plant_nickname_hint">Entrez le surnom de votre plante</string>
+    <string name="add">Ajouter</string>
+    <string name="delete_plant">Supprimer la plante</string>
+    <string name="edit_user_plant">Modifier la plante</string>
+    <string name="delete_user_plant">Supprimer la plante</string>
+    <string name="plant_scientific_name_hint">Quel type de plante est-ce?</string>
+    <string name="add_plant_title">Ajouter une plante</string>
+    <string name="mark_as_done">Marquer comme terminé</string>
+    <string name="task_count">Tâches en attente : %1$d</string>
+    <string name="task_icon">Icône pour le type de tâche</string>
+    <string name="mark_done">Marquer la tâche comme terminée</string>
+    <string name="empty_task_calendar">Rien à voir ici!</string>
+    <string name="weather_date_placeholder">Chargement...</string>
+    <string name="temperature_placeholder">--°C</string>
+    <string name="humidity_placeholder">--%</string>
+    <string name="sunlight_placeholder">--%</string>
+    <string name="settings">Paramètres</string>
+    <string name="take_picture">Prendre une photo</string>
+    <string name="placeholder">" "</string>
+    <string name="camera">Appareil photo</string>
+    <string name="mark_as_watered">Marquer comme arrosée</string>
+    <string name="last_watered_today">Dernière fois arrosée aujourd\'hui</string>
+    <string name="last_watered_yesterday">Dernière fois arrosée hier</string>
+    <string name="last_watered">Dernière fois arrosée il y a %1$d jours</string>
+    <string name="never_watered">Plante ajoutée, arrosez-la!</string>
+    <string name="add_image">Ajouter une image</string>
+    <string name="logo_desc">Logo de BloomBotanica</string>
+    <string name="plant_name">Plant Name</string>
+    <string name="CardImage">Card Image</string>
+    <string-array name="languages_array">
+        <item>Anglais</item>
+        <item>Espagnol</item>
+        <item>Français</item>
+        <item>Allemand</item>
+        <item>Italien</item>
+    </string-array>
+</resources>
