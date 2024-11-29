@@ -2,18 +2,12 @@ package com.example.bloombotanica.ui;
 
 import android.annotation.SuppressLint;
 import android.content.ClipData;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.LayoutInflater;
@@ -21,9 +15,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.os.Vibrator;
-import android.content.Context;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bloombotanica.dialogs.AddPlantDialogFragment;
 import com.example.bloombotanica.adapters.PlantAdapter;
@@ -40,12 +37,6 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-// TODO: When database is implemented, add progress bars for plants with pending tasks
-// and update the RecyclerView to prioritize plants with tasks at the top.
-// - Use a field like `isTaskPending` in the database to track pending tasks.
-// - Show a progress bar in each plant's card if tasks are pending.
-// - Query the database to order plants by task completion status.
-
 public class PlantsFragment extends Fragment implements PlantAdapter.OnPlantLongClickListener, DeletePlantDialog.DeletePlantListener, AddPlantDialogFragment.OnPlantAddedListener {
 
     private UserPlantDatabase userPlantDatabase;
@@ -57,52 +48,54 @@ public class PlantsFragment extends Fragment implements PlantAdapter.OnPlantLong
     private BottomNavigationView bottomNavigationView;
     private TextView dateText;
 
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_plants, container, false);
 
-        //initialize user plant database
+        // Initialize user plant database
         userPlantDatabase = UserPlantDatabase.getInstance(requireContext());
 
-        //Set Date
-        dateText = view.findViewById(R.id.date_text);
-        setDate();
-
-        //set up trash bin view
+        // Set up trash bin view
         trashBin = view.findViewById(R.id.trash_bin);
         trashBin.setVisibility(View.GONE);
 
-        //find dim overlay
+        // Find dim overlay
         dimOverlay = requireActivity().findViewById(R.id.dim_overlay);
 
+        // Set up Bottom Navigation View
         bottomNavigationView = requireActivity().findViewById(R.id.bottomNavigationView);
 
-        // Set up RecyclerView
+// Set up RecyclerView with horizontal scroll
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
-        recyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 2));
-        plantAdapter = new PlantAdapter(userPlantList, this);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false);
+        recyclerView.setLayoutManager(layoutManager);
+
+// Pass the OnItemClickListener directly when initializing the adapter
+        plantAdapter = new PlantAdapter(userPlantList, this, new PlantAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                UserPlant selectedPlant = userPlantList.get(position);
+                Intent intent = new Intent(getContext(), UserPlantProfileActivity.class);
+                intent.putExtra("userPlantId", selectedPlant.getId());
+                startActivity(intent);
+            }
+        });
+
         recyclerView.setAdapter(plantAdapter);
+
+
 
         loadUserPlants();
 
-        // Set up FloatingActionButton
+        // Set up Floating Action Button
         addPlantFab = view.findViewById(R.id.addPlantFab);
         addPlantFab.setOnClickListener(v -> {
-           showAddPlantDialog();
-        });
-
-        plantAdapter.setOnItemClickListener((position) -> {
-            UserPlant selectedPlant = userPlantList.get(position);
-            Intent intent = new Intent(getContext(), UserPlantProfileActivity.class);
-            intent.putExtra("userPlantId", selectedPlant.getId());
-            startActivity(intent);
+            showAddPlantDialog();
         });
 
         return view;
     }
-
 
     @SuppressLint("NotifyDataSetChanged")
     void loadUserPlants() {
@@ -126,27 +119,24 @@ public class PlantsFragment extends Fragment implements PlantAdapter.OnPlantLong
         Log.d("PlantsFragment", "showAddPlantDialog called");
     }
 
-
     public void addPlant(UserPlant newPlant) {
         userPlantList.add(newPlant);
         plantAdapter.notifyItemInserted(userPlantList.size() - 1);
         Log.d("PlantsFragment", "addPlant called");
     }
 
-
     @Override
     public void onPlantLongClick(View view, int position) {
-
         showTrashBin();
         showDimOverlay();
         hideBnv();
 
-        //start drag and drop
+        // Start drag-and-drop operation
         ClipData data = ClipData.newPlainText("", "");
         View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
         view.startDragAndDrop(data, shadowBuilder, view, 0);
 
-        //handle drop on trash bin
+        // Handle drop on trash bin
         trashBin.setOnDragListener((v, event) -> {
             if (event.getAction() == DragEvent.ACTION_DROP) {
                 showDeleteConfirmationDialog(position);
@@ -154,15 +144,14 @@ public class PlantsFragment extends Fragment implements PlantAdapter.OnPlantLong
             } else if (event.getAction() == DragEvent.ACTION_DRAG_ENDED) {
                 hideTrashBin();
                 hideDimOverlay();
-                showBnv(); //hide bottom nav view
+                showBnv(); // Show bottom navigation view after drag operation ends
 
-            } if (event.getAction() == DragEvent.ACTION_DRAG_ENTERED) {
+            } else if (event.getAction() == DragEvent.ACTION_DRAG_ENTERED) {
                 trashBinHoverOn();
                 vibrateTrashBin();
 
             } else if (event.getAction() == DragEvent.ACTION_DRAG_EXITED) {
                 trashBinHoverOff();
-
             }
             return true;
         });
@@ -202,7 +191,6 @@ public class PlantsFragment extends Fragment implements PlantAdapter.OnPlantLong
         bottomNavigationView.setVisibility(View.INVISIBLE);
     }
 
-
     private void showDimOverlay() {
         dimOverlay.setVisibility(View.VISIBLE);
     }
@@ -212,13 +200,14 @@ public class PlantsFragment extends Fragment implements PlantAdapter.OnPlantLong
     }
 
     private void showTrashBin() {
-        //animate trashbin entrance
+        // Animate trash bin entrance
         trashBin.setVisibility(View.VISIBLE);
         trashBin.setAlpha(0f);
         trashBin.animate().alpha(1f).setDuration(300).start();
     }
+
     private void hideTrashBin() {
-        //animate trashbin exit
+        // Animate trash bin exit
         trashBin.setAlpha(1f);
         trashBin.animate().alpha(0f).setDuration(300).withEndAction(() -> {
             trashBin.setVisibility(View.GONE);
@@ -251,12 +240,9 @@ public class PlantsFragment extends Fragment implements PlantAdapter.OnPlantLong
         Log.d("PlantsFragment", "onPlantAdded: New plant added to RecyclerView");
     }
 
-
     @Override
     public void onResume() {
         super.onResume();
         loadUserPlants(); // Reload the list from the database to reflect any changes
     }
-
-
 }

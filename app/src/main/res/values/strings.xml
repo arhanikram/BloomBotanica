@@ -37,6 +37,8 @@
     <string name="never_watered">Plant added, water it!</string>
     <string name="add_image">Add Image</string>
     <string name="logo_desc">BloomBotanica Logo</string>
+    <string name="plant_name">Plant Name</string>
+    <string name="CardImage">Card Image</string>
     <string-array name="languages_array">
         <item>English</item>
         <item>Spanish</item>
@@ -44,5 +46,6 @@
         <item>German</item>
         <item>Italian</item>
     </string-array>
+
 
 </resources>
