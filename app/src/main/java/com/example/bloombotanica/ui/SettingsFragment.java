@@ -1,5 +1,7 @@
 package com.example.bloombotanica.ui;
 
+import static android.app.ProgressDialog.show;
+
 import android.app.ListActivity;
 import android.os.Bundle;
 
@@ -13,6 +15,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -77,6 +80,14 @@ public class SettingsFragment extends Fragment {
                 android.R.layout.simple_list_item_1, settings);
         ListView lv = (ListView) rootView.findViewById(R.id.list);
         lv.setAdapter(adapter);
+
+        AdapterView.OnItemClickListener itemListener = new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                Log.i("SETTINGS", "click");
+            }
+        };
+        lv.setOnItemClickListener(itemListener);
         return rootView;
     }
 
