@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    tools:context=".ui.PredictionActivity">
+
+    <!-- Image View to display the selected image -->
+    <ImageView
+        android:id="@+id/ml_captured_img"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:contentDescription="Captured Image"
+        android:scaleType="centerCrop"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintHeight_percent="0.4" />
+
+    <!-- TextView to display the prediction result -->
+    <TextView
+        android:id="@+id/ml_result_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Prediction Result"
+        android:textSize="18sp"
+        android:textColor="#000000"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/ml_captured_img"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:gravity="center"
+        android:textAlignment="center" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

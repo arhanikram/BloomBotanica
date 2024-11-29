@@ -54,4 +54,5 @@ dependencies {
     annotationProcessor libs.compiler
 
     implementation libs.photoview.v200
+    implementation 'com.microsoft.onnxruntime:onnxruntime-android:1.16.0-rc1'
 }
