@@ -1,7 +1,7 @@
 <!-- res/drawable/rectangular_border.xml -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
     <stroke
-        android:color="#303A2B"
+        android:color="#D3D3D3"
         android:width="2dp" />
     <corners android:radius="32dp" />  <!-- Optional: rounded corners for the border -->
 </shape>
