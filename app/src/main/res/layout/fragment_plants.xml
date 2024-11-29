@@ -37,10 +37,8 @@
             android:minHeight="48dp"
             android:focusable="true"
             android:background="@drawable/rounded_border"
-            android:paddingStart="13dp"
-            android:paddingTop="12dp"
-            android:paddingBottom="12dp"
-            android:drawableLeft="@drawable/ic_search"
+            android:padding="12dp"
+            android:drawableStart="@drawable/ic_search"
             android:drawablePadding="12dp"
             android:focusableInTouchMode="true"
             app:layout_constraintTop_toBottomOf="@id/nameLabel"
@@ -48,26 +46,27 @@
             app:layout_constraintEnd_toEndOf="parent"
         />
 
-
         <!-- RecyclerView for Image Cards (Horizontal Scroll) -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="128dp"
-            android:scrollbars="none"
-            android:focusable="false"
+            android:layout_marginTop="64dp"
             android:clipToPadding="false"
-            android:orientation="horizontal" />
+            android:focusable="false"
+            android:orientation="horizontal"
+            android:scrollbars="none" />
 
     </LinearLayout>
 
     <!-- Trash Bin ImageView (hidden by default) -->
     <ImageView
         android:id="@+id/trash_bin"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
         android:layout_gravity="center|bottom"
+        android:layout_marginBottom="32dp"
+        android:contentDescription="@string/delete_plant"
         android:src="@drawable/trash_full_svgrepo_com"
         android:visibility="gone" />
 
@@ -78,7 +77,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="48dp"
         android:contentDescription="@string/add_plant"
         android:src="@drawable/image_plus_svgrepo_com"
         android:backgroundTint="#4CAF50" />
