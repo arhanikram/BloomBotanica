@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -36,6 +37,8 @@ import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -191,17 +194,16 @@ public class LogDetailActivity extends AppCompatActivity {
                 // Permission granted, proceed with opening the gallery
                 openGallery();
             }
-        } else if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
-            // For Android 10-12 (API level 29-32), request READ_EXTERNAL_STORAGE
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_PERMISSION_REQUEST_CODE);
+        }  else {
+            // For Android 12 and below
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                        STORAGE_PERMISSION_REQUEST_CODE);
             } else {
-                // Permission granted, proceed with opening the gallery
                 openGallery();
             }
-        } else {
-            // For Android 9 and below, legacy permissions should work fine
-            openGallery();
         }
     }
 
@@ -240,6 +242,9 @@ public class LogDetailActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Log.d("LogDetailActivity", "onActivityResult called");
+        Log.d("LogDetailActivity", "Request Code: " + requestCode);
+        Log.d("LogDetailActivity", "Result Code: " + resultCode);
+        Log.d("LogDetailActivity", "Data is null: " + (data == null));
 
         if (imagePaths == null) {
             imagePaths = new ArrayList<>();
@@ -248,7 +253,6 @@ public class LogDetailActivity extends AppCompatActivity {
         if (resultCode == RESULT_OK && data != null) {
             if (requestCode == IMAGE_PICKER_REQUEST) {
                 Log.d("LogDetailActivity", "Image selected from gallery");
-                // Image selected from gallery
                 Uri selectedImageUri = data.getData();
                 String imagePath = getImagePathFromUri(selectedImageUri);
                 imagePaths.add(imagePath);
@@ -264,24 +268,78 @@ public class LogDetailActivity extends AppCompatActivity {
                     ((ImageAdapter) imagesRecyclerView.getAdapter()).updateImagePaths(imagePaths);
 
                 }
+            } else {
+                Log.d("LogDetailActivity", "Unknown request code: " + requestCode);
             }
+        } else {
+            Log.d("LogDetailActivity", "Result not OK or data is null");
         }
     }
 
     private String getImagePathFromUri(Uri uri) {
-        Log.d("LogDetailActivity", "Getting image path from URI");
-        String[] projection = {MediaStore.Images.Media.DATA};
-        try (Cursor cursor = getContentResolver().query(uri, projection, null, null, null)) {
-            if (cursor != null && cursor.moveToFirst()) {
-                Log.d("LogDetailActivity", "Image path found");
-                int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-                return cursor.getString(columnIndex);
-            }
-        } catch (Exception e) {
-            Log.e("LogDetailActivity", "Error getting image path", e);
-            e.printStackTrace();
+        Log.d("LogDetailActivity", "getImagePathFromUri called");
+
+        if (uri == null) {
+            Log.e("LogDetailActivity", "URI is null");
+            return null;
         }
-        return null;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            try {
+                // Use ContentResolver to get a file path that can be used
+                String[] projection = {MediaStore.Images.Media.DATA};
+                try (Cursor cursor = getContentResolver().query(uri, projection, null, null, null)) {
+                    if (cursor != null && cursor.moveToFirst()) {
+                        int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                        return cursor.getString(columnIndex);
+                    }
+                }
+
+                // Alternative: Copy file to app's internal storage if direct path fails
+                return copyImageToInternalStorage(uri);
+            } catch (Exception e) {
+                Log.e("LogDetailActivity", "Error getting image path", e);
+                return null;
+            }
+        } else {
+            // Existing method for older Android versions
+            String[] projection = {MediaStore.Images.Media.DATA};
+            try (Cursor cursor = getContentResolver().query(uri, projection, null, null, null)) {
+                if (cursor != null && cursor.moveToFirst()) {
+                    int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                    return cursor.getString(columnIndex);
+                }
+            } catch (Exception e) {
+                Log.e("LogDetailActivity", "Error getting image path", e);
+            }
+            return null;
+        }
+    }
+
+    private String copyImageToInternalStorage(Uri uri) {
+        try {
+            // Generate a unique filename
+            String filename = "log_image_" + System.currentTimeMillis() + ".png";
+
+            // Open input and output streams
+            try (
+                    InputStream inputStream = getContentResolver().openInputStream(uri);
+                    FileOutputStream outputStream = openFileOutput(filename, MODE_PRIVATE)
+            ) {
+                // Copy the image
+                byte[] buffer = new byte[1024];
+                int bytesRead;
+                while ((bytesRead = inputStream.read(buffer)) != -1) {
+                    outputStream.write(buffer, 0, bytesRead);
+                }
+
+                // Return the path of the copied file
+                return new File(getFilesDir(), filename).getAbsolutePath();
+            }
+        } catch (IOException e) {
+            Log.e("LogDetailActivity", "Error copying image", e);
+            return null;
+        }
     }
 
     private String saveImageToInternalStorage(Bitmap bitmap) {
@@ -298,7 +356,6 @@ public class LogDetailActivity extends AppCompatActivity {
             return null;
         }
     }
-
 
     //annoying permissions stuff
 
@@ -328,8 +385,5 @@ public class LogDetailActivity extends AppCompatActivity {
             }
         }
     }
-
-
-
 
 }

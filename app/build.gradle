@@ -53,4 +53,5 @@ dependencies {
     annotationProcessor libs.compiler
 
     implementation 'com.github.chrisbanes:PhotoView:2.0.0'
+    implementation 'com.microsoft.onnxruntime:onnxruntime-android:1.16.0-rc1'
 }
