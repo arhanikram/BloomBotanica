@@ -5,6 +5,7 @@ import static android.app.ProgressDialog.show;
 import android.app.ListActivity;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -18,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 
 import com.example.bloombotanica.R;
 
@@ -84,7 +86,33 @@ public class SettingsFragment extends Fragment {
         AdapterView.OnItemClickListener itemListener = new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                Log.i("SETTINGS", "click");
+                switch(position) {
+                    case 0:
+                        Log.i("SETTINGS", "theme");
+                        PopupMenu popup = new PopupMenu (getContext(), view);
+                        popup.getMenuInflater().inflate(R.menu.theme_menu, popup.getMenu());
+                        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+
+                             @Override
+                             public boolean onMenuItemClick(MenuItem menuItem) {
+                                 if(menuItem.getItemId()==R.id.light_mode) {
+                                     Log.i("SETTINGS", "light theme");
+                                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                                 }
+                                 else {
+                                     Log.i("SETTINGS", "dark theme");
+                                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                                 }
+                                 return true;
+                             }
+                         });
+                        popup.show();
+
+                        break;
+                    case 1:
+                        Log.i("SETTINGS", "log history");
+                        break;
+                }
             }
         };
         lv.setOnItemClickListener(itemListener);
