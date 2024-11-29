@@ -26,6 +26,29 @@
             android:textStyle="bold"
             android:layout_marginTop="64dp" />
 
+        <!-- First Name Field -->
+        <EditText
+            android:id="@+id/plantSearchfield"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:hint="@string/plantSearch"
+            android:inputType="textPersonName"
+            android:minHeight="48dp"
+            android:focusable="true"
+            android:background="@drawable/rounded_border"
+            android:paddingStart="13dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:drawableLeft="@drawable/ic_search"
+            android:drawablePadding="12dp"
+            android:focusableInTouchMode="true"
+            app:layout_constraintTop_toBottomOf="@id/nameLabel"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+        />
+
+
         <!-- RecyclerView for Image Cards (Horizontal Scroll) -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view"
