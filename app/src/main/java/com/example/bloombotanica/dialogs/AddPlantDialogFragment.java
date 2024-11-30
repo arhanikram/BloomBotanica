@@ -200,7 +200,7 @@ public class AddPlantDialogFragment extends DialogFragment implements PlantSugge
             Log.d("AddPlantDialogFragment", "Next watering date: " + calendar.getTime());
             Log.d("AddPlantDialogFragment", "Date added: " + today);
 
-            UserPlant newPlant = new UserPlant(plant.getId(), plantNickname, today, null, false);
+            UserPlant newPlant = new UserPlant(plant.getId(), plantNickname, today, null, false, 0);
             newPlant.setNextWateringDate(calendar.getTime());
             Log.d("AddPlantDialogFragment", "New plant created");
 

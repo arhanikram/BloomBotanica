@@ -1,38 +1,37 @@
 package com.example.bloombotanica.ui;
 
 import static android.content.Context.MODE_PRIVATE;
-
 import static com.example.bloombotanica.utils.DateUtils.getStartAndEndOfDay;
 
 import android.Manifest;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
+import android.os.Handler;
 import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.bloombotanica.R;
+import com.example.bloombotanica.adapters.PlantGalleryAdapter;
 import com.example.bloombotanica.adapters.TaskAdapter;
 import com.example.bloombotanica.database.PlantCareDatabase;
 import com.example.bloombotanica.database.TaskDao;
 import com.example.bloombotanica.database.UserPlantDao;
 import com.example.bloombotanica.database.UserPlantDatabase;
-import com.example.bloombotanica.models.PlantCare;
 import com.example.bloombotanica.models.Task;
 import com.example.bloombotanica.models.UserPlant;
 import com.example.bloombotanica.utils.TaskUtils;
-import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 
@@ -45,7 +44,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -58,16 +56,25 @@ public class DashboardFragment extends Fragment {
     private String welcomeText;
     private UserPlantDatabase userpdb;
     private FusedLocationProviderClient fusedLocationClient;
+    private ViewPager2 viewPager;  // Use ViewPager2 instead of ImageView
+    private List<String> plantImages; // List to hold image names (e.g., "a1", "a2", ...)
+    private Handler handler = new Handler();  // Handler for auto-scrolling
+    private Runnable autoScrollRunnable; // Runnable to handle the scrolling task
+    private List<UserPlant> userPlants = new ArrayList<>();  // Initialize as an empty list
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_dashboard, container, false);
+
+        // Get username from SharedPreferences
         SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("UserPrefs", MODE_PRIVATE);
         String userName = sharedPreferences.getString("username", "");
 
-        assert container != null;
+        // Initialize UI components
         welcomeMessage = view.findViewById(R.id.welcomeMessage);
         taskCount = view.findViewById(R.id.taskCount);
         tasksRecyclerView = view.findViewById(R.id.tasksRecyclerView);
@@ -75,14 +82,19 @@ public class DashboardFragment extends Fragment {
         temperature = view.findViewById(R.id.temperature);
         humidity = view.findViewById(R.id.humidity);
         sunlight = view.findViewById(R.id.sunlight);
+        viewPager = view.findViewById(R.id.plantGalleryPager);
 
+        // Initialize database and location services
         userpdb = UserPlantDatabase.getInstance(requireActivity().getApplicationContext());
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity());
 
+        // Set the welcome message
         welcomeText = getString(R.string.welcome_username, userName);
         welcomeMessage.setText(welcomeText);
 
+        // Initialize the RecyclerView
         tasksRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        taskAdapter = new TaskAdapter(new ArrayList<>(), this::markTaskAsCompleted, userpdb.userPlantDao());
         tasksRecyclerView.setAdapter(taskAdapter);
 
         return view;
@@ -91,15 +103,63 @@ public class DashboardFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        loadTasks();
-        fetchUserLocation(); // Fetch weather data on resume
+        loadTasks(); // Load tasks
+        fetchUserLocation(); // Fetch weather data based on location
+        loadUserPlants();   // Load user plants for image scrolling
+    }
+    private void loadUserPlants() {
         new Thread(() -> {
-            List<UserPlant> allPlants = userpdb.userPlantDao().getAllUserPlants();
-            for (UserPlant plant : allPlants) {
-                Log.d("ALLPLANTS", "Plant ID: " + plant.getId() + ", Nickname: " + plant.getNickname());
+            UserPlantDao userPlantDao = userpdb.userPlantDao();
+            userPlants = userPlantDao.getAllUserPlants();
+            List<Integer> plantImageIds = new ArrayList<>();  // Make sure we use this list
+
+            // Fetch image resource IDs from plant IDs
+            for (UserPlant userPlant : userPlants) {
+                String imageName = "a" + userPlant.getId();  // Construct the image name dynamically
+                int imageResId = getResources().getIdentifier(imageName, "drawable", getContext().getPackageName());
+                Log.d("Image Debug", "Stored Image Path: " + userPlant.getImagePath());
+                Log.d("Image Debug", "Stored Image Resource: " + userPlant.getImageResource());
+
+                Log.d("DashboardFragment", "Plant ID: " + userPlant.getId() + ", Image Name: " + imageName + ", Image Res ID: " + imageResId);
+
+                if (imageResId != 0) {
+                    plantImageIds.add(imageResId);  // Add valid image resource ID
+                } else {
+                    Log.d("DashboardFragment", "Image not found for plant ID: " + userPlant.getId());
+                    plantImageIds.add(R.drawable.default_plant_image);  // Use a default image if resource not found
+                }
             }
+
+            // Update the adapter on the main thread
+            requireActivity().runOnUiThread(() -> {
+                PlantGalleryAdapter plantGalleryAdapter = new PlantGalleryAdapter(getContext(), plantImageIds);
+                viewPager.setAdapter(plantGalleryAdapter);
+                startAutoScrolling(plantImageIds);  // Pass the correct list here
+            });
         }).start();
     }
+
+
+
+
+
+    private void startAutoScrolling(List<Integer> plantImageIds) {
+        if (plantImageIds == null || plantImageIds.isEmpty()) return;
+
+        // Set up the auto-scrolling logic
+        handler.postDelayed(autoScrollRunnable = new Runnable() {
+            @Override
+            public void run() {
+                int currentItem = viewPager.getCurrentItem();
+                int nextItem = (currentItem + 1) % plantImageIds.size();
+                viewPager.setCurrentItem(nextItem, true); // Smooth scrolling
+                handler.postDelayed(this, 9000); // Repeat every 2 seconds
+            }
+        }, 5000); // Start after 2 seconds
+    }
+
+
+
 
     private void fetchUserLocation() {
         if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -138,8 +198,7 @@ public class DashboardFragment extends Fragment {
                 }
                 reader.close();
 
-                //handling if user quickly leaves dashboard after trying to fetch weather data
-                if(isAdded()) {
+                if (isAdded()) {
                     parseWeatherData(response.toString());
                     Log.d("DashboardFragment", "Weather data fetched successfully");
                 } else {
@@ -147,11 +206,6 @@ public class DashboardFragment extends Fragment {
                 }
             } catch (Exception e) {
                 Log.e("DashboardFragment", "Error fetching weather data", e);
-//                requireActivity().runOnUiThread(() ->
-//                        Toast.makeText(getContext(), "Failed to fetch weather data", Toast.LENGTH_SHORT).show());
-                //this was causing an error when you open the app and instantly open another fragment before it processes weather data,
-                //it would crash due to the ui update with requireactivity so i just commented it out
-                //if it crashes it will show in logcat we dont really need a toast
             }
         }).start();
     }
@@ -164,8 +218,8 @@ public class DashboardFragment extends Fragment {
             String hum = main.getString("humidity");
             String weatherCondition = jsonObject.getJSONArray("weather").getJSONObject(0).getString("description");
 
-            // Sunlight percentage placeholder (can use additional logic if available)
-            String sunlightValue = "72%";
+            // Sunlight percentage placeholder
+            String sunlightValue = "72%"; // Placeholder for now
 
             requireActivity().runOnUiThread(() -> updateWeatherUI(temp, hum, sunlightValue, weatherCondition));
         } catch (JSONException e) {
@@ -185,35 +239,19 @@ public class DashboardFragment extends Fragment {
 
     private void loadTasks() {
         new Thread(() -> {
-            TaskDao taskDao = UserPlantDatabase.getInstance(getContext()).taskDao();
-            UserPlantDao userPlantDao = UserPlantDatabase.getInstance(getContext()).userPlantDao();
+            TaskDao taskDao = userpdb.taskDao();
+            UserPlantDao userPlantDao = userpdb.userPlantDao();
             Pair<Date, Date> dayRange = getStartAndEndOfDay(new Date());
 
-            //for testing purposes, show all pending tasks instead of only tasks for today
-//             List<Task> todayTasks = taskDao.getIncompleteTasks(); //TESTING
-             //to show only tasks for today, uncomment the following line and comment the line above
-            List<Task> todayTasks = taskDao.getTasksForDate(dayRange.first, dayRange.second); //FINAL implementation
+            List<Task> todayTasks = taskDao.getTasksForDate(dayRange.first, dayRange.second);
             List<Task> overdueTasks = taskDao.getOverdueTasks(new Date());
 
-            // Combine today's tasks and overdue tasks
             List<Task> combinedTasks = new ArrayList<>();
             if (overdueTasks != null) combinedTasks.addAll(overdueTasks);
             if (todayTasks != null) combinedTasks.addAll(todayTasks);
 
             taskDao.removeTasksForDeletedPlants();
 
-            //log all tasks
-            for (Task task : combinedTasks) {
-                Log.d("DashboardFragment", "All tasks: " + task.toString());
-            }
-
-            if (todayTasks == null) {
-                todayTasks = new ArrayList<>();
-            }
-
-            List<Task> finalTodayTasks = todayTasks;
-
-            // Sort tasks: overdue first, then by due date
             combinedTasks.sort((task1, task2) -> {
                 if (task1.isOverdue() && !task2.isOverdue()) {
                     return -1;
@@ -223,7 +261,6 @@ public class DashboardFragment extends Fragment {
                     return task1.getDueDate().compareTo(task2.getDueDate());
                 }
             });
-
 
             if (isAdded()) {
                 requireActivity().runOnUiThread(() -> {
@@ -241,14 +278,13 @@ public class DashboardFragment extends Fragment {
             }
         }).start();
     }
-
     private void markTaskAsCompleted(Task task) {
-        TaskDao taskDao = UserPlantDatabase.getInstance(getContext()).taskDao();
-        UserPlantDao userPlantDao = UserPlantDatabase.getInstance(getContext()).userPlantDao();
+        TaskDao taskDao = userpdb.taskDao();
+        UserPlantDao userPlantDao = userpdb.userPlantDao();
         PlantCareDatabase plantCareDatabase = PlantCareDatabase.getInstance(getContext());
 
         TaskUtils.renewTask(task, taskDao, userPlantDao, plantCareDatabase, () -> {
-            loadTasks();
+            loadTasks(); // Reload tasks after task completion
         });
     }
 }
