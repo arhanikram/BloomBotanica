@@ -178,7 +178,7 @@ public class DashboardFragment extends Fragment {
         String currentDate = dateFormat.format(new Date());
 
         weatherDate.setText(currentDate);
-        temperature.setText(String.format("+%s°C", temp));
+        temperature.setText(String.format("%s°C", temp));
         humidity.setText(String.format("%s%%", hum));
         sunlight.setText(sunlightValue);
     }
