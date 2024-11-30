@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -61,7 +62,8 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
     private static final int REQUEST_IMAGE_PICK = 1;
     private static final int REQUEST_IMAGE_CAPTURE = 2;
     private ProgressBar circularProgress;
-    private ImageButton waterButton, journalButton;
+    private ImageButton waterButton;
+    private Button journalButton;
     private TaskDao taskDao;
     private Task task;
 
