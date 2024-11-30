@@ -38,7 +38,7 @@
                 android:text="Task type"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                android:textColor="@color/black" />
+                android:textColor="?attr/colorOnPrimary"/>
 
             <!-- Plant Name -->
             <TextView
