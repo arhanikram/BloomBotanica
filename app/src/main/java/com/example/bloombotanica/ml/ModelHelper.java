@@ -12,6 +12,8 @@ import java.io.InputStream;
 import java.nio.FloatBuffer;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Locale;
 
 public class ModelHelper {
 
@@ -32,6 +34,8 @@ public class ModelHelper {
             "Rubber Plant (Ficus elastica)", "Sago Palm (Cycas revoluta)", "Schefflera", "Snake plant (Sansevieria)",
             "Tradescantia", "Tulip", "Venus Flytrap", "Yucca", "ZZ Plant (Zamioculcas zamiifolia)"
     };
+
+    private static final HashMap<Integer, String> CLASS_LABELS_MAP = new HashMap<>();
 
     private OrtEnvironment env;
     private OrtSession session;
@@ -60,7 +64,7 @@ public class ModelHelper {
         }
     }
 
-    public String runModel(Bitmap bitmap) {
+    public PredictionResult runModel(Bitmap bitmap) {
         Log.d("ModelHelper", "Running ONNX model...");
         try {
             // Step 1: Preprocess the image
@@ -99,13 +103,13 @@ public class ModelHelper {
                     } else {
                         Log.e("ModelHelper", "Unexpected output type: " +
                                 (resultValue != null ? resultValue.getClass().getName() : "null"));
-                        return "Unexpected output format";
+                        return new PredictionResult(-1, 0);
                     }
                 }
             }
         } catch (Exception e) {
             Log.e("ModelHelper", "Comprehensive error in model inference", e);
-            return "Error in inference: " + e.getMessage();
+            return new PredictionResult(-1, 0);
         }
     }
 
@@ -156,7 +160,7 @@ public class ModelHelper {
         for (int c = 0; c < 3; c++) {
             StringBuilder channelLog = new StringBuilder("Channel " + c + ": ");
             for (int i = 0; i < 10; i++) {
-                channelLog.append(String.format("%.4f ", floatArray[c * inputSize * inputSize + i]));
+                channelLog.append(String.format(Locale.US, "%.4f ", floatArray[c * inputSize * inputSize + i]));
             }
             Log.d("ModelHelper", channelLog.toString());
         }
@@ -177,7 +181,7 @@ public class ModelHelper {
     }
 
     // Process the output and get the predicted class
-    private String processOutput(float[] output) {
+    private PredictionResult processOutput(float[] output) {
         float[] probabilities = applySoftmax(output);
         int maxIndex = 0;
         float maxConfidence = probabilities[0];
@@ -188,7 +192,10 @@ public class ModelHelper {
             }
         }
         String predictedClass = CLASS_LABELS[maxIndex];
-        return "Predicted Plant: " + predictedClass + " (Confidence: " + maxConfidence + ")";
+        float confidencePercentage = maxConfidence;
+//        return "Predicted Plant: " + predictedClass + "\nConfidence: " + String.format(Locale.US, "%.2f", confidencePercentage) + "%";
+        Log.d("ModelHelper!!!", CLASS_LABELS[maxIndex]);
+        return new PredictionResult(maxIndex + 1, confidencePercentage);
     }
 
     // Release resources when done

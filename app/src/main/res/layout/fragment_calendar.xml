@@ -17,6 +17,7 @@
         app:mcv_selectionColor="@color/purple_200"
         app:mcv_weekDayTextAppearance="@style/TextAppearance.MaterialComponents.Headline6"
         app:mcv_dateTextAppearance="@style/TextAppearance.MaterialComponents.Body1"
+        app:mcv_arrowColor="?attr/colorOnPrimary"
         />
 
     <!-- Divider -->
@@ -33,7 +34,7 @@
         android:text="@string/empty_task_calendar"
         android:gravity="center"
         android:visibility="gone"
-        android:textColor="@color/black"
+        android:textColor="?attr/colorOnPrimary"
         android:textSize="16sp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="4dp" />

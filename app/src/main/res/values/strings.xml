@@ -40,6 +40,10 @@
     <string name="plant_name">Plant Name</string>
     <string name="CardImage">Card Image</string>
     <string name="plantSearch">Search Plants</string>
+    <string name="add_question">Would you like to add this plant?</string>
+    <string name="captured_image">Captured Image</string>
+    <string name="care_instructions">Care Instructions</string>
+    <string name="model_confidence">Model Confidence</string>
     <string-array name="languages_array">
         <item>English</item>
         <item>Spanish</item>

@@ -4,30 +4,54 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.bloombotanica.R;
+import com.example.bloombotanica.database.PlantCareDao;
+import com.example.bloombotanica.database.PlantCareDatabase;
+import com.example.bloombotanica.dialogs.AddPlantDialogFragment;
+import com.example.bloombotanica.dialogs.AddPlantNicknameDialog;
 import com.example.bloombotanica.ml.ModelHelper;
+import com.example.bloombotanica.ml.PredictionResult;
+import com.example.bloombotanica.models.PlantCare;
+import com.example.bloombotanica.models.UserPlant;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Locale;
 
 public class PredictionActivity extends AppCompatActivity {
 
-    private TextView predictionResultTextView;
+    private TextView predictionResultTextView, confidencePercentage, wateringInstruction, sunlightInstruction, soilInstruction;
     private ImageView imageView;
+    private PlantCareDao plantCareDao;
+    private PlantCare plantCare;
+    private PlantCareDatabase plantCaredb;
+    private int confidence;
+    private String commonName, watering, sunlight, soil;
+    private ProgressBar progressBar;
+    private Button addPlantButton;
+    private PredictionResult result;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_prediction);
 
-        predictionResultTextView = findViewById(R.id.ml_result_text);
+        predictionResultTextView = findViewById(R.id.ml_common_name_text);
         imageView = findViewById(R.id.ml_captured_img);
+        progressBar = findViewById(R.id.confidence_progress_bar);
+        confidencePercentage = findViewById(R.id.confidence_percentage);
+        wateringInstruction = findViewById(R.id.watering_instruction);
+        sunlightInstruction = findViewById(R.id.sunlight_instruction);
+        soilInstruction = findViewById(R.id.soil_instruction);
+        addPlantButton = findViewById(R.id.add_plant);
 
         String imagePath = getIntent().getStringExtra("imagePath");
 
@@ -48,8 +72,25 @@ public class PredictionActivity extends AppCompatActivity {
         } else {
             Log.d("PredictionActivity", "Image path is null");
         }
-
     }
+
+//    @Override
+//    public void onPlantAdded(UserPlant newPlant) {
+//        // Create a new PlantsFragment
+//        PlantsFragment plantsFragment = new PlantsFragment();
+//
+//        // Optionally pass the newly added plant's ID
+//        Bundle args = new Bundle();
+//        args.putInt("userPlantId", newPlant.getId());
+//        plantsFragment.setArguments(args);
+//
+//        // Replace the current fragment with PlantsFragment
+//        getSupportFragmentManager().beginTransaction()
+//                .replace(R.id.fragment_container, plantsFragment)
+//                .addToBackStack(null)
+//                .commit();
+//    }
+
 
     private Bitmap loadImageFromFile(String imagePath) {
         try{
@@ -76,9 +117,52 @@ public class PredictionActivity extends AppCompatActivity {
     private void runModel(Bitmap bitmap) {
         // Assuming you have a ModelHelper class to handle the ONNX model logic
         ModelHelper modelHelper = new ModelHelper(getApplicationContext());
-        String result = modelHelper.runModel(bitmap);  // Run the model and get the result
+        result = modelHelper.runModel(bitmap);  // Run the model and get the result
+        Log.d("PredictionActivity", "Model result: " + result);
+        // Use a background thread to query the database
+        new Thread(() -> {
+            plantCaredb = PlantCareDatabase.getInstance(this);
+            plantCare = plantCaredb.plantCareDao().getPlantCareById(result.getPredictedClassIndex());
 
-        // Display the prediction result
-        predictionResultTextView.setText(result);
+            // Check if plantCare is null to prevent NullPointerException
+            if (plantCare != null) {
+                commonName = plantCare.getCommonName();
+                watering = "Water every " + plantCare.getWateringFrequency() + " days";
+                sunlight = plantCare.getSunlight() + "is preferred";
+                soil = "Use " + plantCare.getSoilType();
+                confidence = (int) (result.getConfidencePercentage() * 100);
+            } else {
+                commonName = "Unknown Plant"; // Fallback if no plant care data found
+                confidence = 0;
+            }
+
+            confidence = Math.max(0, Math.min(confidence, 100));
+
+            int finalConfidence = confidence;
+
+            // Update the UI on the main thread
+            runOnUiThread(() -> {
+                predictionResultTextView.setText(commonName);
+                wateringInstruction.setText(watering);
+                sunlightInstruction.setText(sunlight);
+                soilInstruction.setText(soil);
+                // Format confidence as percentage (0-100) and set progress
+                confidencePercentage.setText(String.format(Locale.getDefault(), "%d%%", finalConfidence));
+                progressBar.setProgress(finalConfidence);  // Confidence as an integer (scaled to 100)
+                //log progress bar progress
+                Log.d("PredictionActivity", "Progress Bar Confidence: " + finalConfidence);
+                //log plantcare id
+                addPlantButton.setOnClickListener(v -> {
+                    // Pass the PlantCare object to the dialog
+                    AddPlantNicknameDialog dialog = new AddPlantNicknameDialog();
+                    Bundle args = new Bundle();
+                    args.putSerializable("plantCare", plantCare);  // Pass the PlantCare object to the dialog
+                    dialog.setArguments(args); // Set the arguments for the dialog
+                    dialog.show(getSupportFragmentManager(), "AddPlantNicknameDialog");
+                });
+            });
+
+        }).start();
     }
+
 }

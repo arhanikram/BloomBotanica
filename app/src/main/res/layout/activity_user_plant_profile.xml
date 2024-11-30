@@ -4,6 +4,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/colorSurface"
     tools:context=".ui.UserPlantProfileActivity">
 
     <!-- Toolbar with centered text -->
@@ -35,7 +36,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="?android:attr/actionBarSize"
-        android:background="@android:color/transparent"
+        android:background="?attr/colorSurface"
         app:layout_constraintBottom_toTopOf="@id/journal_button"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
@@ -45,7 +46,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="16dp"
+        android:background="?attr/colorSurface">
 
         <!-- Plant Image -->
         <ImageView

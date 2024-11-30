@@ -4,36 +4,183 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
+    android:background="@android:color/white"
     tools:context=".ui.PredictionActivity">
 
-    <!-- Image View to display the selected image -->
-    <ImageView
-        android:id="@+id/ml_captured_img"
-        android:layout_width="0dp"
+    <!-- ScrollView to make the content scrollable -->
+    <ScrollView
+        android:id="@+id/scroll_view"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="16dp"
-        android:contentDescription="Captured Image"
-        android:scaleType="centerCrop"
+        android:background="@android:color/transparent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintHeight_percent="0.4" />
+        app:layout_constraintBottom_toBottomOf="parent">
 
-    <!-- TextView to display the prediction result -->
-    <TextView
-        android:id="@+id/ml_result_text"
-        android:layout_width="wrap_content"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
+
+            <!-- Header Text Above Image -->
+            <TextView
+                android:id="@+id/prediction_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:gravity="center"
+                android:text="We think it is..."
+                android:textColor="#000000"
+                android:textSize="24sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <!-- Image View to display the selected image -->
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/ml_captured_img"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_margin="16dp"
+                android:contentDescription="@string/captured_image"
+                android:scaleType="centerCrop"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/prediction_header"
+                app:shapeAppearanceOverlay="@style/RoundedCorner"/>
+
+
+            <!-- TextView to display the prediction result (Plant Name) -->
+            <TextView
+                android:id="@+id/ml_common_name_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:gravity="center"
+                android:text="Plant Name"
+                android:textAlignment="center"
+                android:textColor="#000000"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ml_captured_img"
+                tools:ignore="HardcodedText" />
+
+            <!-- Confidence Section -->
+            <TextView
+                android:id="@+id/confidence_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:gravity="start"
+                android:text="@string/model_confidence"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ml_common_name_text" />
+
+            <!-- Circular ProgressBar or Confidence Text -->
+            <RelativeLayout
+                android:id="@+id/confidence_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/confidence_label">
+
+                <!-- Circle Progress Bar (for confidence percentage) -->
+                <ProgressBar
+                    android:id="@+id/confidence_progress_bar"
+                    style="@android:style/Widget.ProgressBar.Horizontal"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:layout_centerInParent="true"
+                    android:indeterminate="false"
+                    android:max="100"
+                    android:progressDrawable="@drawable/circular_progress"
+                    android:progress="0" />
+
+                <!-- Confidence Percentage Text -->
+                <TextView
+                    android:id="@+id/confidence_percentage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="0%"
+                    android:textColor="#000000"
+                    android:textSize="20sp" />
+            </RelativeLayout>
+
+            <!-- Care Instructions Header -->
+            <TextView
+                android:id="@+id/care_instructions_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:gravity="start"
+                android:text="Tips to care for your plant"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:paddingHorizontal="24dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/confidence_layout" />
+
+            <!-- LinearLayout to hold care instruction items (water, sunlight, etc.) -->
+            <LinearLayout
+                android:id="@+id/care_instructions_list"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="vertical"
+                android:paddingHorizontal="32dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/care_instructions_text">
+
+                <TextView
+                    android:id="@+id/watering_instruction"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="Watering: Loading....."
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/sunlight_instruction"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="Sunlight: Loading....."
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/soil_instruction"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="Soil Type: Loading....."
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/add_plant"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Prediction Result"
-        android:textSize="18sp"
-        android:textColor="#000000"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@+id/ml_captured_img"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="16dp"
+        android:elevation="6dp"
         android:gravity="center"
-        android:textAlignment="center" />
+        android:text="Click here to add plant"
+        android:textColor="@android:color/white"
+        app:cornerRadius="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
