@@ -16,6 +16,8 @@ import androidx.fragment.app.Fragment;
 
 import com.example.bloombotanica.R;
 import com.example.bloombotanica.databinding.ActivityMainBinding;
+import com.example.bloombotanica.dialogs.AddPlantNicknameDialog;
+import com.example.bloombotanica.models.UserPlant;
 import com.example.bloombotanica.utils.CameraHelper;
 
 import java.io.File;
@@ -23,7 +25,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AddPlantNicknameDialog.OnPlantAddedListener {
 
     ActivityMainBinding binding;
     private CameraHelper cameraHelper;
@@ -172,4 +174,20 @@ public class MainActivity extends AppCompatActivity {
             Log.d("MainActivity", "Image path is null");
         }
     }
+
+    @Override
+    public void onPlantAdded(UserPlant newPlant) {
+        // Log to ensure the method is being called
+        Log.d("MainActivity", "New plant added");
+
+        // Create a new instance of PlantsFragment
+        PlantsFragment plantsFragment = new PlantsFragment();
+
+        // Replace the current fragment with PlantsFragment
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, plantsFragment)
+                .addToBackStack(null)  // Optional: add to back stack so user can navigate back
+                .commit();
+    }
+
 }

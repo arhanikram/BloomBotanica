@@ -12,6 +12,7 @@ material = "1.12.0"
 activity = "1.9.3"
 constraintlayout = "2.1.4"
 materialCalendarview = "1.4.3"
+materialVersion = "1.7.0"
 onnxruntimeMobile = "1.15.0"
 photoview = "2.3.0"
 photoviewVersion = "2.0.0"
@@ -34,6 +35,7 @@ material = { group = "com.google.android.material", name = "material", version.r
 activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 material-calendarview = { module = "com.prolificinteractive:material-calendarview", version.ref = "materialCalendarview" }
+material-v170 = { module = "com.google.android.material:material", version.ref = "materialVersion" }
 onnxruntime-mobile = { module = "com.microsoft.onnxruntime:onnxruntime-mobile", version.ref = "onnxruntimeMobile" }
 photoview = { module = "com.github.chrisbanes:PhotoView", version.ref = "photoview" }
 photoview-v200 = { module = "com.github.chrisbanes:PhotoView", version.ref = "photoviewVersion" }

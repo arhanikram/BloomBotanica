@@ -3,8 +3,10 @@ package com.example.bloombotanica.models;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.io.Serializable;
+
 @Entity(tableName = "plant_care")
-public class PlantCare {
+public class PlantCare implements Serializable {
 
     @PrimaryKey(autoGenerate = true)
     private int id;
