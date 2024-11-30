@@ -2,6 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -10,130 +11,172 @@
     android:layout_marginHorizontal="16dp"
     tools:context=".ui.DashboardFragment">
 
-    <!-- Welcome Message -->
-    <TextView
-        android:id="@+id/welcomeMessage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/welcome_username"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:paddingBottom="16dp" />
 
-    <!-- Weather Widget -->
-    <LinearLayout
+
+    <!-- Plant Gallery Card -->
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp"
-        android:layout_marginTop="16dp"
-        android:background="@color/white"
-        android:elevation="2dp"
-        android:gravity="center"
         android:layout_marginBottom="16dp"
-        android:clipToPadding="false"
-        android:backgroundTint="@color/weather_card_background">
+        app:cardCornerRadius="12dp"
+        app:cardElevation="4dp">
 
-        <!-- Weather Date -->
-        <TextView
-            android:id="@+id/weather_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Wednesday, Sept 19"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:drawablePadding="8dp"
-            />
-
-        <!-- Weather Stats -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="center"
-            android:weightSum="3"
-            android:layout_marginTop="8dp">
+            android:padding="16dp">
 
-            <!-- Temperature -->
+            <!-- Left Side - Plant Stats -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:padding="8dp"
-                android:background="@drawable/weather_stat_background">
+                android:orientation="vertical">
 
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginBottom="4dp"
-                    android:src="@drawable/ic_temperature" />
-
+                <!-- Plant Title and Date -->
+                <!-- Welcome Message -->
                 <TextView
-                    android:id="@+id/temperature"
+                    android:id="@+id/welcomeMessage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="+20°C"
-                    android:textSize="16sp"
+                    android:text="@string/welcome_username"
+                    android:textSize="24sp"
                     android:textStyle="bold"
-                    android:textColor="@color/brown" />
+                    android:paddingBottom="1dp" />
+
+                <TextView
+                    android:id="@+id/weather_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Date"
+                    android:textSize="24sp"
+                    android:textColor="@android:color/darker_gray"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="100dp" />
+
+                <!-- Humidity -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="16dp">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_humidity"
+                            app:tint="@android:color/holo_blue_dark" />
+
+                        <TextView
+                            android:id="@+id/humidity"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="10%"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:layout_marginStart="8dp" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Humidity"
+                        android:textSize="14sp"
+                        android:layout_marginStart="32dp" />
+                </LinearLayout>
+
+                <!-- Temperature -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="16dp">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_temperature"
+                            app:tint="@android:color/holo_red_light" />
+
+                        <TextView
+                            android:id="@+id/temperature"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="22°C"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:layout_marginStart="8dp" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Temperature"
+                        android:textSize="14sp"
+                        android:layout_marginStart="32dp" />
+                </LinearLayout>
+
+                <!-- Light -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_sunlight"
+                            app:tint="@android:color/holo_orange_light" />
+
+                        <TextView
+                            android:id="@+id/sunlight"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="70%"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:layout_marginStart="8dp" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Light"
+                        android:textSize="14sp"
+                        android:layout_marginStart="32dp" />
+                </LinearLayout>
             </LinearLayout>
 
-            <!-- Humidity -->
-            <LinearLayout
+            <!-- Right Side - Plant Gallery -->
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/plantGalleryPager"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="300dp"
                 android:layout_weight="1"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:padding="8dp"
-                android:background="@drawable/weather_stat_background">
-
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_humidity"
-                    android:layout_marginBottom="4dp" />
-
-                <TextView
-                    android:id="@+id/humidity"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="32%"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/green" />
-            </LinearLayout>
-
-            <!-- Sunlight -->
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:padding="8dp"
-                android:background="@drawable/weather_stat_background">
-
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_sunlight"
-                    android:layout_marginBottom="4dp" />
-
-                <TextView
-                    android:id="@+id/sunlight"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="72%"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/red" />
-            </LinearLayout>
+                android:layout_marginStart="16dp"
+                android:orientation="horizontal" />
 
         </LinearLayout>
-    </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
     <!-- Task Count -->
     <TextView

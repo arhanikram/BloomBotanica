@@ -49,6 +49,7 @@ dependencies {
     implementation libs.room.runtime
     annotationProcessor libs.room.compiler
     implementation libs.gson.v288
+    implementation libs.commons.csv
 
     implementation libs.glide
     annotationProcessor libs.compiler
