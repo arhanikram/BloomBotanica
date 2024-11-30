@@ -13,13 +13,15 @@ public class PlantCare {
     private int wateringFrequency; // in days
     private String sunlight; // Full sun, partial shade, etc.
     private String soilType;
+    private String plantDescription;
 
-    public PlantCare(String commonName, String scientificName, int wateringFrequency, String sunlight, String soilType) {
+    public PlantCare(String commonName, String scientificName, int wateringFrequency, String sunlight, String soilType, String plantDescription) {
         this.commonName = commonName;
         this.scientificName = scientificName;
         this.wateringFrequency = wateringFrequency;
         this.sunlight = sunlight;
         this.soilType = soilType;
+        this.plantDescription = plantDescription;
     }
 
     // Getters and setters
@@ -47,6 +49,10 @@ public class PlantCare {
         return soilType;
     }
 
+    public String getPlantDescription() {
+        return plantDescription;
+    }
+
     public void setId(int id) {
         this.id = id;
     }
@@ -69,6 +75,10 @@ public class PlantCare {
 
     public void setSoilType(String soilType) {
         this.soilType = soilType;
+    }
+
+    public void setPlantDescription(String plantDescription) {
+        this.plantDescription = plantDescription;
     }
 
     // Returns the name that best matches the query

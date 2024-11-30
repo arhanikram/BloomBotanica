@@ -66,6 +66,7 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
     private Button journalButton;
     private TaskDao taskDao;
     private Task task;
+    private TextView plant_description;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +86,7 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
         plantName = findViewById(R.id.plant_common_name);
         plantSciName = findViewById(R.id.plant_sci_name);
         lastWateredText = findViewById(R.id.last_watered_text);
+        plant_description = findViewById(R.id.plant_description);
 
         circularProgress = findViewById(R.id.circular_progress);
         waterButton = findViewById(R.id.water_button);
@@ -145,6 +147,7 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
                     plantNickname.setText(userPlant.getNickname());
                     plantName.setText(plantCare.getCommonName());
                     plantSciName.setText(plantCare.getScientificName());
+                    plant_description.setText(plantCare.getPlantDescription());
 
                     int daysSinceLastWatered = calculateDaysSinceLastWatered(userPlant.getLastWatered());
                     if (daysSinceLastWatered == 0) {

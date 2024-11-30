@@ -70,13 +70,8 @@ public class PlantAdapter extends RecyclerView.Adapter<PlantAdapter.PlantViewHol
         String imageResourceName = "a" + userPlant.getPlantCareId();  // Example: "a1", "a2", etc.
         int imageResId = holder.itemView.getContext().getResources()
                 .getIdentifier(imageResourceName, "drawable", holder.itemView.getContext().getPackageName());
+        holder.plantImageView.setImageResource(imageResId);
 
-        // If the image exists, set it to the ImageView; else set a default image
-        if (imageResId != 0) {
-            holder.plantImageView.setImageResource(imageResId);
-        } else {
-            holder.plantImageView.setImageResource(R.drawable.default_plant_image);  // Placeholder if image not found
-        }
 
 
         //set up long click listener for drag and drop

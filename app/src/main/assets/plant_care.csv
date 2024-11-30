@@ -1,48 +1,48 @@
-Plant Name,Scientific Name,Watering Frequency (days),Sunlight,Soil Type
-African Violet,Saintpaulia ionantha,7,"Bright, indirect light","Well-drained, slightly acidic soil"
-Aloe Vera,Aloe barbadensis miller,14,"Bright, indirect light",Cactus/succulent soil mix
-Anthurium,Anthurium andraeanum,7,"Bright, indirect light","Well-drained, slightly acidic soil"
-Areca Palm,Dypsis lutescens,5,"Bright, indirect light",Well-drained potting soil
-Asparagus Fern,Asparagus setaceus,7,"Bright, indirect light","Well-drained, slightly acidic soil"
-Begonia,Begonia spp.,5,"Bright, indirect light","Well-drained, slightly acidic soil"
-Bird of Paradise,Strelitzia reginae,7,"Bright, indirect light",Well-drained potting soil
-Bird's Nest Fern,Asplenium nidus,3,Low to medium light,"Rich, well-drained soil"
-Boston Fern,Nephrolepis exaltata,3,Indirect light,"Rich, well-drained soil"
-Calathea,Calathea spp.,3,Low to medium light,"Moist, well-draining soil"
-Cast Iron Plant,Aspidistra elatior,14,Low light,Well-drained potting soil
-Chinese Evergreen,Aglaonema,7,Low to bright indirect light,"Well-drained, slightly acidic soil"
-Chinese Money Plant,Pilea peperomioides,7,"Bright, indirect light",Well-drained potting soil
-Christmas Cactus,Schlumbergera bridgesii,7,"Bright, indirect light","Well-drained, slightly acidic soi"
-Chrysanthemum,Chrysanthemum spp.,3,Full sun,"Well-drained, rich soil"
-Ctenanthe,Ctenanthe spp.,3,Low to medium light,"Moist, well-draining soil"
-Daffodils,Narcissus spp.,7,Full sun,Well-drained soil
-Dracaena,Dracaena marginata,7,Indirect light,Well-drained potting soil
-Dumb Cane,Dieffenbachia spp.,7,Low to bright indirect light,Well-drained potting soil
-Elephant Ear,Alocasia spp.,5,"Bright, indirect light","Moist, well-draining soil"
-English Ivy,Hedera helix,7,"Bright, indirect light",Well-drained potting soil
-Hyacinth,Hyacinthus orientalis,7,Full sun,Well-drained soil
-Iron Cross Begonia,Begonia masoniana,5,"Bright, indirect light","Well-drained, slightly acidic soil"
-Jade Plant,Crassula ovata,14,"Bright, indirect light",Cactus/succulent soil mix
-Kalanchoe,Kalanchoe spp.,14,"Bright, indirect light",Cactus/succulent soil mix
-Lilium,Hemerocallis spp.,7,Full sun,"Well-drained, slightly acidic soil"
-Lily of the Valley,Convallaria majalis,7,Low to medium light,"Moist, well-draining soil"
-Money Tree,Pachira aquatica,7,"Bright, indirect light",Well-drained potting soil
-Monstera,Monstera deliciosa,7,"Bright, indirect light",Peat-based potting mix
-Orchid,Orchidaceae spp.,7,"Bright, indirect light",Well-draining orchid mix
-Parlor Palm,Chamaedorea elegans,7,Low to medium light,Well-drained potting soil
-Peace Lily,Spathiphyllum,5,Low to medium light,"Moist, well-draining soil"
-Poinsettia,Euphorbia pulcherrima,7,"Bright, indirect light","Well-drained, slightly acidic soil"
-Polka Dot Plant,Hypoestes phyllostachya,5,"Bright, indirect light","Well-drained, slightly acidic soil"
-Ponytail Palm,Beaucarnea recurvata,14,"Bright, indirect light",Well-drained potting soil
-Pothos,Epipremnum aureum,7,"Bright, indirect light",Well-drained potting soil
-Prayer Plant,Maranta leuconeura,5,Low to medium light,"Moist, well-draining soil"
-Rattlesnake Plant,Calathea lancifolia,3,Low to medium light,"Moist, well-draining soil"
-Rubber Plant,Ficus elastica,7,"Bright, indirect light",Well-drained potting soil
-Sago Palm,Cycas revoluta,14,"Bright, indirect light",Well-drained potting soil
-Schefflera,Schefflera arboricola,7,"Bright, indirect light",Well-drained potting soil
-Snake Plant,Sansevieria trifasciata,14,Low to bright indirect light,Well-drained potting mix
-Tradescantia,Tradescantia spp.,7,"Bright, indirect light",Well-drained potting soil
-Tulip,Tulipa spp.,7,Full sun,Well-drained soil
-Venus Flytrap,Dionaea muscipula,3,Full sun,"Moist, acidic, well-drained soil"
-Yucca,Yucca spp.,14,"Bright, indirect light",Well-drained potting soil
-ZZ Plant,Zamioculcas zamiifolia,14,Low to bright indirect light,Well-drained potting soil
+Plant Name,Scientific Name,Watering Frequency (days),Sunlight,Soil Type,Plant Description
+African Violet,Saintpaulia ionantha,7,"Bright, indirect light","Well-drained, slightly acidic soil","A popular houseplant with vibrant, colorful flowers, African Violets thrive in bright, indirect light and require well-drained, slightly acidic soil for healthy growth."
+Aloe Vera,Aloe barbadensis miller,14,"Bright, indirect light",Cactus/succulent soil mix,"Known for its medicinal properties, Aloe Vera is a hardy succulent that grows best in bright, indirect light and well-drained cactus/succulent soil for optimal growth."
+Anthurium,Anthurium andraeanum,7,"Bright, indirect light","Well-drained, slightly acidic soil","With its glossy red or white spathes, Anthurium is a tropical plant that prefers bright, indirect light and well-drained, slightly acidic soil for vibrant flowers."
+Areca Palm,Dypsis lutescens,5,"Bright, indirect light",Well-drained potting soil,"A graceful palm with feathery fronds, Areca Palm thrives in bright, indirect light and needs well-drained potting soil for healthy growth and lush foliage."
+Asparagus Fern,Asparagus setaceus,7,"Bright, indirect light","Well-drained, slightly acidic soil","A fern with delicate, feathery foliage, Asparagus Fern enjoys bright, indirect light and well-drained, slightly acidic soil for optimal health and rapid growth."
+Begonia,Begonia spp.,5,"Bright, indirect light","Well-drained, slightly acidic soil","Known for its colorful leaves and flowers, Begonias thrive in bright, indirect light and need well-drained, slightly acidic soil for continuous vibrant blooms."
+Bird of Paradise,Strelitzia reginae,7,"Bright, indirect light",Well-drained potting soil,"This striking plant has large, tropical leaves and requires bright, indirect light and well-drained potting soil to grow and develop stunning flowers over time."
+Bird's Nest Fern,Asplenium nidus,3,Low to medium light,"Rich, well-drained soil","A fern with glossy, arching fronds, Bird's Nest Fern prefers low to medium light and rich, well-drained soil for ideal growth and lush, green foliage."
+Boston Fern,Nephrolepis exaltata,3,Indirect light,"Rich, well-drained soil","Known for its lush, feathery fronds, Boston Fern thrives in indirect light and needs rich, well-drained soil for healthy, full, and vibrant foliage year-round."
+Calathea,Calathea spp.,3,Low to medium light,"Moist, well-draining soil","A striking plant with vibrant patterned leaves, Calathea prefers low to medium light and moist, well-draining soil to grow successfully and maintain stunning foliage."
+Cast Iron Plant,Aspidistra elatior,14,Low light,Well-drained potting soil,"Cast Iron Plant is known for its resilience and tolerance to low light. It grows well in well-drained potting soil, making it an excellent, low-maintenance houseplant."
+Chinese Evergreen,Aglaonema,7,Low to bright indirect light,"Well-drained, slightly acidic soil","A tough, low-maintenance plant, Chinese Evergreen thrives in low to bright indirect light and well-drained, slightly acidic soil, perfect for beginners."
+Chinese Money Plant,Pilea peperomioides,7,"Bright, indirect light",Well-drained potting soil,"With its round, coin-shaped leaves, Chinese Money Plant thrives in bright, indirect light and well-drained potting soil, making it a popular choice for home decor."
+Christmas Cactus,Schlumbergera bridgesii,7,"Bright, indirect light","Well-drained, slightly acidic soi","Unlike other cacti, Christmas Cactus enjoys bright, indirect light and well-drained, slightly acidic soil for a colorful display of blooms during the holiday season."
+Chrysanthemum,Chrysanthemum spp.,3,Full sun,"Well-drained, rich soil","Known for its bright, colorful flowers, Chrysanthemums need full sun and well-drained, rich soil to bloom profusely, especially during the fall months."
+Ctenanthe,Ctenanthe spp.,3,Low to medium light,"Moist, well-draining soil","This ornamental plant has beautiful, patterned leaves and grows best in low to medium light with moist, well-draining soil to preserve its stunning foliage and color."
+Daffodils,Narcissus spp.,7,Full sun,Well-drained soil,"Daffodils are cheerful, spring-blooming flowers that thrive in full sun and well-drained soil, adding vibrant color to any garden or indoor space during the season."
+Dracaena,Dracaena marginata,7,Indirect light,Well-drained potting soil,"A popular houseplant with long, slender leaves, Dracaena grows best in indirect light and requires well-drained potting soil for easy care and minimal maintenance."
+Dumb Cane,Dieffenbachia spp.,7,Low to bright indirect light,Well-drained potting soil,"Dumb Cane has striking, variegated leaves and prefers low to bright indirect light with well-drained potting soil for successful growth and attractive foliage."
+Elephant Ear,Alocasia spp.,5,"Bright, indirect light","Moist, well-draining soil","Known for its large, dramatic leaves, Elephant Ear thrives in bright, indirect light and needs moist, well-draining soil to support its bold, tropical appearance."
+English Ivy,Hedera helix,7,"Bright, indirect light",Well-drained potting soil,"A fast-growing vine, English Ivy thrives in bright, indirect light and prefers well-drained potting soil, making it ideal for hanging baskets and decorative arrangements."
+Hyacinth,Hyacinthus orientalis,7,Full sun,Well-drained soil,"With its fragrant, colorful flowers, Hyacinths bloom best in full sun and well-drained soil, adding a sweet fragrance and beautiful color to any indoor or outdoor space."
+Iron Cross Begonia,Begonia masoniana,5,"Bright, indirect light","Well-drained, slightly acidic soil","Iron Cross Begonia is known for its distinctive leaf pattern and thrives in bright, indirect light with well-drained, slightly acidic soil for optimal growth."
+Jade Plant,Crassula ovata,14,"Bright, indirect light",Cactus/succulent soil mix,"A hardy succulent with thick, glossy leaves, Jade Plant requires bright, indirect light and a cactus/succulent soil mix to grow well and maintain its thick foliage."
+Kalanchoe,Kalanchoe spp.,14,"Bright, indirect light",Cactus/succulent soil mix,"Kalanchoe is a flowering succulent that thrives in bright, indirect light and prefers a cactus/succulent soil mix for healthy growth and colorful blooms year-round."
+Lilium,Hemerocallis spp.,7,Full sun,"Well-drained, slightly acidic soil","Known for its beautiful trumpet-shaped flowers, Lilium grows best in full sun and well-drained, slightly acidic soil to produce large, fragrant blooms during spring."
+Lily of the Valley,Convallaria majalis,7,Low to medium light,"Moist, well-draining soil","This fragrant spring-blooming plant prefers low to medium light and grows best in moist, well-draining soil, perfect for adding beauty to shaded areas."
+Money Tree,Pachira aquatica,7,"Bright, indirect light",Well-drained potting soil,"Money Tree is a popular plant believed to bring good luck. It thrives in bright, indirect light and requires well-drained potting soil for growth and longevity."
+Monstera,Monstera deliciosa,7,"Bright, indirect light",Peat-based potting mix,"Monstera, with its large, perforated leaves, thrives in bright, indirect light and prefers peat-based potting mix for healthy growth and striking foliage indoors."
+Orchid,Orchidaceae spp.,7,"Bright, indirect light",Well-draining orchid mix,"Orchids are known for their beautiful, delicate flowers and require bright, indirect light and well-draining orchid mix to thrive, making them ideal for indoor decor."
+Parlor Palm,Chamaedorea elegans,7,Low to medium light,Well-drained potting soil,"This palm is an excellent indoor plant, thriving in low to medium light with well-drained potting soil, ideal for apartments and small spaces with indirect sunlight."
+Peace Lily,Spathiphyllum,5,Low to medium light,"Moist, well-draining soil","Peace Lily, known for its elegant white flowers, prefers low to medium light and moist, well-draining soil to thrive and purify the air in homes and offices."
+Poinsettia,Euphorbia pulcherrima,7,"Bright, indirect light","Well-drained, slightly acidic soil","With its bright red bracts, Poinsettia thrives in bright, indirect light and well-drained, slightly acidic soil, adding festive cheer during the holiday season."
+Polka Dot Plant,Hypoestes phyllostachya,5,"Bright, indirect light","Well-drained, slightly acidic soil","Known for its colorful, speckled leaves, Polka Dot Plant thrives in bright, indirect light and well-drained, slightly acidic soil for vibrant growth and foliage."
+Ponytail Palm,Beaucarnea recurvata,14,"Bright, indirect light",Well-drained potting soil,"A striking plant with a bulbous base and long, graceful leaves, Ponytail Palm prefers bright, indirect light and well-drained potting soil for robust, healthy growth."
+Pothos,Epipremnum aureum,7,"Bright, indirect light",Well-drained potting soil,"Pothos is a popular, easy-to-care-for vine that grows well in bright, indirect light and requires well-drained potting soil for rapid growth and lush trailing vines."
+Prayer Plant,Maranta leuconeura,5,Low to medium light,"Moist, well-draining soil","Prayer Plant has vibrant foliage and prefers low to medium light, with moist, well-draining soil for lush, colorful leaves that fold up at night like hands in prayer."
+Rattlesnake Plant,Calathea lancifolia,3,Low to medium light,"Moist, well-draining soil","Known for its unique foliage pattern, Rattlesnake Plant thrives in low to medium light and moist, well-draining soil to maintain its stunning, vibrant foliage year-round."
+Rubber Plant,Ficus elastica,7,"Bright, indirect light",Well-drained potting soil,"Rubber Plant has large, glossy leaves and thrives in bright, indirect light with well-drained potting soil for optimal health and lush, green foliage."
+Sago Palm,Cycas revoluta,14,"Bright, indirect light",Well-drained potting soil,"Despite being called a palm, Sago Palm is a cycad that prefers bright, indirect light and well-drained potting soil, growing slowly but surely over time."
+Schefflera,Schefflera arboricola,7,"Bright, indirect light",Well-drained potting soil,"Schefflera, known for its glossy, umbrella-like leaves, thrives in bright, indirect light and well-drained potting soil for lush, full foliage and easy care indoors."
+Snake Plant,Sansevieria trifasciata,14,Low to bright indirect light,Well-drained potting mix,"Snake Plant is one of the toughest houseplants, able to thrive in low to bright indirect light and requires well-drained potting mix to grow and purify indoor air."
+Tradescantia,Tradescantia spp.,7,"Bright, indirect light",Well-drained potting soil,"Known for its trailing vines and vibrant purple and green leaves, Tradescantia grows well in bright, indirect light and well-drained potting soil for stunning growth."
+Tulip,Tulipa spp.,7,Full sun,Well-drained soil,"With its striking, colorful blooms, Tulips grow best in full sun and well-drained soil, adding vibrant spring color and beauty to gardens and indoor arrangements."
+Venus Flytrap,Dionaea muscipula,3,Full sun,"Moist, acidic, well-drained soil","A carnivorous plant known for its insect-catching traps, Venus Flytrap thrives in full sun and moist, acidic, well-drained soil for best growth and unique flower blooms."
+Yucca,Yucca spp.,14,"Bright, indirect light",Well-drained potting soil,"Yucca is a hardy, drought-tolerant plant with spiky leaves, thriving in bright, indirect light and well-drained potting soil for low-maintenance care and longevity."
+ZZ Plant,Zamioculcas zamiifolia,14,Low to bright indirect light,Well-drained potting soil,"The ZZ Plant is a low-maintenance, drought-tolerant plant with glossy leaves. It thrives in low to bright indirect light and is known for its air-purifying qualities. Ideal for spaces with minimal care."

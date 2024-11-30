@@ -61,7 +61,7 @@
             android:id="@+id/plant_common_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="25dp"
             android:text="Plant Name"
             android:textSize="24sp"
             android:textStyle="bold"
@@ -72,7 +72,7 @@
             android:id="@+id/plant_sci_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="4dp"
             android:text="Plant Scientific Name"
             android:textColor="@android:color/darker_gray"
             android:textSize="20sp"
@@ -84,14 +84,14 @@
             android:id="@+id/plant_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/rounded_border"
+            android:layout_marginTop="2dp"
             android:clickable="false"
             android:focusable="false"
             android:maxLines="5"
-            android:padding="16dp"
+            android:padding="4dp"
             android:scrollbars="vertical"
-            android:text="" />
+            android:text=""
+            android:textSize="18sp"/>
 
         <!-- Watering and Pruning Progress Bars -->
         <LinearLayout
@@ -185,15 +185,6 @@
                     android:textSize="14sp" />
             </LinearLayout>
         </LinearLayout>
-
-        <!-- Test Text-->
-        <TextView
-            android:id="@+id/test_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Testing for Scroll"
-            android:textSize="120sp" />
     </LinearLayout>
 </ScrollView>
 
