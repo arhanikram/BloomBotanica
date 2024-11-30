@@ -136,14 +136,16 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
         Log.d("UserPlantProfileActivity", "Fetching user plant with ID: " + userPlantId);
         new Thread(() -> {
             userPlant = userPlantDatabase.userPlantDao().getUserPlantById(userPlantId);
-            //get plant name from plant care database
+            // Get plant name from plant care database
             plantCare = plantCaredb.plantCareDao().getPlantCareById(userPlant.getPlantCareId());
+
             runOnUiThread(() -> {
                 if (userPlant != null) {
                     Log.d("UserPlantProfileActivity", "User plant found: " + userPlant.getNickname());
                     plantNickname.setText(userPlant.getNickname());
                     plantName.setText(plantCare.getCommonName());
                     plantSciName.setText(plantCare.getScientificName());
+
                     int daysSinceLastWatered = calculateDaysSinceLastWatered(userPlant.getLastWatered());
                     if (daysSinceLastWatered == 0) {
                         if (userPlant.getLastWatered() == null) {
@@ -159,14 +161,27 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
 
                     updateWaterProgress();
 
-                    // Load image from internal storage
+                    // Check if the user has uploaded an image (from internal storage)
                     if (userPlant.getImagePath() != null) {
                         Log.d("UserPlantProfileActivity", "Loading image from path: " + userPlant.getImagePath());
                         Bitmap bitmap = BitmapFactory.decodeFile(userPlant.getImagePath());
                         plantImageView.setImageBitmap(bitmap);
                     } else {
                         Log.d("UserPlantProfileActivity", "No image path found for user plant");
+
+                        // If no image exists in internal storage, fall back to the default image based on the userPlantId
+                        String imageResourceName = "a" + plantCare.getId();  // Add "a" before the ID (e.g., "a1" for plant ID 1)
+                        int imageResId = getResources().getIdentifier(imageResourceName, "drawable", getPackageName());
+                        Log.d("TESTID", String.valueOf(plantCare.getId()));
+                        if (imageResId != 0) {
+                            // Load the default image from drawable based on ID (e.g., "a1" for plant ID 1)
+                            plantImageView.setImageResource(imageResId);
+                        } else {
+                            // Use a fallback default image (e.g., "a_default" as the name of the fallback image)
+                            plantImageView.setImageResource(R.drawable.default_plant_image);
+                        }
                     }
+
                 } else {
                     Log.d("UserPlantProfileActivity", "User plant not found");
                     Toast.makeText(UserPlantProfileActivity.this, "User plant not found", Toast.LENGTH_SHORT).show();
@@ -175,6 +190,8 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
             });
         }).start();
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -24,6 +25,7 @@ public class PlantAdapter extends RecyclerView.Adapter<PlantAdapter.PlantViewHol
     private OnItemClickListener itemClickListener;
     private PlantCareDatabase plantcaredat;
     private String plantCommonName;
+
 
     public interface OnItemClickListener {
         void onItemClick(int position);
@@ -64,6 +66,19 @@ public class PlantAdapter extends RecyclerView.Adapter<PlantAdapter.PlantViewHol
 
         }).start();
 
+        // Set plant image dynamically using plant ID
+        String imageResourceName = "a" + userPlant.getPlantCareId();  // Example: "a1", "a2", etc.
+        int imageResId = holder.itemView.getContext().getResources()
+                .getIdentifier(imageResourceName, "drawable", holder.itemView.getContext().getPackageName());
+
+        // If the image exists, set it to the ImageView; else set a default image
+        if (imageResId != 0) {
+            holder.plantImageView.setImageResource(imageResId);
+        } else {
+            holder.plantImageView.setImageResource(R.drawable.default_plant_image);  // Placeholder if image not found
+        }
+
+
         //set up long click listener for drag and drop
         holder.itemView.setOnLongClickListener(v -> {
             if (longClickListener != null) {
@@ -89,11 +104,13 @@ public class PlantAdapter extends RecyclerView.Adapter<PlantAdapter.PlantViewHol
     public static class PlantViewHolder extends RecyclerView.ViewHolder {
         TextView plantName;
         TextView plantCommonName;
+        ImageView plantImageView;
 
         public PlantViewHolder(@NonNull View itemView) {
             super(itemView);
             plantName = itemView.findViewById(R.id.card_plant_name);
             plantCommonName = itemView.findViewById(R.id.plant_common_name);
+            plantImageView = itemView.findViewById(R.id.plant_image);
         }
     }
 }
