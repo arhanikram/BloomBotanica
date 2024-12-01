@@ -51,8 +51,7 @@
             android:exported="false" />
         <activity
             android:name=".ui.UserPlantProfileActivity"
-            android:exported="false"
-            android:theme="@style/OverflowMenuStyle" />
+            android:exported="false" />
         <activity
             android:name=".ui.OnboardingActivity"
             android:exported="false" />
