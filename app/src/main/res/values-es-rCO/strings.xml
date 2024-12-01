@@ -39,6 +39,8 @@
     <string name="logo_desc">Logo de BloomBotanica</string>
     <string name="plant_name">Plant Name</string>
     <string name="CardImage">Card Image</string>
+    <string name="AboutTitle">¡Sobre nosotros!</string>
+    <string name="AboutBlurb">\n\n¡Somos Bloom Botánica! ¡Una aplicación totalmente codificada y dirigida por estudiantes diseñada para ayudar a gestionar todas sus necesidades de cuidado de plantas! \n Navegue por la aplicación usando la barra de herramientas en la parte inferior de la pantalla. Simplemente toque cada ícono para ir a la página respectiva. \n El Panel es su página de inicio. Aquí es donde verá sus tareas pendientes o vencidas. \n\n La pestaña Calendario está diseñada para ayudar a visualizar y ver fácilmente todas las tareas próximas y pendientes del mes actual, ¡o puedes usar las flechas para verificar los meses futuros! \n\n La pestaña Cámara es una herramienta útil que puede ayudarte a identificar plantas en tiempo real para que nunca haya dudas. \n\n La pestaña Plantas es donde agregas manualmente tus plantas compañeras: tendrás la oportunidad de ponerle un apodo a tu planta y agregar el tipo de planta. Una vez agregada su planta, puede tomar una fotografía de la planta tocando en Generar imagen de la planta. Para regar o podar tu planta, simplemente toca los íconos respectivos. Finalmente, puede tocar el botón en la parte inferior de la página para registrar un diario del viaje de su planta. \n\n La pestaña Configuración es donde puedes personalizar tu aplicación, como cambiar el tema o conocer el historial de versiones. \n ¡Disfruta de Bloom Botánica! Feliz siembra :)</string>
     <string-array name="languages_array">
         <item>Inglés</item>
         <item>Español</item>

@@ -92,12 +92,13 @@ public class SettingsFragment extends Fragment {
                 switch(position) {
                     case 0:
                         //About
+                        Intent intent = new Intent(getActivity(), AboutPageActivity.class);
+                        startActivity(intent);
                         break;
                     case 1:
-                        //version
-                        String version = "Version Name: " + BuildConfig.VERSION_NAME + "\n" + "Version Code: " + BuildConfig.VERSION_CODE;
-                        Intent intent = new Intent(getActivity(), VersionHistoryActivity.class);
-                        startActivity(intent);
+                        //Version
+                        Intent intentVer = new Intent(getActivity(), VersionHistoryActivity.class);
+                        startActivity(intentVer);
                         break;
                     case 2:
                         //Theme
