@@ -1,8 +1,11 @@
 
 package com.example.bloombotanica.adapters;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,11 +69,26 @@ public class PlantAdapter extends RecyclerView.Adapter<PlantAdapter.PlantViewHol
 
         }).start();
 
-        // Set plant image dynamically using plant ID
-        String imageResourceName = "a" + userPlant.getPlantCareId();  // Example: "a1", "a2", etc.
-        int imageResId = holder.itemView.getContext().getResources()
-                .getIdentifier(imageResourceName, "drawable", holder.itemView.getContext().getPackageName());
-        holder.plantImageView.setImageResource(imageResId);
+        // Check if the user has uploaded a custom image
+        if (userPlant.getImagePath() != null && !userPlant.getImagePath().isEmpty()) {
+            // Try to load the custom image from the saved path
+            try {
+                Bitmap bitmap = BitmapFactory.decodeFile(userPlant.getImagePath());
+                if (bitmap != null) {
+                    holder.plantImageView.setImageBitmap(bitmap);
+                } else {
+                    // Fallback to default image if custom image can't be loaded
+                    setDefaultPlantImage(holder, userPlant);
+                }
+            } catch (Exception e) {
+                Log.e("PlantAdapter", "Error loading custom image", e);
+                // Fallback to default image if there's an error
+                setDefaultPlantImage(holder, userPlant);
+            }
+        } else {
+            // No custom image, use default
+            setDefaultPlantImage(holder, userPlant);
+        }
 
 
 
@@ -89,6 +107,20 @@ public class PlantAdapter extends RecyclerView.Adapter<PlantAdapter.PlantViewHol
         });
 
 
+    }
+
+    private void setDefaultPlantImage(PlantViewHolder holder, UserPlant userPlant) {
+        // Set plant image dynamically using plant ID
+        String imageResourceName = "a" + userPlant.getPlantCareId();  // Example: "a1", "a2", etc.
+        int imageResId = holder.itemView.getContext().getResources()
+                .getIdentifier(imageResourceName, "drawable", holder.itemView.getContext().getPackageName());
+
+        if (imageResId != 0) {
+            holder.plantImageView.setImageResource(imageResId);
+        } else {
+            // Fallback to a default plant image if no specific image is found
+            holder.plantImageView.setImageResource(R.drawable.default_plant_image);
+        }
     }
 
     @Override

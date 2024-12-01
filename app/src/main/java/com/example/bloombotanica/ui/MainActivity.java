@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements AddPlantNicknameD
             int navBarHeight = insets.getInsets(WindowInsetsCompat.Type.systemBars()).bottom;
 
             // Offset the nav bar height to make it sit closer
-            int offset = -24; // Move it 24dp closer to the bottom (negative value)
+            int offset = 8; // Move it closer (negative) or farther (positive)
 
             // Adjust BottomNavigationView margin
             CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) view.getLayoutParams();

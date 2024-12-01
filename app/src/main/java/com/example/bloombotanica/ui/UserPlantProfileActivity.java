@@ -132,6 +132,12 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
             intent.putExtra("plantId", userPlantId);
             startActivity(intent);
         });
+
+        try{
+            Log.d("!!!!!", userPlant.getImagePath());
+        } catch (Exception e) {
+            Log.d("!!!!!", "null");
+        }
     }
 
     private void fetchUserPlant() {
@@ -193,8 +199,6 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
             });
         }).start();
     }
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

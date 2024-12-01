@@ -52,7 +52,7 @@ public class DashboardFragment extends Fragment {
 
     private RecyclerView tasksRecyclerView;
     private TaskAdapter taskAdapter;
-    private TextView welcomeMessage, taskCount, weatherDate, temperature, humidity, sunlight;
+    private TextView welcomeMessage, taskCount, weatherDate, temperature, humidity, sunlight, noTasks;
     private String welcomeText;
     private UserPlantDatabase userpdb;
     private FusedLocationProviderClient fusedLocationClient;
@@ -83,6 +83,7 @@ public class DashboardFragment extends Fragment {
         humidity = view.findViewById(R.id.humidity);
         sunlight = view.findViewById(R.id.sunlight);
         viewPager = view.findViewById(R.id.plantGalleryPager);
+        noTasks = view.findViewById(R.id.noTasks);
 
         // Initialize database and location services
         userpdb = UserPlantDatabase.getInstance(requireActivity().getApplicationContext());
@@ -94,6 +95,7 @@ public class DashboardFragment extends Fragment {
 
         // Initialize the RecyclerView
         tasksRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        tasksRecyclerView.setLayoutFrozen(true);
         taskAdapter = new TaskAdapter(new ArrayList<>(), this::markTaskAsCompleted, userpdb.userPlantDao());
         tasksRecyclerView.setAdapter(taskAdapter);
 
@@ -107,6 +109,7 @@ public class DashboardFragment extends Fragment {
         fetchUserLocation(); // Fetch weather data based on location
         loadUserPlants();   // Load user plants for image scrolling
     }
+
     private void loadUserPlants() {
         new Thread(() -> {
             UserPlantDao userPlantDao = userpdb.userPlantDao();
@@ -223,9 +226,9 @@ public class DashboardFragment extends Fragment {
     private void updateWeatherUI(String temp, String hum, String sunlightValue, String condition) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE, MMM d", Locale.getDefault());
         String currentDate = dateFormat.format(new Date());
-
+        double tempVal = Double.parseDouble(temp);
         weatherDate.setText(currentDate);
-        temperature.setText(String.format("%s°C", temp));
+        temperature.setText(String.format(Locale.US, "%.0f°C", tempVal));
         humidity.setText(String.format("%s%%", hum));
         sunlight.setText(sunlightValue);
     }
@@ -264,10 +267,13 @@ public class DashboardFragment extends Fragment {
 
                     if (combinedTasks.isEmpty()) {
                         tasksRecyclerView.setVisibility(View.GONE);
-                        taskCount.setText(getString(R.string.task_count, 0));
+                        taskCount.setVisibility(View.GONE);
+                        noTasks.setVisibility(View.VISIBLE);
                     } else {
                         tasksRecyclerView.setVisibility(View.VISIBLE);
-                        taskCount.setText(getString(R.string.task_count, combinedTasks.size()));
+                        taskCount.setVisibility(View.VISIBLE);
+                        taskCount.setText("You have " + combinedTasks.size() + " tasks due!");
+                        noTasks.setVisibility(View.GONE);
                     }
                 });
             }
