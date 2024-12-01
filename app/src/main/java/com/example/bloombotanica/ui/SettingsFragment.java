@@ -3,6 +3,8 @@ package com.example.bloombotanica.ui;
 import static android.app.ProgressDialog.show;
 
 import android.app.ListActivity;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatDelegate;
@@ -22,6 +24,7 @@ import android.widget.ListView;
 import android.widget.PopupMenu;
 
 import com.example.bloombotanica.R;
+import com.github.chrisbanes.photoview.BuildConfig;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -40,7 +43,7 @@ public class SettingsFragment extends Fragment {
     private String mParam2;
 
     ListView l;
-    String settings[] = { "Theme", "Log View" };
+    String settings[] = { "About", "Version", "Theme", "Log View" };
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -88,28 +91,36 @@ public class SettingsFragment extends Fragment {
 
                 switch(position) {
                     case 0:
-                        Log.i("SETTINGS", "theme");
+                        //About
+                        break;
+                    case 1:
+                        //version
+                        String version = "Version Name: " + BuildConfig.VERSION_NAME + "\n" + "Version Code: " + BuildConfig.VERSION_CODE;
+                        Intent intent = new Intent(getActivity(), VersionHistoryActivity.class);
+                        startActivity(intent);
+                        break;
+                    case 2:
+                        //Theme
                         PopupMenu popup = new PopupMenu (getContext(), view);
                         popup.getMenuInflater().inflate(R.menu.theme_menu, popup.getMenu());
                         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
 
-                             @Override
-                             public boolean onMenuItemClick(MenuItem menuItem) {
-                                 if(menuItem.getItemId()==R.id.light_mode) {
-                                     Log.i("SETTINGS", "light theme");
-                                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                                 }
-                                 else {
-                                     Log.i("SETTINGS", "dark theme");
-                                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                                 }
-                                 return true;
-                             }
-                         });
+                            @Override
+                            public boolean onMenuItemClick(MenuItem menuItem) {
+                                if(menuItem.getItemId()==R.id.light_mode) {
+                                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                                }
+                                else {
+                                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                                }
+                                return true;
+                            }
+                        });
                         popup.show();
 
                         break;
-                    case 1:
+                    case 3:
+                        //log history
                         Log.i("SETTINGS", "log history");
                         break;
                 }
@@ -118,7 +129,5 @@ public class SettingsFragment extends Fragment {
         lv.setOnItemClickListener(itemListener);
         return rootView;
     }
-
-
 
 }

@@ -20,7 +20,7 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.util.List;
 
-@Database(entities = {PlantCare.class}, version = 3, exportSchema = false)
+@Database(entities = {PlantCare.class}, version = 4, exportSchema = false)
 @TypeConverters({Converters.class})
 public abstract class PlantCareDatabase extends RoomDatabase {
 

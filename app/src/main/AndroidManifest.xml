@@ -11,9 +11,8 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
-
 
     <queries>
         <intent>
@@ -32,6 +31,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BloomBotanica"
         tools:targetApi="31">
+        <activity
+            android:name=".ui.VersionHistoryActivity"
+            android:exported="false" />
         <activity
             android:name=".ui.PredictionActivity"
             android:exported="false" />

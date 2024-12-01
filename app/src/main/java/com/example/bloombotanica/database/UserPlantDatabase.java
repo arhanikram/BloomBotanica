@@ -12,7 +12,7 @@ import com.example.bloombotanica.models.Task;
 import com.example.bloombotanica.utils.Converters;
 import com.example.bloombotanica.models.UserPlant;
 
-@Database(entities = {UserPlant.class, Task.class, JournalEntry.class}, version = 1, exportSchema = false)
+@Database(entities = {UserPlant.class, Task.class, JournalEntry.class}, version = 2, exportSchema = false)
 @TypeConverters({Converters.class})
 public abstract class UserPlantDatabase extends RoomDatabase {
 
