@@ -70,13 +70,19 @@ public class PlantAdapter extends RecyclerView.Adapter<PlantAdapter.PlantViewHol
         }).start();
 
         // Check if the user has uploaded a custom image
+        Log.d("PlantAdapter", "Checking custom image for plant: " + userPlant.getNickname());
+        Log.d("PlantAdapter", "User plant image path: " + userPlant.getImagePath());
         if (userPlant.getImagePath() != null && !userPlant.getImagePath().isEmpty()) {
+            Log.d("PlantAdapter", "Loading custom image for plant: " + userPlant.getNickname());
             // Try to load the custom image from the saved path
             try {
+                Log.d("PlantAdapter", "Custom image path: " + userPlant.getImagePath());
                 Bitmap bitmap = BitmapFactory.decodeFile(userPlant.getImagePath());
                 if (bitmap != null) {
+                    Log.d("PlantAdapter", "Successfully loaded custom image");
                     holder.plantImageView.setImageBitmap(bitmap);
                 } else {
+                    Log.d("PlantAdapter", "Failed to load custom image");
                     // Fallback to default image if custom image can't be loaded
                     setDefaultPlantImage(holder, userPlant);
                 }

@@ -1,5 +1,6 @@
 package com.example.bloombotanica.ui;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -26,7 +27,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Locale;
 
-public class PredictionActivity extends AppCompatActivity {
+public class PredictionActivity extends AppCompatActivity implements AddPlantNicknameDialog.OnPlantAddedListener {
 
     private TextView predictionResultTextView, confidencePercentage, wateringInstruction, sunlightInstruction, soilInstruction;
     private ImageView imageView;
@@ -34,10 +35,11 @@ public class PredictionActivity extends AppCompatActivity {
     private PlantCare plantCare;
     private PlantCareDatabase plantCaredb;
     private int confidence;
-    private String commonName, watering, sunlight, soil;
+    private String commonName, watering, sunlight, soil, imagePath;
     private ProgressBar progressBar;
     private Button addPlantButton;
     private PredictionResult result;
+    private Bitmap bitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,14 +55,15 @@ public class PredictionActivity extends AppCompatActivity {
         soilInstruction = findViewById(R.id.soil_instruction);
         addPlantButton = findViewById(R.id.add_plant);
 
-        String imagePath = getIntent().getStringExtra("imagePath");
+        imagePath = getIntent().getStringExtra("imagePath");
+        Log.d("PredictionActivity", "Image path: " + imagePath);
 
 //        Testing method
 //        Bitmap bitmap = loadImageFromAssets("x.webp");
 
         if (imagePath != null) {
             // Display the image in ImageView
-            Bitmap bitmap = loadImageFromFile(imagePath);
+            bitmap = loadImageFromFile(imagePath);
             if(bitmap != null){
                 imageView.setImageBitmap(bitmap);
 
@@ -72,11 +75,21 @@ public class PredictionActivity extends AppCompatActivity {
         } else {
             Log.d("PredictionActivity", "Image path is null");
         }
+
+        addPlantButton.setOnClickListener(v -> {
+            // Pass the PlantCare object to the dialog
+            AddPlantNicknameDialog dialog = new AddPlantNicknameDialog();
+            Bundle args = new Bundle();
+            args.putSerializable("plantCare", plantCare);  // Pass the PlantCare object to the dialog
+            args.putString("imagePath", imagePath);
+            dialog.setArguments(args); // Set the arguments for the dialog
+            dialog.show(getSupportFragmentManager(), "AddPlantNicknameDialog");
+        });
     }
 
-//    @Override
-//    public void onPlantAdded(UserPlant newPlant) {
-//        // Create a new PlantsFragment
+    @Override
+    public void onPlantAdded(UserPlant newPlant) {
+        // Create a new PlantsFragment
 //        PlantsFragment plantsFragment = new PlantsFragment();
 //
 //        // Optionally pass the newly added plant's ID
@@ -89,7 +102,15 @@ public class PredictionActivity extends AppCompatActivity {
 //                .replace(R.id.fragment_container, plantsFragment)
 //                .addToBackStack(null)
 //                .commit();
-//    }
+
+        newPlant.setImagePath(imagePath);
+        Log.d("new plant image path" , newPlant.getImagePath());
+
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("userPlantId", newPlant.getId());
+        intent.putExtra("navToPlants", true);
+        startActivity(intent);
+    }
 
 
     private Bitmap loadImageFromFile(String imagePath) {
@@ -152,14 +173,6 @@ public class PredictionActivity extends AppCompatActivity {
                 //log progress bar progress
                 Log.d("PredictionActivity", "Progress Bar Confidence: " + finalConfidence);
                 //log plantcare id
-                addPlantButton.setOnClickListener(v -> {
-                    // Pass the PlantCare object to the dialog
-                    AddPlantNicknameDialog dialog = new AddPlantNicknameDialog();
-                    Bundle args = new Bundle();
-                    args.putSerializable("plantCare", plantCare);  // Pass the PlantCare object to the dialog
-                    dialog.setArguments(args); // Set the arguments for the dialog
-                    dialog.show(getSupportFragmentManager(), "AddPlantNicknameDialog");
-                });
             });
 
         }).start();

@@ -31,6 +31,7 @@ public class AddPlantNicknameDialog extends DialogFragment {
     private EditText plantNicknameInput;
     private Button addPlantButton;
     private UserPlantDatabase userpdb;
+    private String imagePath;
 
     public interface OnPlantAddedListener {
         void onPlantAdded(UserPlant newPlant);
@@ -43,6 +44,7 @@ public class AddPlantNicknameDialog extends DialogFragment {
         // Retrieve the passed PlantCare object from the arguments
         if (getArguments() != null && getArguments().containsKey("plantCare")) {
             plantCare = (PlantCare) getArguments().getSerializable("plantCare");
+            imagePath = getArguments().getString("imagePath");
             Log.d("AddPlantNicknameDialog", "PlantCare object received: " + plantCare.getCommonName());
             //log id
             Log.d("AddPlantNicknameDialog", "PlantCare object id received: " + plantCare.getId());
@@ -65,7 +67,7 @@ public class AddPlantNicknameDialog extends DialogFragment {
             }
 
             // Proceed to add the plant to the database
-            addPlantToDatabase(plantNickname, plantCare);
+            addPlantToDatabase(plantNickname, plantCare, imagePath);
         });
 
         return view;
@@ -88,7 +90,7 @@ public class AddPlantNicknameDialog extends DialogFragment {
         }).start();
     }
 
-    private void addPlantToDatabase(String plantNickname, PlantCare plantCare) {
+    private void addPlantToDatabase(String plantNickname, PlantCare plantCare, String imagePath) {
         new Thread(() -> {
             Log.d("AddPlantNicknameDialog", "Adding plant to database: " + plantNickname);
             if (plantCare != null) {
@@ -104,8 +106,9 @@ public class AddPlantNicknameDialog extends DialogFragment {
             calendar.setTime(today);
             calendar.add(Calendar.DAY_OF_YEAR, wateringFrequency);
 
-            UserPlant newPlant = new UserPlant(plantCare.getId(), plantNickname, today, null, false, 0);
+            UserPlant newPlant = new UserPlant(plantCare.getId(), plantNickname, today, null, false);
             newPlant.setNextWateringDate(calendar.getTime());
+            newPlant.setImagePath(imagePath);
 
             userpdb.userPlantDao().insert(newPlant);
             Log.d("AddPlantNicknameDialog", "Plant added to database: " + newPlant.getNickname());

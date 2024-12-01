@@ -98,7 +98,7 @@ public class DashboardFragment extends Fragment {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity());
 
         // Set the welcome message
-        welcomeText = getString(R.string.welcome_username, userName);
+        welcomeText = getString(R.string.welcome_username);
         welcomeMessage.setText(welcomeText);
 
         // Initialize the RecyclerView
@@ -137,7 +137,6 @@ public class DashboardFragment extends Fragment {
                 String imageName = "a" + userPlant.getPlantCareId();  // Construct the image name dynamically
                 int imageResId = getResources().getIdentifier(imageName, "drawable", getContext().getPackageName());
                 Log.d("Image Debug", "Stored Image Path: " + userPlant.getImagePath());
-                Log.d("Image Debug", "Stored Image Resource: " + userPlant.getImageResource());
 
                 Log.d("DashboardFragment", "Plant ID: " + userPlant.getId() + ", Image Name: " + imageName + ", Image Res ID: " + imageResId);
 

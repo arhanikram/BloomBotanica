@@ -10,6 +10,7 @@ import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.LayoutInflater;
@@ -23,6 +24,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bloombotanica.database.PlantCareDatabase;
@@ -289,6 +291,28 @@ public class PlantsFragment extends Fragment implements PlantAdapter.OnPlantLong
             filterPlants(plantSearchfield.getText().toString());
         }
 
+        RecyclerView recyclerView = getView().findViewById(R.id.recycler_view);
+        LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+
+        if (layoutManager != null) {
+            // Create a custom smooth scroller
+            LinearSmoothScroller smoothScroller = new LinearSmoothScroller(requireContext()) {
+                @Override
+                protected int getVerticalSnapPreference() {
+                    return SNAP_TO_END;  // Scroll to the end of the item
+                }
+
+                @Override
+                public float calculateSpeedPerPixel(DisplayMetrics displayMetrics) {
+                    // Adjust the speed of the scroll
+                    return 150f / (int) displayMetrics.densityDpi;  // Modify the speed if needed
+                }
+            };
+
+            // Scroll to the last item
+            smoothScroller.setTargetPosition(userPlantList.size() - 1);
+            layoutManager.startSmoothScroll(smoothScroller);
+        }
         Log.d("PlantsFragment", "onPlantAdded: New plant added to RecyclerView");
     }
 

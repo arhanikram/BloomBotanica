@@ -58,6 +58,23 @@ public class MainActivity extends AppCompatActivity implements AddPlantNicknameD
                     .commit();
         }
 
+        boolean navToPlants = getIntent().getBooleanExtra("navToPlants", false);
+
+        if (navToPlants) {
+            //add bitmap from intent extra
+            Bitmap bitmap = getIntent().getParcelableExtra("bitMap");
+            binding.bottomNavigationView.setSelectedItemId(R.id.plants);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new PlantsFragment())
+                    .commit();
+        } else if (savedInstanceState == null) {
+            binding.bottomNavigationView.setSelectedItemId(R.id.dashboard);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new DashboardFragment())
+                    .commit();
+        }
+
+
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
             Fragment selectedFragment = null;
 
@@ -72,9 +89,6 @@ public class MainActivity extends AppCompatActivity implements AddPlantNicknameD
             } else if(item.getItemId() == R.id.camera) {
                 //open camera for ML model
                 cameraHelper.showImageSourceDialog();
-
-                //testing purposes
-//                openPredictionActivityTEST();
             }
 
             if (selectedFragment != null) {
@@ -84,15 +98,6 @@ public class MainActivity extends AppCompatActivity implements AddPlantNicknameD
             }
             return true;
         });
-        // Add the fragment dynamically if it's not already added
-        if (savedInstanceState == null) {
-            SettingsFragment settingsFragment = new SettingsFragment();
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.fragment_container, settingsFragment);  // Use the ID of the container in the layout
-            transaction.commit();
-        }
-        //set dashboard as default so it auto opens on start
-        binding.bottomNavigationView.setSelectedItemId(R.id.dashboard);
 
         // Handle BottomNavigationView position dynamically
         ViewCompat.setOnApplyWindowInsetsListener(binding.bottomNavigationView, (view, insets) -> {
