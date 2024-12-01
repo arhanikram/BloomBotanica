@@ -57,6 +57,10 @@
             android:name=".ui.OnboardingActivity"
             android:exported="false" />
         <activity
+            android:name=".ui.AppearanceActivity"
+            android:exported="false" />
+        <activity android:name=".ui.SettingsFragment" />
+        <activity
             android:name=".ui.MainActivity"
             android:exported="true">
             <intent-filter>
