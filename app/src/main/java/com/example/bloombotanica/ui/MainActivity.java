@@ -16,6 +16,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.bloombotanica.R;
 import com.example.bloombotanica.databinding.ActivityMainBinding;
@@ -83,7 +84,13 @@ public class MainActivity extends AppCompatActivity implements AddPlantNicknameD
             }
             return true;
         });
-
+        // Add the fragment dynamically if it's not already added
+        if (savedInstanceState == null) {
+            SettingsFragment settingsFragment = new SettingsFragment();
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragment_container, settingsFragment);  // Use the ID of the container in the layout
+            transaction.commit();
+        }
         //set dashboard as default so it auto opens on start
         binding.bottomNavigationView.setSelectedItemId(R.id.dashboard);
 

@@ -2,21 +2,21 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    tools:context=".ui.SettingsFragment">
+    tools:context=".ui.AboutPageActivity">
 
 
-
-    <!-- Version Information TextView -->
+    <!-- Dialog content TextView -->
     <TextView
-        android:id="@+id/versionTitle"
+        android:id="@+id/aboutUsBlurb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:text="Version Name: 1.0.0\nVersion Code: 1"
-        android:textSize="16sp"
-        android:layout_marginTop="20dp"
-        tools:ignore="MissingConstraints" />
-
+        android:text="@string/AboutBlurb"
+        android:textSize="17sp"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="-2dp"
+        tools:layout_editor_absoluteY="49dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

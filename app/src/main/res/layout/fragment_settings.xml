@@ -1,14 +1,207 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="?android:attr/windowBackground"
     tools:context=".ui.SettingsFragment">
 
-    <ListView
-        android:id="@+id/list"
+    <!-- Title -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Settings"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:padding="16dp"/>
+
+    <!-- Settings Container -->
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="16dp">
+
+            <!-- General Section -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="General"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_marginVertical="8dp"/>
+
+            <!-- Account Information -->
+            <LinearLayout
+                android:id="@+id/account_info_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:background="@drawable/settings_item_background"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:clickable="true"
+                android:focusable="true">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_person"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Account Information"
+                    android:textSize="16sp"
+                    android:layout_marginStart="16dp"/>
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_chevron_right"/>
+            </LinearLayout>
+
+            <!-- Appearance -->
+            <LinearLayout
+                android:id="@+id/appearance_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:background="@drawable/settings_item_background"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:clickable="true"
+                android:focusable="true">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_palette"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Appearance"
+                    android:textSize="16sp"
+                    android:layout_marginStart="16dp"/>
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_chevron_right"/>
+            </LinearLayout>
+
+            <!-- Notifications -->
+            <LinearLayout
+                android:id="@+id/notifications_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:background="@drawable/settings_item_background"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:clickable="true"
+                android:focusable="true">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_notifications"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Notifications"
+                    android:textSize="16sp"
+                    android:layout_marginStart="16dp"/>
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_chevron_right"/>
+            </LinearLayout>
+
+            <!-- Support Section -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Support"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="8dp"/>
+
+            <!-- Help -->
+            <LinearLayout
+                android:id="@+id/help_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:background="@drawable/settings_item_background"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:clickable="true"
+                android:focusable="true">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_help"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Help"
+                    android:textSize="16sp"
+                    android:layout_marginStart="16dp"/>
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_chevron_right"/>
+            </LinearLayout>
+
+            <!-- About -->
+            <LinearLayout
+                android:id="@+id/about_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:background="@drawable/settings_item_background"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:clickable="true"
+                android:focusable="true">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_info"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="About"
+                    android:textSize="16sp"
+                    android:layout_marginStart="16dp"/>
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_chevron_right"/>
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

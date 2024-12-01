@@ -57,7 +57,7 @@ public class DashboardFragment extends Fragment {
     private RecyclerView tasksRecyclerView;
     private TaskAdapter taskAdapter;
     private TextView welcomeMessage, taskCount, weatherDate, temperature, humidity, sunlight, noTasks;
-    private String welcomeText;
+    private String welcomeText,userName;
     private UserPlantDatabase userpdb;
     private FusedLocationProviderClient fusedLocationClient;
     private ViewPager2 viewPager;  // Use ViewPager2 instead of ImageView
@@ -67,6 +67,7 @@ public class DashboardFragment extends Fragment {
     private List<UserPlant> userPlants = new ArrayList<>();  // Initialize as an empty list
     private PlantCareDatabase plantCareDatabase;
     private PlantCareDao plantCareDao;
+    private SharedPreferences sharedPreferences;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -78,8 +79,8 @@ public class DashboardFragment extends Fragment {
         plantCareDao = plantCareDatabase.plantCareDao();
 
         // Get username from SharedPreferences
-        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("UserPrefs", MODE_PRIVATE);
-        String userName = sharedPreferences.getString("username", "");
+        sharedPreferences = requireActivity().getSharedPreferences("UserPrefs", MODE_PRIVATE);
+        userName = sharedPreferences.getString("username", "");
 
         // Initialize UI components
         welcomeMessage = view.findViewById(R.id.welcomeMessage);
@@ -115,7 +116,10 @@ public class DashboardFragment extends Fragment {
         Log.d("DashboardFragment", "OnResumeCalled");
         fetchUserLocation(); // Fetch weather data based on location
         loadUserPlants();   // Load user plants for image scrolling
-
+        sharedPreferences = requireActivity().getSharedPreferences("UserPrefs", MODE_PRIVATE);
+        userName = sharedPreferences.getString("username", "");
+        welcomeText = getString(R.string.welcome_username);
+        welcomeMessage.setText(welcomeText +" "+ userName);
         //TESTING
 //        createOverdueTask(0, "Watering", 3); // Creates an overdue task due 3 days ago
 
