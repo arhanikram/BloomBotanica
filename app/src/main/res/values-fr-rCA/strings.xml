@@ -39,6 +39,7 @@
     <string name="logo_desc">Logo de BloomBotanica</string>
     <string name="plant_name">Plant Name</string>
     <string name="CardImage">Card Image</string>
+    <string name="AboutTitle">About us!</string>
     <string-array name="languages_array">
         <item>Anglais</item>
         <item>Espagnol</item>

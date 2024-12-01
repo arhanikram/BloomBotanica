@@ -81,30 +81,40 @@ public class SettingsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_settings, container, false);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_list_item_1, settings);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, settings);
+
+        //Creates a settings list of options for the user
         ListView lv = (ListView) rootView.findViewById(R.id.list);
         lv.setAdapter(adapter);
 
+        //Creates a listener for the settings list
         AdapterView.OnItemClickListener itemListener = new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                //Switch determines which option the user chose
                 switch(position) {
                     case 0:
-                        //About
-                        break;
-                    case 1:
-                        //version
-                        String version = "Version Name: " + BuildConfig.VERSION_NAME + "\n" + "Version Code: " + BuildConfig.VERSION_CODE;
-                        Intent intent = new Intent(getActivity(), VersionHistoryActivity.class);
+                        //About Page
+
+                        //Sends user to the About Page
+                        Intent intent = new Intent(getActivity(), AboutPageActivity.class);
                         startActivity(intent);
                         break;
+                    case 1:
+                        //Version Option
+
+                        //Sends user to the Version History page
+                        Intent intentVer = new Intent(getActivity(), VersionHistoryActivity.class);
+                        startActivity(intentVer);
+                        break;
                     case 2:
-                        //Theme
+                        //Theme Option
+
+                        //Creates a popup menu for the different theme choices
                         PopupMenu popup = new PopupMenu (getContext(), view);
                         popup.getMenuInflater().inflate(R.menu.theme_menu, popup.getMenu());
                         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
 
+                            //listener for the popup menu
                             @Override
                             public boolean onMenuItemClick(MenuItem menuItem) {
                                 if(menuItem.getItemId()==R.id.light_mode) {
@@ -120,7 +130,7 @@ public class SettingsFragment extends Fragment {
 
                         break;
                     case 3:
-                        //log history
+                        //Log history
                         Log.i("SETTINGS", "log history");
                         break;
                 }
