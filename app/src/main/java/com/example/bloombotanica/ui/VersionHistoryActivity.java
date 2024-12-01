@@ -25,6 +25,7 @@ public class VersionHistoryActivity extends AppCompatActivity {
             return insets;
         });
 
+        //Display the version name + history
         TextView version = findViewById(R.id.versionTitle);
         String versionStr = "Version Name: " + BuildConfig.VERSION_NAME + "\n" + "Version Code  " + BuildConfig.VERSION_CODE;
         version.setText(versionStr);
