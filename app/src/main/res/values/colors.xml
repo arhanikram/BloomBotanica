@@ -17,6 +17,6 @@
     <color name="healthy_green">#4CAF50</color>
     <color name="unhealthy">#A52A2A</color>
     <color name="darkgreen">#243E36</color>
-
+    <color name="lightergreen">#7CA982</color>
 
 </resources>

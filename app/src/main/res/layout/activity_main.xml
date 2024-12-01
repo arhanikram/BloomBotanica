@@ -26,6 +26,10 @@
         app:menu="@menu/bottom_nav_menu"
         android:background="@drawable/bottom_nav_background"
         android:fitsSystemWindows="true"
+        app:itemIconTint="@color/bottom_nav_item_icon"
+        app:itemTextColor="@color/bottom_nav_item_text"
+        app:itemBackground="@drawable/bottom_nav_item_background"
+        android:fitsSystemWindows="false"
         android:clipToPadding="false"
         android:elevation="8dp" />
 
