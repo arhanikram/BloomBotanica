@@ -23,10 +23,14 @@ public interface PlantCareDao {
     @Delete
     void delete(PlantCare plantCare);
 
+    @Query("DELETE FROM plant_care")
+    void deleteAll();  // Deletes all records in the table
+
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(List<PlantCare> plantCareList);
 
-    @Query("SELECT * FROM plant_care")
+    @Query("SELECT * FROM plant_care ORDER BY id ASC")
     List<PlantCare> getAllPlants();
 
     @Query("SELECT * FROM plant_care WHERE commonName LIKE '%' || :query || '%' OR scientificName LIKE '%' || :query || '%'")
@@ -44,4 +48,6 @@ public interface PlantCareDao {
     @Query("SELECT * FROM plant_care WHERE commonName = :commonName")
     PlantCare getByCommonName(String commonName);
 
+    @Query("DELETE FROM sqlite_sequence WHERE name = 'plant_care'")
+    void resetSequence();
 }

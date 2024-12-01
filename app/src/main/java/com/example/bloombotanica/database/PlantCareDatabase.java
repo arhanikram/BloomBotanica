@@ -20,7 +20,7 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.util.List;
 
-@Database(entities = {PlantCare.class}, version = 4, exportSchema = false)
+@Database(entities = {PlantCare.class}, version = 1, exportSchema = false)
 @TypeConverters({Converters.class})
 public abstract class PlantCareDatabase extends RoomDatabase {
 
@@ -31,6 +31,7 @@ public abstract class PlantCareDatabase extends RoomDatabase {
     public static synchronized PlantCareDatabase getInstance(Context context) {
         Log.d("PlantCareDatabase", "Getting the database instance" + context.toString());
         if (instance == null) {
+
             instance = Room.databaseBuilder(context.getApplicationContext(),
                             PlantCareDatabase.class, "plant_care_database")
                     .fallbackToDestructiveMigration()
@@ -58,14 +59,45 @@ public abstract class PlantCareDatabase extends RoomDatabase {
         return instance;
     }
 
+    private void populateDatabase(Context context) {
+        Log.d("PlantCareDatabase", "Populating database...");
+        List<PlantCare> plantCareList = CsvParser.parseCsv(context, "plant_care.csv");
+        Log.d("PlantCareDatabase", "CSV data parsed. Size: " + plantCareList.size());
+
+        if (!plantCareList.isEmpty()) {
+
+            // Clear existing data first (optional)
+            plantCareDao().deleteAll();  // Assuming you have a deleteAll() method
+
+            plantCareDao().resetSequence();
+
+            Log.d("PlantCareDatabase", "Inserting plants. First plant details:");
+            PlantCare firstPlant = plantCareList.get(0);
+            Log.d("PlantCareDatabase", "First plant ID before insertion: " + firstPlant.getId());
+
+            Log.d("PlantCareDatabase", "Populating database with CSV data...");
+            // Insert the new plants
+            plantCareDao().insertAll(plantCareList);
+            // Retrieve and log the first inserted plant's ID
+            List<PlantCare> insertedPlants = plantCareDao().getAllPlants();
+            if (!insertedPlants.isEmpty()) {
+                Log.d("PlantCareDatabase", "First inserted plant ID: " + insertedPlants.get(0).getId());
+            }
+            Log.d("PlantCareDatabase", "Database populated.");
+        } else {
+            Log.e("PlantCareDatabase", "CSV data is empty or failed to parse.");
+        }
+    }
+
     private void checkForDatabaseUpdates(Context context) {
+        //Loop through all db items
+        for (PlantCare plant : plantCareDao().getAllPlants()) {
+            Log.d("PLANT IDS", plant.getId() + "  -  " + plant.getCommonName());
+        }
         Log.d("PlantCareDatabase", "Checking for database updates...");
         String currentFileHash = getFileHash(context, "plant_care.csv");
         String savedFileHash = getSavedFileHash(context);
 
-        for (PlantCare plant : plantCareDao().getAllPlants()) {
-            Log.d("PLANT IDS", plant.getId() + "  -  " + plant.getCommonName());
-        }
         // If file hash is different, update the database
         if (!currentFileHash.equals(savedFileHash)) {
             Log.d("PlantCareDatabase", "Database file hash changed. Updating database...");
@@ -107,59 +139,6 @@ public abstract class PlantCareDatabase extends RoomDatabase {
         Log.d("PlantCareDatabase", "Saving new file hash: " + newHash);
         SharedPreferences prefs = context.getSharedPreferences("PlantCarePrefs", Context.MODE_PRIVATE);
         prefs.edit().putString("fileHash", newHash).apply();
-    }
-
-    private void populateDatabase(Context context) {
-        Log.d("PlantCareDatabase", "Populating database...");
-        List<PlantCare> plantCareList = CsvParser.parseCsv(context, "plant_care.csv");
-
-        if (!plantCareList.isEmpty()) {
-            Log.d("PlantCareDatabase", "Populating database with CSV data...");
-
-            // First, add or update plants in the database
-            for (PlantCare plant : plantCareList) {
-                PlantCare existingPlant = plantCareDao().getByCommonName(plant.getCommonName());
-
-                if (existingPlant == null) {
-                    Log.d("PlantCareDatabase", "Inserting new plant: " + plant.getCommonName());
-                    plantCareDao().insert(plant); // Insert new plant
-                } else {
-                    Log.d("PlantCareDatabase", "Updating existing plant: " + plant.getCommonName());
-                    // Update existing plant (or insert, depending on your DAO logic)
-                    plantCareDao().update(plant);
-                }
-            }
-
-//            // Now, check for duplicates and remove them
-//            List<PlantCare> allPlants = plantCareDao().getAllPlants();
-//            Log.d("PlantCareDatabase", "Checking for duplicates...");
-//            for (PlantCare plant : allPlants) {
-//                List<PlantCare> duplicates = plantCareDao().searchByCommonName(plant.getCommonName());
-//                if (duplicates.size() > 1) {
-//                    Log.d("PlantCareDatabase", "Found duplicate plant: " + plant.getCommonName());
-//                    // Keep the first one, and delete the rest
-//                    for (int i = 1; i < duplicates.size(); i++) {
-//                        Log.d("PlantCareDatabase", "Deleting duplicate plant: " + duplicates.get(i).getCommonName());
-//                        plantCareDao().delete(duplicates.get(i)); // Assuming a delete method exists
-//                    }
-//                }
-//            }
-
-            // Now, remove plants that are no longer in the CSV
-            for (PlantCare existingPlant : plantCareDao().getAllPlants()) {
-                if (!isPlantInCsv(existingPlant, plantCareList)) {
-                    Log.d("PlantCareDatabase", "Removing plant not in CSV: " + existingPlant.getCommonName());
-                    plantCareDao().deleteByCommonName(existingPlant.getCommonName());
-                }
-            }
-
-            Log.d("PlantCareDatabase", "Database populated and updated with CSV data.");
-            for (PlantCare plant : plantCareDao().getAllPlants()) {
-                Log.d("PlantCareDatabase", plant.getCommonName());
-            }
-        } else {
-            Log.e("PlantCareDatabase", "CSV data is empty or failed to parse.");
-        }
     }
 
     private boolean isPlantInCsv(PlantCare plant, List<PlantCare> plantCareList) {

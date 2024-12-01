@@ -1,11 +1,14 @@
 package com.example.bloombotanica.database;
 
 import android.content.Context;
+import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
+import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.example.bloombotanica.models.JournalEntry;
 import com.example.bloombotanica.models.Task;
@@ -23,10 +26,24 @@ public abstract class UserPlantDatabase extends RoomDatabase {
     public abstract JournalEntryDao journalEntryDao();
 
     public static synchronized UserPlantDatabase getInstance(Context context) {
+        Log.d("UserPlantDatabase", "getInstance Called");
         if (instance == null) {
+            Log.d("UserPlantDatabase", "Creating new instance");
             instance = Room.databaseBuilder(context.getApplicationContext()
                     , UserPlantDatabase.class, "user_plant_database")
-                    .fallbackToDestructiveMigration().build();
+                    .fallbackToDestructiveMigration().addCallback(new Callback() {
+                        @Override
+                        public void onCreate(@NonNull SupportSQLiteDatabase db) {
+                            super.onCreate(db);
+                            Log.d("UserPlantDatabase", "Database created.");
+                        }
+
+                        @Override
+                        public void onOpen(@NonNull SupportSQLiteDatabase db) {
+                            super.onOpen(db);
+                            Log.d("UserPlantDatabase", "Database opened.");
+                        }
+                    }).build();
         }
         return instance;
     }

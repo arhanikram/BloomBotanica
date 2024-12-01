@@ -1,11 +1,14 @@
 package com.example.bloombotanica.models;
 
 import androidx.room.Entity;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
 
-@Entity(tableName = "plant_care")
+@Entity(tableName = "plant_care",
+        indices = {@Index(value = {"commonName"}, unique = true),
+                @Index(value = {"scientificName"}, unique = true)})
 public class PlantCare implements Serializable {
 
     @PrimaryKey(autoGenerate = true)
