@@ -121,7 +121,7 @@ public abstract class PlantCareDatabase extends RoomDatabase {
 
             // Clear existing data first (optional)
             plantCareDao().deleteAll();  // Assuming you have a deleteAll() method
-
+            plantCareDao().resetSequence();
             Log.d("PlantCareDatabase", "Inserting plants. First plant details:");
             PlantCare firstPlant = plantCareList.get(0);
             Log.d("PlantCareDatabase", "First plant ID before insertion: " + firstPlant.getId());
@@ -132,9 +132,6 @@ public abstract class PlantCareDatabase extends RoomDatabase {
             // Retrieve and log the first inserted plant's ID
             List<PlantCare> insertedPlants = plantCareDao().getAllPlants();
             if (!insertedPlants.isEmpty()) {
-                for (int i = 0; i < plantCareList.size(); i++) {
-                    plantCareList.get(i).setId(0);  // Explicitly set to 0
-                }
                 Log.d("PlantCareDatabase", "First inserted plant ID: " + insertedPlants.get(0).getId());
             }
             Log.d("PlantCareDatabase", "Database populated.");
