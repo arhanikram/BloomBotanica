@@ -8,11 +8,14 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -49,6 +52,7 @@ public class PlantsFragment extends Fragment implements PlantAdapter.OnPlantLong
     private BottomNavigationView bottomNavigationView;
     private TextView dateText;
     private PlantCareDatabase plantCareDatabase;
+    private EditText plantSearchfield;
 
     @Nullable
     @Override
@@ -76,7 +80,7 @@ public class PlantsFragment extends Fragment implements PlantAdapter.OnPlantLong
         recyclerView.setLayoutManager(layoutManager);
 
         plantAdapter = new PlantAdapter(userPlantList, plantCareDatabase, this);
-// Pass the OnItemClickListener directly when initializing the adapter
+        // Pass the OnItemClickListener directly when initializing the adapter
         plantAdapter.setOnItemClickListener((position) -> {
             UserPlant selectedPlant = userPlantList.get(position);
             Intent intent = new Intent(getContext(), UserPlantProfileActivity.class);
@@ -87,8 +91,6 @@ public class PlantsFragment extends Fragment implements PlantAdapter.OnPlantLong
 
         recyclerView.setAdapter(plantAdapter);
 
-
-
         loadUserPlants();
 
         // Set up Floating Action Button
@@ -97,7 +99,44 @@ public class PlantsFragment extends Fragment implements PlantAdapter.OnPlantLong
             showAddPlantDialog();
         });
 
+        plantSearchfield = view.findViewById(R.id.plantSearchfield);
+        plantSearchfield.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                filterPlants(charSequence.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
         return view;
+    }
+
+    private void filterPlants(String string) {
+
+        if (string.isEmpty()) {
+            plantAdapter.updatePlants(userPlantList);
+            return;
+        }
+
+        List<UserPlant> filteredList = new ArrayList<>();
+
+        for (UserPlant plant : userPlantList) {
+            if (plant.getNickname().toLowerCase().contains(string.toLowerCase())) {
+                filteredList.add(plant);
+            }
+        }
+
+        plantAdapter.updatePlants(filteredList);
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -105,7 +144,6 @@ public class PlantsFragment extends Fragment implements PlantAdapter.OnPlantLong
         new Thread(() -> {
             List<UserPlant> userPlants = userPlantDatabase.userPlantDao().getAllUserPlants();
 
-            int initialSize = userPlantList.size();
             // Update the UI on the main thread
             requireActivity().runOnUiThread(() -> {
                 userPlantList.clear();
@@ -142,6 +180,7 @@ public class PlantsFragment extends Fragment implements PlantAdapter.OnPlantLong
         // Handle drop on trash bin
         trashBin.setOnDragListener((v, event) -> {
             if (event.getAction() == DragEvent.ACTION_DROP) {
+                //delete plant
                 showDeleteConfirmationDialog(position);
                 trashBinHoverOff();
             } else if (event.getAction() == DragEvent.ACTION_DRAG_ENDED) {
@@ -227,6 +266,8 @@ public class PlantsFragment extends Fragment implements PlantAdapter.OnPlantLong
         userPlantList.remove(position);
         plantAdapter.notifyItemRemoved(position);
         plantAdapter.notifyItemRangeChanged(position, userPlantList.size());
+
+//        loadUserPlants();
     }
 
     private void setDate() {
@@ -238,10 +279,19 @@ public class PlantsFragment extends Fragment implements PlantAdapter.OnPlantLong
     @Override
     public void onPlantAdded(UserPlant newPlant) {
         userPlantList.add(newPlant);
-        plantAdapter.notifyItemInserted(userPlantList.size() - 1);
-        loadUserPlants();
+
+        // Check if search is active and either update filtered or full list accordingly
+        if (plantSearchfield.getText().toString().isEmpty()) {
+            // If no search query, show the full list
+            plantAdapter.updatePlants(userPlantList);
+        } else {
+            // Otherwise, apply the filter
+            filterPlants(plantSearchfield.getText().toString());
+        }
+
         Log.d("PlantsFragment", "onPlantAdded: New plant added to RecyclerView");
     }
+
 
     @Override
     public void onResume() {

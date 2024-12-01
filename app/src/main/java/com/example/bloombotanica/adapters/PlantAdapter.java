@@ -128,6 +128,12 @@ public class PlantAdapter extends RecyclerView.Adapter<PlantAdapter.PlantViewHol
         return userPlantList.size();
     }
 
+    public void updatePlants(List<UserPlant> newPlants) {
+        this.userPlantList = newPlants;
+        notifyDataSetChanged();
+    }
+
+
     public static class PlantViewHolder extends RecyclerView.ViewHolder {
         TextView plantName;
         TextView plantCommonName;
