@@ -57,7 +57,7 @@ public class DashboardFragment extends Fragment {
     private RecyclerView tasksRecyclerView;
     private TaskAdapter taskAdapter;
     private TextView welcomeMessage, taskCount, weatherDate, temperature, humidity, sunlight, noTasks;
-    private String welcomeText,userName;
+    private String welcomeText, userName;
     private UserPlantDatabase userpdb;
     private FusedLocationProviderClient fusedLocationClient;
     private ViewPager2 viewPager;  // Use ViewPager2 instead of ImageView
@@ -119,7 +119,7 @@ public class DashboardFragment extends Fragment {
         sharedPreferences = requireActivity().getSharedPreferences("UserPrefs", MODE_PRIVATE);
         userName = sharedPreferences.getString("username", "");
         welcomeText = getString(R.string.welcome_username);
-        welcomeMessage.setText(welcomeText +" "+ userName);
+        welcomeMessage.setText(welcomeText + " " + userName);
         //TESTING
 //        createOverdueTask(0, "Watering", 3); // Creates an overdue task due 3 days ago
 
@@ -135,25 +135,30 @@ public class DashboardFragment extends Fragment {
             // Fetch image resource IDs from plant IDs
             for (UserPlant userPlant : userPlants) {
                 String imageName = "a" + userPlant.getPlantCareId();  // Construct the image name dynamically
-                int imageResId = getResources().getIdentifier(imageName, "drawable", getContext().getPackageName());
-                Log.d("Image Debug", "Stored Image Path: " + userPlant.getImagePath());
+                if (isAdded() && getContext() != null) {
+                    int imageResId = getResources().getIdentifier(imageName, "drawable", getContext().getPackageName());
+                    Log.d("Image Debug", "Stored Image Path: " + userPlant.getImagePath());
 
-                Log.d("DashboardFragment", "Plant ID: " + userPlant.getId() + ", Image Name: " + imageName + ", Image Res ID: " + imageResId);
+                    Log.d("DashboardFragment", "Plant ID: " + userPlant.getId() + ", Image Name: " + imageName + ", Image Res ID: " + imageResId);
 
-                if (imageResId != 0) {
-                    plantImageIds.add(imageResId);  // Add valid image resource ID
-                } else {
-                    Log.d("DashboardFragment", "Image not found for plant ID: " + userPlant.getId());
-                    plantImageIds.add(R.drawable.default_plant_image);  // Use a default image if resource not found
+                    if (imageResId != 0) {
+                        plantImageIds.add(imageResId);  // Add valid image resource ID
+                    } else {
+                        Log.d("DashboardFragment", "Image not found for plant ID: " + userPlant.getId());
+                        plantImageIds.add(R.drawable.default_plant_image);  // Use a default image if resource not found
+                    }
+
                 }
             }
 
             // Update the adapter on the main thread
-            requireActivity().runOnUiThread(() -> {
-                PlantGalleryAdapter plantGalleryAdapter = new PlantGalleryAdapter(getContext(), plantImageIds);
-                viewPager.setAdapter(plantGalleryAdapter);
-                startAutoScrolling(plantImageIds);  // Pass the correct list here
-            });
+            if (isAdded()) {
+                requireActivity().runOnUiThread(() -> {
+                    PlantGalleryAdapter plantGalleryAdapter = new PlantGalleryAdapter(getContext(), plantImageIds);
+                    viewPager.setAdapter(plantGalleryAdapter);
+                    startAutoScrolling(plantImageIds);  // Pass the correct list here
+                });
+            }
         }).start();
     }
 
@@ -330,7 +335,6 @@ public class DashboardFragment extends Fragment {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DAY_OF_YEAR, -daysPastDue); // Subtract days to set a past due date
         Date pastDueDate = calendar.getTime();
-
 
 
         Task overdueTask = new Task(

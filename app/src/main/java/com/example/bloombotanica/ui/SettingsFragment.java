@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.PopupMenu;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,6 +30,8 @@ public class SettingsFragment extends Fragment {
 
         preferences = requireActivity().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
 
+        applySavedThemeMode();
+
         // Account Information Section Click Listener (Popup)
         rootView.findViewById(R.id.account_info_layout).setOnClickListener(v -> {
             showAccountInfoDialog();
@@ -36,9 +39,33 @@ public class SettingsFragment extends Fragment {
 
         // Appearance Section Click Listener (Navigate to AppearanceActivity)
         rootView.findViewById(R.id.appearance_layout).setOnClickListener(v -> {
+
+            //APPEARANCE ACTIVITY CURRENTLY NOT WORKING - Going to use popup for now.
+
             // Start AppearanceActivity to change the theme
-            Intent intent = new Intent(getActivity(), AppearanceActivity.class);
-            startActivity(intent);
+            //Intent intent = new Intent(getActivity(), AppearanceActivity.class);
+            //startActivity(intent);
+
+            // Create a PopupMenu for the theme options
+            PopupMenu popup = new PopupMenu(getContext(), v);  // Use the `v` (the clicked view)
+            popup.getMenuInflater().inflate(R.menu.theme_menu, popup.getMenu());
+            popup.setOnMenuItemClickListener(menuItem -> {
+                if (menuItem.getItemId() == R.id.light_mode) {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                } else {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                }
+
+                // Save the selected theme mode to SharedPreferences
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putInt("theme_mode", menuItem.getItemId() == R.id.light_mode ? AppCompatDelegate.MODE_NIGHT_NO : AppCompatDelegate.MODE_NIGHT_YES);
+                editor.apply();  // Apply changes asynchronously
+
+                return true;
+            });
+
+            popup.show();
+
         });
 
         // Notifications Section Click Listener (Popup for Push Notifications)

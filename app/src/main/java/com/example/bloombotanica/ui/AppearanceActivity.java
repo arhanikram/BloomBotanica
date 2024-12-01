@@ -10,6 +10,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import com.example.bloombotanica.R;
+
+import androidx.appcompat.widget.Toolbar;
 import androidx.preference.PreferenceManager;
 
 public class AppearanceActivity extends AppCompatActivity {
@@ -48,10 +50,16 @@ public class AppearanceActivity extends AppCompatActivity {
             }
         });
 
+        Toolbar toolbar = findViewById(R.id.appearance_toolbar);
+        setSupportActionBar(toolbar);
 
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle("");
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
-        // Handle Cancel Button
-        findViewById(R.id.back_button).setOnClickListener(v -> finish());  // Close the activity without saving
+        toolbar.setNavigationOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
+
     }
 
     private void saveThemeMode(int mode) {

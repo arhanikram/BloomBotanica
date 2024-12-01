@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
@@ -43,6 +44,12 @@ public class MainActivity extends AppCompatActivity implements AddPlantNicknameD
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
 
         cameraHelper = new CameraHelper(this);
+
+        // Apply the saved theme mode before setting content view
+        SharedPreferences themePrefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+        int savedThemeMode = themePrefs.getInt("theme_mode", AppCompatDelegate.MODE_NIGHT_NO);
+        AppCompatDelegate.setDefaultNightMode(savedThemeMode);
+
 
         SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
         boolean isFirstLaunch = sharedPreferences.getBoolean("isFirstLaunch", true);

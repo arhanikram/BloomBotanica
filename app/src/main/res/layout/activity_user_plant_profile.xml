@@ -92,7 +92,7 @@
             android:maxLines="5"
             android:padding="4dp"
             android:scrollbars="vertical"
-            android:text=""
+            android:text="Plant description"
             android:textSize="18sp"/>
 
         <!-- Watering and Pruning Progress Bars -->
