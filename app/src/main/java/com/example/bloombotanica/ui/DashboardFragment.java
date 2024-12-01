@@ -25,10 +25,12 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.example.bloombotanica.R;
 import com.example.bloombotanica.adapters.PlantGalleryAdapter;
 import com.example.bloombotanica.adapters.TaskAdapter;
+import com.example.bloombotanica.database.PlantCareDao;
 import com.example.bloombotanica.database.PlantCareDatabase;
 import com.example.bloombotanica.database.TaskDao;
 import com.example.bloombotanica.database.UserPlantDao;
 import com.example.bloombotanica.database.UserPlantDatabase;
+import com.example.bloombotanica.models.PlantCare;
 import com.example.bloombotanica.models.Task;
 import com.example.bloombotanica.models.UserPlant;
 import com.example.bloombotanica.utils.TaskUtils;
@@ -45,6 +47,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -62,14 +65,17 @@ public class DashboardFragment extends Fragment {
     private Handler handler = new Handler();  // Handler for auto-scrolling
     private Runnable autoScrollRunnable; // Runnable to handle the scrolling task
     private List<UserPlant> userPlants = new ArrayList<>();  // Initialize as an empty list
-
-
+    private PlantCareDatabase plantCareDatabase;
+    private PlantCareDao plantCareDao;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_dashboard, container, false);
+
+        plantCareDatabase = PlantCareDatabase.getInstance(requireContext());
+        plantCareDao = plantCareDatabase.plantCareDao();
 
         // Get username from SharedPreferences
         SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("UserPrefs", MODE_PRIVATE);
@@ -107,9 +113,13 @@ public class DashboardFragment extends Fragment {
     public void onResume() {
         super.onResume();
         Log.d("DashboardFragment", "OnResumeCalled");
-        loadTasks(); // Load tasks
         fetchUserLocation(); // Fetch weather data based on location
         loadUserPlants();   // Load user plants for image scrolling
+
+        //TESTING
+//        createOverdueTask(0, "Watering", 3); // Creates an overdue task due 3 days ago
+
+        loadTasks(); // Load tasks
     }
 
     private void loadUserPlants() {
@@ -247,19 +257,30 @@ public class DashboardFragment extends Fragment {
     }
 
     private void loadTasks() {
+        Log.d("DashboardFragment", "loadTasks Called");
         new Thread(() -> {
             TaskDao taskDao = userpdb.taskDao();
             UserPlantDao userPlantDao = userpdb.userPlantDao();
+            PlantCare plantCare = plantCareDao.getPlantCareById(0);
             Pair<Date, Date> dayRange = getStartAndEndOfDay(new Date());
 
             //commented out for testing purposes
-//            List<Task> todayTasks = taskDao.getTasksForDate(dayRange.first, dayRange.second);
-            List<Task> todayTasks = taskDao.getIncompleteTasks();
-            List<Task> overdueTasks = taskDao.getOverdueTasks(new Date());
+            List<Task> todayTasks = taskDao.getTasksForDate(dayRange.first, dayRange.second);
+//            List<Task> todayTasks = taskDao.getIncompleteTasks();
+            List<Task> overdueTasks = taskDao.getOverdueTasks(dayRange.first);
+
+            Log.d("DashboardFragment", "Today tasks: " + todayTasks);
+            Log.d("DashboardFragment", "Overdue tasks: " + overdueTasks.size());
 
             List<Task> combinedTasks = new ArrayList<>();
-            if (overdueTasks != null) combinedTasks.addAll(overdueTasks);
-            if (todayTasks != null) combinedTasks.addAll(todayTasks);
+            if (!overdueTasks.isEmpty()) {
+                combinedTasks.addAll(overdueTasks);
+                Log.d("CombinedTasks", "Added overdue task to combinedTasks: " + overdueTasks);
+            }
+            if (!todayTasks.isEmpty()) {
+                combinedTasks.addAll(todayTasks);
+                Log.d("CombinedTasks", "Added today task to combinedTasks: " + todayTasks);
+            }
 
             taskDao.removeTasksForDeletedPlants();
 
@@ -275,9 +296,8 @@ public class DashboardFragment extends Fragment {
 
             if (isAdded()) {
                 requireActivity().runOnUiThread(() -> {
-                    taskAdapter = new TaskAdapter(combinedTasks, this::markTaskAsCompleted, userPlantDao);
+                    taskAdapter.updateTasks(combinedTasks);
                     tasksRecyclerView.setAdapter(taskAdapter);
-
                     if (combinedTasks.isEmpty()) {
                         tasksRecyclerView.setVisibility(View.GONE);
                         taskCount.setVisibility(View.GONE);
@@ -298,8 +318,32 @@ public class DashboardFragment extends Fragment {
         UserPlantDao userPlantDao = userpdb.userPlantDao();
         PlantCareDatabase plantCareDatabase = PlantCareDatabase.getInstance(getContext());
 
-        TaskUtils.renewTask(task, taskDao, userPlantDao, plantCareDatabase, () -> {
-            loadTasks(); // Reload tasks after task completion
-        });
+        // Reload tasks after task completion
+        TaskUtils.renewTask(task, taskDao, userPlantDao, plantCareDatabase, this::loadTasks);
     }
+
+    // Method to create a task with a past due date
+    private void createOverdueTask(int userPlantId, String taskType, int daysPastDue) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_YEAR, -daysPastDue); // Subtract days to set a past due date
+        Date pastDueDate = calendar.getTime();
+
+
+
+        Task overdueTask = new Task(
+                userPlantId,
+                taskType,
+                pastDueDate,
+                false // Not completed
+        );
+
+        new Thread(() -> {
+            TaskDao taskDao = userpdb.taskDao();
+            taskDao.insert(overdueTask);
+            Log.d("DashboardFragment", "Inserted overdue task: " + overdueTask.toString());
+            Log.d("TaskDao", "Current date for overdue query: " + new Date());
+            requireActivity().runOnUiThread(this::loadTasks); // Refresh task list
+        }).start();
+    }
+
 }

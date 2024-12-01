@@ -4,6 +4,7 @@ import static com.example.bloombotanica.utils.DateUtils.getStartAndEndOfDay;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,12 +57,14 @@ public class CalendarFragment extends Fragment {
         }
         taskDao = UserPlantDatabase.getInstance(requireContext()).taskDao();
         userPlantDao = UserPlantDatabase.getInstance(requireContext()).userPlantDao();
+        Log.d("CalendarFragment", "onCreateView called");
         return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        Log.d("CalendarFragment", "onViewCreated called");
         if(binding != null) {
 
             MaterialCalendarView calendarView = binding.calendarView;
@@ -88,6 +91,7 @@ public class CalendarFragment extends Fragment {
     }
 
     private void fetchTaskDates() {
+        Log.d("CalendarFragment", "fetchTaskDates called");
         new Thread(() -> {
             List<Task> allTasks = taskDao.getIncompleteTasks();
             for (Task task : allTasks) {

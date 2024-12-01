@@ -14,6 +14,7 @@ import com.example.bloombotanica.database.UserPlantDao;
 import com.example.bloombotanica.models.Task;
 import com.example.bloombotanica.models.UserPlant;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,7 +74,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     }
 
     public void updateTasks(List<Task> newTasks) {
-        tasks = newTasks != null ? newTasks : new ArrayList<>();
+        this.tasks = newTasks;
         notifyDataSetChanged();
     }
 

@@ -22,8 +22,8 @@ public interface TaskDao {
     @Query("SELECT * FROM tasks WHERE isCompleted = 0")
     List<Task> getIncompleteTasks();
 
-    @Query("SELECT * FROM tasks WHERE dueDate < :currentDate AND isCompleted = 0")
-    List<Task> getOverdueTasks(Date currentDate);
+    @Query("SELECT * FROM tasks WHERE dueDate < :startOfDay AND isCompleted = 0")
+    List<Task> getOverdueTasks(Date startOfDay);
 
     @Query("UPDATE tasks SET isCompleted = 1 WHERE id = :taskId")
     void markTaskAsCompleted(int taskId);

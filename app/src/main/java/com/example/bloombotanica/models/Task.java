@@ -3,6 +3,8 @@ package com.example.bloombotanica.models;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import com.example.bloombotanica.utils.DateUtils;
+
 import java.util.Date;
 import java.util.Objects;
 
@@ -24,8 +26,7 @@ public class Task {
     }
 
     public boolean isOverdue() {
-        Date today = new Date();
-        return !isCompleted && dueDate.before(today);
+        return !isCompleted && dueDate.before(DateUtils.getStartOfDay(new Date()));
     }
 
     public String getTaskType() {
