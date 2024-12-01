@@ -34,6 +34,7 @@ import com.example.bloombotanica.models.UserPlant;
 import com.example.bloombotanica.utils.TaskUtils;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.example.bloombotanica.utils.WeatherUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -105,6 +106,7 @@ public class DashboardFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        Log.d("DashboardFragment", "OnResumeCalled");
         loadTasks(); // Load tasks
         fetchUserLocation(); // Fetch weather data based on location
         loadUserPlants();   // Load user plants for image scrolling
@@ -158,6 +160,7 @@ public class DashboardFragment extends Fragment {
     }
 
     private void fetchUserLocation() {
+        Log.d("DashboardFragment", "fetchUserLocation Called");
         if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 100);
             return;
@@ -214,23 +217,33 @@ public class DashboardFragment extends Fragment {
             String hum = main.getString("humidity");
             String weatherCondition = jsonObject.getJSONArray("weather").getJSONObject(0).getString("description");
 
-            // Sunlight percentage placeholder
-            String sunlightValue = "72%"; // Placeholder for now
+            // Extract sunrise and sunset times from the response (in UNIX timestamp format)
+            long sunriseUnix = jsonObject.getJSONObject("sys").getLong("sunrise");
+            long sunsetUnix = jsonObject.getJSONObject("sys").getLong("sunset");
 
+            // Calculate the light percentage using the WeatherUtils class
+            double lightPercentage = WeatherUtils.calculateLightPercentage(sunriseUnix, sunsetUnix);
+
+            // Format the light percentage as a string for display
+            String sunlightValue = String.format(Locale.getDefault(), "%.0f%%", lightPercentage);
+
+            // Update the UI with weather data
             requireActivity().runOnUiThread(() -> updateWeatherUI(temp, hum, sunlightValue, weatherCondition));
         } catch (JSONException e) {
             Log.e("DashboardFragment", "Error parsing weather data", e);
         }
     }
 
+
     private void updateWeatherUI(String temp, String hum, String sunlightValue, String condition) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE, MMM d", Locale.getDefault());
         String currentDate = dateFormat.format(new Date());
         double tempVal = Double.parseDouble(temp);
+
         weatherDate.setText(currentDate);
         temperature.setText(String.format(Locale.US, "%.0f°C", tempVal));
         humidity.setText(String.format("%s%%", hum));
-        sunlight.setText(sunlightValue);
+        sunlight.setText(sunlightValue);  // Display the calculated sunlight percentage
     }
 
     private void loadTasks() {
