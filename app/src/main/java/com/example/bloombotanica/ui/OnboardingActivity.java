@@ -3,11 +3,11 @@ package com.example.bloombotanica.ui;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.res.Configuration;
@@ -58,8 +58,15 @@ public class OnboardingActivity extends AppCompatActivity {
         Button continueButton = findViewById(R.id.continueButton);
 
         continueButton.setOnClickListener(v -> {
-            String name = nameInput.getText().toString();
-            if (!name.isEmpty()) {
+            String name = nameInput.getText().toString().trim();
+
+            // Validation: Check if the name is not empty and contains only letters and spaces
+            if (name.isEmpty()) {
+                nameInput.setError("Please enter your name");
+            } else if (!name.matches("[a-zA-Z\\s]+")) {
+                // Validation: Check if the name contains only letters and spaces
+                nameInput.setError("Name can only contain letters and spaces");
+            } else {
                 // Save language preference
                 saveLanguagePreference(selectedLanguage);
 
@@ -75,8 +82,6 @@ public class OnboardingActivity extends AppCompatActivity {
                 // Start MainActivity and finish OnboardingActivity
                 startActivity(new Intent(OnboardingActivity.this, MainActivity.class));
                 finish();
-            } else {
-                nameInput.setError("Please enter your name");
             }
         });
     }

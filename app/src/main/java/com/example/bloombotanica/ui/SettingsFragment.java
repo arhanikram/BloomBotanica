@@ -62,7 +62,7 @@ public class SettingsFragment extends Fragment {
         return rootView;
     }
 
-    // Show Account Info Dialog
+    // Show Account Info Dialog with Validation
     private void showAccountInfoDialog() {
         // Inflate the dialog layout
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_account_info, null);
@@ -77,15 +77,26 @@ public class SettingsFragment extends Fragment {
 
         final AlertDialog dialog = builder.create();
 
-        // Save button logic
+        // Save button logic with validation
         saveButton.setOnClickListener(v -> {
-            String newName = editName.getText().toString();
-            // Save the new name to SharedPreferences
-            SharedPreferences.Editor editor = preferences.edit();
-            editor.putString("username", newName);
-            editor.apply();
-            Toast.makeText(getActivity(), "Name changed to: " + newName, Toast.LENGTH_SHORT).show();
-            dialog.dismiss();
+            String newName = editName.getText().toString().trim();
+
+            // Check if the input is empty
+            if (newName.isEmpty()) {
+                Toast.makeText(getActivity(), "Please enter a name.", Toast.LENGTH_SHORT).show();
+            }
+            // Check if the input contains only valid characters (letters and spaces)
+            else if (!newName.matches("[a-zA-Z\\s]+")) {
+                Toast.makeText(getActivity(), "Name can only contain letters and spaces.", Toast.LENGTH_SHORT).show();
+            }
+            // If the input is valid, save it to SharedPreferences
+            else {
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putString("username", newName);
+                editor.apply();
+                Toast.makeText(getActivity(), "Name changed to: " + newName, Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+            }
         });
 
         dialog.show();

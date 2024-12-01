@@ -8,6 +8,8 @@
     tools:context=".ui.PlantsFragment">
 
     <!-- Root layout with a gradient background -->
+
+    <!-- Trash Bin ImageView (hidden by default) -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -19,33 +21,33 @@
             android:id="@+id/title_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="64dp"
             android:text="My Plants"
-            android:textSize="40sp"
             android:textColor="?attr/colorOnPrimary"
+            android:textSize="40sp"
             android:textStyle="bold"
-            android:layout_marginTop="64dp" />
+            android:fontFamily="@font/facultyglyphicregular"
+            />
 
-        <!-- First Name Field -->
         <EditText
             android:id="@+id/plantSearchfield"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:background="@drawable/rounded_border"
+            android:drawableStart="@drawable/ic_search"
+            android:drawablePadding="12dp"
+            android:drawableTint="?attr/colorOnPrimary"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:hint="@string/plantSearch"
             android:inputType="textPersonName"
             android:minHeight="48dp"
-            android:focusable="true"
-            android:background="@drawable/rounded_border"
             android:padding="12dp"
-            android:drawableStart="@drawable/ic_search"
-            android:drawableTint="?attr/colorOnPrimary"
-            android:drawablePadding="12dp"
-            android:focusableInTouchMode="true"
             android:textColor="?attr/colorOnPrimary"
-            app:layout_constraintTop_toBottomOf="@id/nameLabel"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-        />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/nameLabel" />
 
         <!-- RecyclerView for Image Cards (Horizontal Scroll) -->
         <androidx.recyclerview.widget.RecyclerView
@@ -60,7 +62,6 @@
 
     </LinearLayout>
 
-    <!-- Trash Bin ImageView (hidden by default) -->
     <ImageView
         android:id="@+id/trash_bin"
         android:layout_width="64dp"
