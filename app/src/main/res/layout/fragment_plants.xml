@@ -79,9 +79,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="48dp"
+        android:layout_marginBottom="100dp"
         android:contentDescription="@string/add_plant"
-        android:src="@drawable/image_plus_svgrepo_com"
-        android:backgroundTint="?attr/colorSecondary" />
+        android:src="@drawable/ic_plus_sign"
+        android:backgroundTint="@color/lightergreen" />
 
 </FrameLayout>
