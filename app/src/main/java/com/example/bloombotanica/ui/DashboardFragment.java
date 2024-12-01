@@ -115,7 +115,7 @@ public class DashboardFragment extends Fragment {
 
             // Fetch image resource IDs from plant IDs
             for (UserPlant userPlant : userPlants) {
-                String imageName = "a" + userPlant.getId();  // Construct the image name dynamically
+                String imageName = "a" + userPlant.getPlantCareId();  // Construct the image name dynamically
                 int imageResId = getResources().getIdentifier(imageName, "drawable", getContext().getPackageName());
                 Log.d("Image Debug", "Stored Image Path: " + userPlant.getImagePath());
                 Log.d("Image Debug", "Stored Image Resource: " + userPlant.getImageResource());
@@ -177,7 +177,7 @@ public class DashboardFragment extends Fragment {
     }
 
     private void fetchWeatherData(double latitude, double longitude) {
-        String apiKey = "f3822f4c158ca8a944e2193b7191a838";
+        String apiKey = "d9a614beccdb31bfe3b3d13bf1e6bd52";
         String weatherUrl = String.format(
                 "https://api.openweathermap.org/data/2.5/weather?lat=%s&lon=%s&units=metric&appid=%s",
                 latitude, longitude, apiKey);

@@ -104,7 +104,7 @@ public class AddPlantNicknameDialog extends DialogFragment {
             calendar.setTime(today);
             calendar.add(Calendar.DAY_OF_YEAR, wateringFrequency);
 
-            UserPlant newPlant = new UserPlant(plantCare.getId(), plantNickname, today, null, false);
+            UserPlant newPlant = new UserPlant(plantCare.getId(), plantNickname, today, null, false, 0);
             newPlant.setNextWateringDate(calendar.getTime());
 
             userpdb.userPlantDao().insert(newPlant);
