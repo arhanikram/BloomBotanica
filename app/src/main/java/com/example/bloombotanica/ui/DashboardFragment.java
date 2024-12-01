@@ -139,10 +139,6 @@ public class DashboardFragment extends Fragment {
         }).start();
     }
 
-
-
-
-
     private void startAutoScrolling(List<Integer> plantImageIds) {
         if (plantImageIds == null || plantImageIds.isEmpty()) return;
 
@@ -157,9 +153,6 @@ public class DashboardFragment extends Fragment {
             }
         }, 5000); // Start after 2 seconds
     }
-
-
-
 
     private void fetchUserLocation() {
         if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -243,7 +236,9 @@ public class DashboardFragment extends Fragment {
             UserPlantDao userPlantDao = userpdb.userPlantDao();
             Pair<Date, Date> dayRange = getStartAndEndOfDay(new Date());
 
-            List<Task> todayTasks = taskDao.getTasksForDate(dayRange.first, dayRange.second);
+            //commented out for testing purposes
+//            List<Task> todayTasks = taskDao.getTasksForDate(dayRange.first, dayRange.second);
+            List<Task> todayTasks = taskDao.getIncompleteTasks();
             List<Task> overdueTasks = taskDao.getOverdueTasks(new Date());
 
             List<Task> combinedTasks = new ArrayList<>();
@@ -278,6 +273,7 @@ public class DashboardFragment extends Fragment {
             }
         }).start();
     }
+
     private void markTaskAsCompleted(Task task) {
         TaskDao taskDao = userpdb.taskDao();
         UserPlantDao userPlantDao = userpdb.userPlantDao();

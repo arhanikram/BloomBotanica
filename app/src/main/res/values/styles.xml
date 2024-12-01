@@ -5,10 +5,9 @@
         <item name="cornerSize">16dp</item> <!-- Adjust the corner radius as needed -->
         <item name="android:textSize">12sp</item>
     </style>
-    <style name="BottomNavItemText">
-        <item name="android:textSize">12sp</item> <!-- Adjust text size -->
-        <item name="android:gravity">center_vertical</item>
-<!--        <item name="android:lineSpacingExtra">0dp</item> &lt;!&ndash; Remove any extra line spacing &ndash;&gt;-->
-<!--        <item name="android:paddingTop">0dp</item> &lt;!&ndash; Ensure no extra padding at the top &ndash;&gt;-->
+    <style name="BottomNavigationCompact" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="itemPaddingTop">0dp</item>
+        <item name="itemPaddingBottom">0dp</item>
+        <item name="itemHorizontalTranslationEnabled">false</item>
     </style>
 </resources>

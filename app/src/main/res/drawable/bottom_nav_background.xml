@@ -1,4 +1,10 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
-    <solid android:color="@color/darkgreen" />
+    <solid android:color="@color/healthy_green" /> <!-- Temp color -->
+    <corners android:radius="64dp" /> <!-- Increase corner radius for rounder look -->
+    <padding
+        android:left="16dp"
+        android:top="8dp"
+        android:right="16dp"
+        android:bottom="8dp" />
 </shape>

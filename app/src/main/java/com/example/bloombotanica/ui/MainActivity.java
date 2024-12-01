@@ -11,7 +11,10 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.bloombotanica.R;
@@ -84,6 +87,21 @@ public class MainActivity extends AppCompatActivity implements AddPlantNicknameD
         //set dashboard as default so it auto opens on start
         binding.bottomNavigationView.setSelectedItemId(R.id.dashboard);
 
+        // Handle BottomNavigationView position dynamically
+        ViewCompat.setOnApplyWindowInsetsListener(binding.bottomNavigationView, (view, insets) -> {
+            // Get the system navigation bar height
+            int navBarHeight = insets.getInsets(WindowInsetsCompat.Type.systemBars()).bottom;
+
+            // Offset the nav bar height to make it sit closer
+            int offset = -24; // Move it 24dp closer to the bottom (negative value)
+
+            // Adjust BottomNavigationView margin
+            CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) view.getLayoutParams();
+            params.bottomMargin = Math.max(0, navBarHeight + offset); // Ensure no negative margin
+            view.setLayoutParams(params);
+
+            return insets; // Return insets to retain other behaviors
+        });
     }
 
     private void openPredictionActivityTEST() {
