@@ -31,6 +31,7 @@ public abstract class PlantCareDatabase extends RoomDatabase {
     public static synchronized PlantCareDatabase getInstance(Context context) {
         Log.d("PlantCareDatabase", "Getting the database instance" + context.toString());
         if (instance == null) {
+            context.deleteDatabase("plant_care_database");
 
             instance = Room.databaseBuilder(context.getApplicationContext(),
                             PlantCareDatabase.class, "plant_care_database")
@@ -57,36 +58,6 @@ public abstract class PlantCareDatabase extends RoomDatabase {
                     .build();
         }
         return instance;
-    }
-
-    private void populateDatabase(Context context) {
-        Log.d("PlantCareDatabase", "Populating database...");
-        List<PlantCare> plantCareList = CsvParser.parseCsv(context, "plant_care.csv");
-        Log.d("PlantCareDatabase", "CSV data parsed. Size: " + plantCareList.size());
-
-        if (!plantCareList.isEmpty()) {
-
-            // Clear existing data first (optional)
-            plantCareDao().deleteAll();  // Assuming you have a deleteAll() method
-
-            plantCareDao().resetSequence();
-
-            Log.d("PlantCareDatabase", "Inserting plants. First plant details:");
-            PlantCare firstPlant = plantCareList.get(0);
-            Log.d("PlantCareDatabase", "First plant ID before insertion: " + firstPlant.getId());
-
-            Log.d("PlantCareDatabase", "Populating database with CSV data...");
-            // Insert the new plants
-            plantCareDao().insertAll(plantCareList);
-            // Retrieve and log the first inserted plant's ID
-            List<PlantCare> insertedPlants = plantCareDao().getAllPlants();
-            if (!insertedPlants.isEmpty()) {
-                Log.d("PlantCareDatabase", "First inserted plant ID: " + insertedPlants.get(0).getId());
-            }
-            Log.d("PlantCareDatabase", "Database populated.");
-        } else {
-            Log.e("PlantCareDatabase", "CSV data is empty or failed to parse.");
-        }
     }
 
     private void checkForDatabaseUpdates(Context context) {
@@ -140,6 +111,39 @@ public abstract class PlantCareDatabase extends RoomDatabase {
         SharedPreferences prefs = context.getSharedPreferences("PlantCarePrefs", Context.MODE_PRIVATE);
         prefs.edit().putString("fileHash", newHash).apply();
     }
+
+    private void populateDatabase(Context context) {
+        Log.d("PlantCareDatabase", "Populating database...");
+        List<PlantCare> plantCareList = CsvParser.parseCsv(context, "plant_care.csv");
+        Log.d("PlantCareDatabase", "CSV data parsed. Size: " + plantCareList.size());
+
+        if (!plantCareList.isEmpty()) {
+
+            // Clear existing data first (optional)
+            plantCareDao().deleteAll();  // Assuming you have a deleteAll() method
+
+            Log.d("PlantCareDatabase", "Inserting plants. First plant details:");
+            PlantCare firstPlant = plantCareList.get(0);
+            Log.d("PlantCareDatabase", "First plant ID before insertion: " + firstPlant.getId());
+
+            Log.d("PlantCareDatabase", "Populating database with CSV data...");
+            // Insert the new plants
+            plantCareDao().insertAll(plantCareList);
+            // Retrieve and log the first inserted plant's ID
+            List<PlantCare> insertedPlants = plantCareDao().getAllPlants();
+            if (!insertedPlants.isEmpty()) {
+                for (int i = 0; i < plantCareList.size(); i++) {
+                    plantCareList.get(i).setId(0);  // Explicitly set to 0
+                }
+                Log.d("PlantCareDatabase", "First inserted plant ID: " + insertedPlants.get(0).getId());
+            }
+            Log.d("PlantCareDatabase", "Database populated.");
+        } else {
+            Log.e("PlantCareDatabase", "CSV data is empty or failed to parse.");
+        }
+    }
+
+
 
     private boolean isPlantInCsv(PlantCare plant, List<PlantCare> plantCareList) {
         // Check if the plant exists in the CSV list (based on commonName)
