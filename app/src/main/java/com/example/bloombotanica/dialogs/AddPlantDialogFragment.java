@@ -1,5 +1,7 @@
 package com.example.bloombotanica.dialogs;
 
+import static android.content.ContentValues.TAG;
+
 import android.os.Bundle;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -189,19 +191,28 @@ public class AddPlantDialogFragment extends DialogFragment implements PlantSugge
         new Thread(() -> {
             Log.d("AddPlantDialogFragment", "addPlantToDatabase called");
             PlantCare plant = plantCaredb.plantCareDao().searchPlants(plantName).get(0);
+            Log.d("AddPlantDialogFragment", "Plant found: " + plant.getCommonName());
+            Log.d(TAG, String.valueOf(plant.getId()));
+            Log.d(TAG, plantName + " " + plantCaredb.plantCareDao().searchPlants(plantName).get(0).getCommonName());
             int wateringFrequency = plant.getWateringFrequency();
 
             Date today = new Date();
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(today);
-            calendar.add(Calendar.DAY_OF_YEAR, wateringFrequency);
+            Calendar nextWater = Calendar.getInstance();
+            nextWater.setTime(today);
+            nextWater.add(Calendar.DAY_OF_YEAR, wateringFrequency);
+
+            Calendar nextTurn = Calendar.getInstance();
+            nextTurn.setTime(today);
+            nextTurn.add(Calendar.DAY_OF_YEAR, plant.getTurningFrequency());
 
             //checking next water date and date added in logs
-            Log.d("AddPlantDialogFragment", "Next watering date: " + calendar.getTime());
+            Log.d("AddPlantDialogFragment", "Next watering date: " + nextWater.getTime());
+            Log.d("AddPlantDialogFragment", "Next turning date: " + nextTurn.getTime());
             Log.d("AddPlantDialogFragment", "Date added: " + today);
 
-            UserPlant newPlant = new UserPlant(plant.getId(), plantNickname, today, null, false);
-            newPlant.setNextWateringDate(calendar.getTime());
+            UserPlant newPlant = new UserPlant(plant.getId(), plantNickname, today);
+            newPlant.setNextWateringDate(nextWater.getTime());
+            newPlant.setNextTurningDate(nextTurn.getTime());
             Log.d("AddPlantDialogFragment", "New plant created");
 
             userpdb.userPlantDao().insert(newPlant);
@@ -209,7 +220,8 @@ public class AddPlantDialogFragment extends DialogFragment implements PlantSugge
 
             UserPlant insertedPlant = userpdb.userPlantDao().getUserPlantByNickname(plantNickname);
 
-            createTask(insertedPlant.getId(), calendar.getTime(), "Water");
+            createTask(insertedPlant.getId(), new Date(), "Water");
+            createTask(insertedPlant.getId(), new Date(), "Rotate");
 
             //log the plant added date in journal
             JournalEntry entry = new JournalEntry();

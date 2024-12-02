@@ -38,4 +38,6 @@ public interface UserPlantDao {
     void updateWateringDates(int id, Date today, Date nextWateringDate);
 
 
+    @Query("UPDATE user_plants SET lastTurned = :today, nextTurningDate = :nextTurningDate WHERE id = :id")
+    void updateTurningDates(int id, Date today, Date nextTurningDate);
 }

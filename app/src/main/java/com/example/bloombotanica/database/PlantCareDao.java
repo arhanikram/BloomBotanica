@@ -14,7 +14,7 @@ import java.util.List;
 @Dao
 public interface PlantCareDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insert(PlantCare plantCare);
 
     @Update
@@ -38,6 +38,9 @@ public interface PlantCareDao {
 
     @Query("SELECT wateringFrequency FROM plant_care WHERE id = :plantCareId")
     int getWateringFrequencyById(int plantCareId);
+
+    @Query("SELECT turningFrequency FROM plant_care WHERE id = :plantCareId")
+    int getTurningFrequencyById(int plantCareId);
 
     @Query("SELECT * FROM plant_care WHERE id = :id")
     PlantCare getPlantCareById(int id);

@@ -129,7 +129,7 @@ public class CalendarFragment extends Fragment {
     private void fetchTasksForDate(Date selectedDate) {
         new Thread(() -> {
             Pair<Date, Date> dayRange = getStartAndEndOfDay(selectedDate);
-            Set<Task> uniqueTasks = new HashSet<>(taskDao.getTasksForDate(dayRange.first, dayRange.second)); // Use a HashSet for uniqueness
+            Set<Task> uniqueTasks = new HashSet<>(taskDao.getIncompleteTasksForDate(dayRange.first, dayRange.second)); // Use a HashSet for uniqueness
 
             // Add recurring tasks
             List<Task> allTasks = taskDao.getIncompleteTasks();

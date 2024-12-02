@@ -43,6 +43,7 @@ import com.example.bloombotanica.models.JournalEntry;
 import com.example.bloombotanica.models.PlantCare;
 import com.example.bloombotanica.models.Task;
 import com.example.bloombotanica.models.UserPlant;
+import com.example.bloombotanica.utils.DateUtils;
 import com.example.bloombotanica.utils.TaskUtils;
 
 import java.io.File;
@@ -55,18 +56,18 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
     private UserPlantDatabase userPlantDatabase;
     private PlantCareDatabase plantCaredb;
     private int userPlantId;
-    private TextView plantNickname, plantName, plantSciName, lastWateredText;
+    private TextView plantNickname, plantName, plantSciName, lastWateredText, plant_description, lastTurnedText;
     private UserPlant userPlant;
     private PlantCare plantCare;
     private ImageView plantImageView;
     private static final int REQUEST_IMAGE_PICK = 1;
     private static final int REQUEST_IMAGE_CAPTURE = 2;
-    private ProgressBar circularProgress;
-    private ImageButton waterButton;
+    private ProgressBar waterProgress, turnProgress;
+    private ImageButton waterButton, turnButton;
     private Button journalButton;
     private TaskDao taskDao;
-    private Task task;
-    private TextView plant_description;
+    private Task task, turnTask, waterTask;
+    ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,14 +83,19 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
         Log.d("UserPlantProfileActivity", "onCreate called");
         Log.d("UserPlantProfileActivity", "UserPlantId: " + userPlantId);
 
+        taskDao = UserPlantDatabase.getInstance(this).taskDao();
+
         plantNickname = findViewById(R.id.userplant_nickname);
         plantName = findViewById(R.id.plant_common_name);
         plantSciName = findViewById(R.id.plant_sci_name);
-        lastWateredText = findViewById(R.id.last_watered_text);
         plant_description = findViewById(R.id.plant_description);
 
-        circularProgress = findViewById(R.id.circular_progress);
+        waterProgress = findViewById(R.id.water_progress);
         waterButton = findViewById(R.id.water_button);
+        lastWateredText = findViewById(R.id.last_watered_text);
+        turnButton = findViewById(R.id.rotate_button);
+        turnProgress = findViewById(R.id.rotate_progress);
+        lastTurnedText = findViewById(R.id.last_rotated_text);
         journalButton = findViewById(R.id.journal_button);
 
         userPlantDatabase = UserPlantDatabase.getInstance(this);
@@ -121,7 +127,14 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
         waterButton.setOnClickListener(v -> {
             if (userPlant != null) {
                 markPlantAsWatered(userPlant);
-                updateWaterProgress();
+            } else {
+                Toast.makeText(this, "Plant not loaded yet", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        turnButton.setOnClickListener(v -> {
+            if (userPlant != null) {
+                markPlantAsTurned(userPlant);
             } else {
                 Toast.makeText(this, "Plant not loaded yet", Toast.LENGTH_SHORT).show();
             }
@@ -133,11 +146,146 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
             startActivity(intent);
         });
 
-        try{
+        try {
             Log.d("!!!!!", userPlant.getImagePath());
         } catch (Exception e) {
             Log.d("!!!!!", "null");
         }
+    }
+
+    private void markPlantAsTurned(UserPlant userPlant) {
+        // Use TaskUtils.renewTask to handle task completion and plant turning updates
+        new Thread(() -> {
+            try {
+                int turningFrequency = plantCaredb.plantCareDao().getTurningFrequencyById(userPlant.getPlantCareId());
+                Date today = new Date();
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(today);
+                calendar.add(Calendar.DAY_OF_YEAR, turningFrequency);
+                Date nextTurningDate = calendar.getTime();
+
+                //first time turning plant
+                if (userPlant.getLastTurned() == null) {
+
+                    // Update in-memory userPlant object
+                    userPlant.setLastTurned(today);
+                    userPlant.setNextTurningDate(nextTurningDate);
+//                    userPlant.setTurned(true);
+                    userPlantDatabase.userPlantDao().updateTurningDates(userPlantId, today, nextTurningDate);
+
+                    runOnUiThread(() -> {
+                        Toast.makeText(this, "Plant turned successfully!", Toast.LENGTH_SHORT).show();
+                        Log.d("markPlantAsTurned", "Next Turning Date: " + nextTurningDate);
+                        updateTurnProgress(turnTask.isOverdue());
+                        lastTurnedText.setText(R.string.last_turned_today);
+                    });
+
+//                    JournalEntry entry = new JournalEntry();
+//                    entry.setPlantId(userPlant.getId());
+//                    entry.setTimestamp(today);
+//                    entry.setTitle("Turned");
+//                    userPlantDatabase.journalEntryDao().insert(entry);
+
+                    TaskDao taskDao = UserPlantDatabase.getInstance(this).taskDao();
+                    UserPlantDao userPlantDao = UserPlantDatabase.getInstance(this).userPlantDao();
+                    PlantCareDatabase plantCareDatabase = PlantCareDatabase.getInstance(this);
+
+                    task = taskDao.getTaskForUserPlantAndType(userPlant.getId(), "Rotate");
+
+                    TaskUtils.renewTask(task, taskDao, userPlantDao, plantCareDatabase, () -> {
+                        runOnUiThread(() -> {
+                            // Update UI to reflect changes
+                            updateTurnProgress(task.isOverdue()); // Update the turning progress bar
+                            lastTurnedText.setText(R.string.last_turned_today); // Update "last turned" text
+                            Toast.makeText(this, "Plant turned successfully!", Toast.LENGTH_SHORT).show();
+                        });
+                    });
+
+                    Log.d("markPlantAsTurned", "First time turning plant");
+                } else {
+                    Calendar currentDate = Calendar.getInstance();
+                    int currentDay = currentDate.get(Calendar.DAY_OF_YEAR);
+                    int currentYear = currentDate.get(Calendar.YEAR);
+
+                    Date lastTurned = userPlant.getLastTurned();
+                    currentDate.setTime(lastTurned);
+                    int lastTurnedDay = currentDate.get(Calendar.DAY_OF_YEAR);
+                    int lastTurnedYear = currentDate.get(Calendar.YEAR);
+
+                    if (currentDay == lastTurnedDay && currentYear == lastTurnedYear) {
+                        //if plant already turned today
+                        Log.d("markPlantAsTurned", "Plant already turned today");
+                        runOnUiThread(() -> Toast.makeText(this, "Plant already turned today", Toast.LENGTH_SHORT).show());
+                        return;
+                    } else {
+                        Log.d("markPlantAsTurned", "Plant not turned today");
+                        TaskDao taskDao = UserPlantDatabase.getInstance(this).taskDao();
+                        UserPlantDao userPlantDao = UserPlantDatabase.getInstance(this).userPlantDao();
+                        PlantCareDatabase plantCareDatabase = PlantCareDatabase.getInstance(this);
+
+                        task = taskDao.getTaskForUserPlantAndType(userPlant.getId(), "Rotate");
+
+                        Log.d("markPlantAsTurned", "currently turning: " + task.toString());
+
+                        // Update in-memory userPlant object
+                        userPlant.setLastTurned(today);
+                        userPlant.setNextTurningDate(nextTurningDate);
+//                        userPlant.setTurned(true);
+
+
+                        TaskUtils.renewTask(task, taskDao, userPlantDao, plantCareDatabase, () -> {
+                            runOnUiThread(() -> {
+                                // Update UI to reflect changes
+                                updateTurnProgress(task.isOverdue()); // Update the turning progress bar
+                                lastTurnedText.setText(R.string.last_turned_today); // Update "last turned" text
+                                Toast.makeText(this, "Plant turned successfully!", Toast.LENGTH_SHORT).show();
+                            });
+                        });
+                    }
+                }
+            } catch (Exception e) {
+                Log.e("markPlantAsTurned", "Error while marking plant as turned", e);
+            }
+        }).start();
+
+    }
+
+    private void updateTurnProgress(boolean isOverdue) {
+
+        if (userPlant.getLastTurned() == null) {
+            Log.d("updateTurnProgress", "Last turned date is null");
+            return;
+        }
+        new Thread(() -> {
+            if(isOverdue) {
+                runOnUiThread(() -> turnProgress.setProgress(100));
+                return;
+            }
+
+            if (userPlant != null) {
+                Log.d("updateTurnProgress", "Updating progress bar");
+                try {
+                    Date today = new Date();
+                    Date nextTurningDate = userPlant.getNextTurningDate();
+
+                    // Calculate progress
+                    long totalDuration = nextTurningDate.getTime() - userPlant.getLastTurned().getTime();
+                    long remainingDuration = nextTurningDate.getTime() - today.getTime();
+                    int progress = (int) (100 - (remainingDuration * 100 / totalDuration));
+
+                    // Ensure progress is between 0 and 100
+                    progress = Math.max(0, Math.min(progress, 100));
+
+                    // Update progress bar on main thread
+                    int finalProgress = progress;
+                    runOnUiThread(() -> turnProgress.setProgress(finalProgress));
+                    Log.d("updateTurnProgress", "Progress updated to " + finalProgress);
+                } catch (Exception e) {
+                    Log.e("updateTurnProgress", "Error updating progress bar", e);
+                }
+            }
+        }).start();
+
     }
 
     private void fetchUserPlant() {
@@ -154,21 +302,61 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
                     plantName.setText(plantCare.getCommonName());
                     plantSciName.setText(plantCare.getScientificName());
                     plant_description.setText(plantCare.getPlantDescription());
+                    new Thread(() -> {
+                        // Fetch the tasks on the background thread
+                        waterTask = taskDao.getTaskForUserPlantAndType(userPlant.getId(), "Water");
+                        turnTask = taskDao.getTaskForUserPlantAndType(userPlant.getId(), "Rotate");
 
-                    int daysSinceLastWatered = calculateDaysSinceLastWatered(userPlant.getLastWatered());
-                    if (daysSinceLastWatered == 0) {
-                        if (userPlant.getLastWatered() == null) {
-                            lastWateredText.setText(R.string.never_watered);
-                        } else {
-                            lastWateredText.setText(R.string.last_watered_today);
-                        }
-                    } else if (daysSinceLastWatered == 1) {
-                        lastWateredText.setText(R.string.last_watered_yesterday);
-                    } else {
-                        lastWateredText.setText(getString(R.string.last_watered, daysSinceLastWatered));
-                    }
+                        // Now, update the UI after the tasks are fetched
+                        runOnUiThread(() -> {
+                            if (waterTask != null) {
+                                int daysSinceLastWatered = calculateDaysSinceLastWatered(userPlant.getLastWatered());
+                                if (daysSinceLastWatered == 0 && !waterTask.isOverdue()) {
+                                    if (userPlant.getLastWatered() == null) {
+                                        lastWateredText.setText(R.string.never_watered);
+                                    } else {
+                                        lastWateredText.setText(R.string.last_watered_today);
+                                    }
+                                } else if (daysSinceLastWatered == 1) {
+                                    lastWateredText.setText(R.string.last_watered_yesterday);
+                                } else if (waterTask.isOverdue()) {
+                                    int overdue = calculateDaysOverdue(waterTask);
+                                    lastWateredText.setText(getString(R.string.due_1_d_days_ago, overdue));
+                                } else {
+                                    lastWateredText.setText(getString(R.string.last_watered, daysSinceLastWatered));
+                                }
+                            } else {
+                                lastWateredText.setText(""); // Handle null case
+                                Log.d("UserPlantProfileActivity", "Water task is null");
+                            }
 
-                    updateWaterProgress();
+                            if (turnTask != null) {
+                                int daysSinceLastTurned = calculateDaysSinceLastTurned(userPlant.getLastTurned());
+                                if (daysSinceLastTurned == 0 && !turnTask.isOverdue()) {
+                                    if (userPlant.getLastTurned() == null) {
+                                        lastTurnedText.setText(R.string.plant_added_turn_it);
+                                    } else {
+                                        lastTurnedText.setText(R.string.last_turned_today);
+                                    }
+                                } else if (daysSinceLastTurned == 1) {
+                                    lastTurnedText.setText(R.string.last_turned_yesterday);
+                                } else if (turnTask.isOverdue()) {
+                                    int overdue = calculateDaysOverdue(turnTask);
+                                    lastTurnedText.setText(getString(R.string.due_1_d_days_ago, overdue));
+                                } else {
+                                    lastTurnedText.setText(getString(R.string.last_turned, daysSinceLastTurned));
+                                }
+                            } else {
+                                lastTurnedText.setText(""); // Handle null case
+                                Log.d("UserPlantProfileActivity", "Turn task is null");
+                            }
+
+                            // Update progress indicators, checking for overdue status
+                            updateWaterProgress(waterTask != null && waterTask.isOverdue());
+                            updateTurnProgress(turnTask != null && turnTask.isOverdue());
+                        });
+                    }).start();
+
 
                     // Check if the user has uploaded an image (from internal storage)
                     if (userPlant.getImagePath() != null) {
@@ -199,6 +387,21 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
             });
         }).start();
     }
+
+    private int calculateDaysSinceLastTurned(Date lastTurned) {
+
+        //if plant has never been watered (just added plant)
+        if (lastTurned == null) {
+            Log.d("calculateDaysSinceLastTurned", "Last turned date is null");
+            return 0;
+        }
+
+        Log.d("calculateDaysSinceLastTurned", "Calculating days since last turned");
+        Date today = new Date();
+        long differenceInMillis = today.getTime() - lastTurned.getTime();
+        return (int) (differenceInMillis / (1000 * 60 * 60 * 24)); // Convert milliseconds to days
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -370,6 +573,7 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
                 calendar.setTime(today);
                 calendar.add(Calendar.DAY_OF_YEAR, wateringFrequency);
                 Date nextWateringDate = calendar.getTime();
+
                 //first time watering plant
                 if (plant.getLastWatered() == null) {
 
@@ -382,15 +586,30 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
                     runOnUiThread(() -> {
                         Toast.makeText(this, "Plant watered successfully!", Toast.LENGTH_SHORT).show();
                         Log.d("markPlantAsWatered", "Next Watering Date: " + nextWateringDate);
-                        updateWaterProgress();
+                        updateWaterProgress(false);
                         lastWateredText.setText(R.string.last_watered_today);
                     });
 
-                    JournalEntry entry = new JournalEntry();
-                    entry.setPlantId(plant.getId());
-                    entry.setTimestamp(today);
-                    entry.setTitle("Watered");
-                    userPlantDatabase.journalEntryDao().insert(entry);
+//                    JournalEntry entry = new JournalEntry();
+//                    entry.setPlantId(plant.getId());
+//                    entry.setTimestamp(today);
+//                    entry.setTitle("Watered");
+//                    userPlantDatabase.journalEntryDao().insert(entry);
+
+                    TaskDao taskDao = UserPlantDatabase.getInstance(this).taskDao();
+                    UserPlantDao userPlantDao = UserPlantDatabase.getInstance(this).userPlantDao();
+                    PlantCareDatabase plantCareDatabase = PlantCareDatabase.getInstance(this);
+
+                    task = taskDao.getTaskForUserPlantAndType(plant.getId(), "Water");
+
+                    TaskUtils.renewTask(task, taskDao, userPlantDao, plantCareDatabase, () -> {
+                        runOnUiThread(() -> {
+                            // Update UI to reflect changes
+                            updateWaterProgress(false); // Update the watering progress bar
+                            lastWateredText.setText(R.string.last_watered_today); // Update "last watered" text
+                            Toast.makeText(this, "Plant watered for the first time successfully!", Toast.LENGTH_SHORT).show();
+                        });
+                    });
 
                     Log.d("markPlantAsWatered", "First time watering plant");
                 } else {
@@ -426,7 +645,7 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
                         TaskUtils.renewTask(task, taskDao, userPlantDao, plantCareDatabase, () -> {
                             runOnUiThread(() -> {
                                 // Update UI to reflect changes
-                                updateWaterProgress(); // Update the watering progress bar
+                                updateWaterProgress(false); // Update the watering progress bar
                                 lastWateredText.setText(R.string.last_watered_today); // Update "last watered" text
                                 Toast.makeText(this, "Plant watered successfully!", Toast.LENGTH_SHORT).show();
                             });
@@ -440,12 +659,17 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
     }
 
 
-    private void updateWaterProgress() {
+    private void updateWaterProgress(boolean isOverdue) {
         if (userPlant.getLastWatered() == null) {
             Log.d("updateWaterProgress", "Last watered date is null");
             return;
         }
         new Thread(() -> {
+            if (isOverdue) {
+                runOnUiThread(() -> waterProgress.setProgress(100));
+                return;
+            }
+
             if (userPlant != null) {
                 Log.d("updateWaterProgress", "Updating progress bar");
                 try {
@@ -462,7 +686,7 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
 
                     // Update progress bar on main thread
                     int finalProgress = progress;
-                    runOnUiThread(() -> circularProgress.setProgress(finalProgress));
+                    runOnUiThread(() -> waterProgress.setProgress(finalProgress));
                     Log.d("updateWaterProgress", "Progress updated to " + finalProgress);
                 } catch (Exception e) {
                     Log.e("updateWaterProgress", "Error updating progress bar", e);
@@ -484,6 +708,21 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
         long differenceInMillis = today.getTime() - lastWatered.getTime();
         return (int) (differenceInMillis / (1000 * 60 * 60 * 24)); // Convert milliseconds to days
     }
+
+    private int calculateDaysOverdue(Task task) {
+        if (task == null || task.getDueDate() == null) {
+            return 0; // If no task or no due date, return 0
+        }
+
+        Date today = new Date();
+        long differenceInMillis = today.getTime() - task.getDueDate().getTime(); // Calculate time difference in milliseconds
+
+        // Convert milliseconds to days
+        long differenceInDays = differenceInMillis / (1000 * 60 * 60 * 24); // Convert from milliseconds to days
+
+        return (int) differenceInDays;
+    }
+
 
 
 }

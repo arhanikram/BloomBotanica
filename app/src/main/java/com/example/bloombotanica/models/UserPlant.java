@@ -17,13 +17,13 @@ public class UserPlant {
     private String imagePath; // New field to store the image path
     private Date nextWateringDate; // New field to store the next watering date
     private boolean isWatered; // New field to track if the plant has been watered
+    private Date nextTurningDate; // New field to store the next turning date
+    private Date lastTurned;
 
-    public UserPlant(int plantCareId, String nickname, Date dateAdded, Date lastWatered, boolean isWatered) {
+    public UserPlant(int plantCareId, String nickname, Date dateAdded) {
         this.plantCareId = plantCareId;
         this.nickname = nickname;
         this.dateAdded = dateAdded;
-        this.lastWatered = lastWatered;
-        this.isWatered = isWatered;
     }
 
     // Getters
@@ -53,6 +53,14 @@ public class UserPlant {
 
     public Date getNextWateringDate() {
         return nextWateringDate;
+    }
+
+    public Date getNextTurningDate() {
+        return nextTurningDate;
+    }
+
+    public Date getLastTurned() {
+        return lastTurned;
     }
 
     public boolean isWatered() {
@@ -86,6 +94,14 @@ public class UserPlant {
 
     public void setNextWateringDate(Date nextWateringDate) {
         this.nextWateringDate = nextWateringDate;
+    }
+
+    public void setNextTurningDate(Date nextTurningDate) {
+        this.nextTurningDate = nextTurningDate;
+    }
+
+    public void setLastTurned(Date lastTurned) {
+        this.lastTurned = lastTurned;
     }
 
     public void setWatered(boolean watered) {

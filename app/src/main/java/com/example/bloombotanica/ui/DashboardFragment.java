@@ -13,7 +13,6 @@ import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.core.app.ActivityCompat;
@@ -273,7 +272,7 @@ public class DashboardFragment extends Fragment {
             Pair<Date, Date> dayRange = getStartAndEndOfDay(new Date());
 
             //commented out for testing purposes
-            List<Task> todayTasks = taskDao.getTasksForDate(dayRange.first, dayRange.second);
+            List<Task> todayTasks = taskDao.getIncompleteTasksForDate(dayRange.first, dayRange.second);
 //            List<Task> todayTasks = taskDao.getIncompleteTasks();
             List<Task> overdueTasks = taskDao.getOverdueTasks(dayRange.first);
 
@@ -291,6 +290,8 @@ public class DashboardFragment extends Fragment {
             }
 
             taskDao.removeTasksForDeletedPlants();
+
+            taskDao.removeCompletedTasks();
 
             combinedTasks.sort((task1, task2) -> {
                 if (task1.isOverdue() && !task2.isOverdue()) {

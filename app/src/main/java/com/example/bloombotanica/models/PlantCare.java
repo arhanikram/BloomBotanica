@@ -16,14 +16,16 @@ public class PlantCare implements Serializable {
     private String commonName;
     private String scientificName;
     private int wateringFrequency; // in days
+    private int turningFrequency; // in days
     private String sunlight; // Full sun, partial shade, etc.
     private String soilType;
     private String plantDescription;
 
-    public PlantCare(String commonName, String scientificName, int wateringFrequency, String sunlight, String soilType, String plantDescription) {
+    public PlantCare(String commonName, String scientificName, int wateringFrequency, int turningFrequency, String sunlight, String soilType, String plantDescription) {
         this.commonName = commonName;
         this.scientificName = scientificName;
         this.wateringFrequency = wateringFrequency;
+        this.turningFrequency = turningFrequency;
         this.sunlight = sunlight;
         this.soilType = soilType;
         this.plantDescription = plantDescription;
@@ -44,6 +46,10 @@ public class PlantCare implements Serializable {
 
     public int getWateringFrequency() {
         return wateringFrequency;
+    }
+
+    public int getTurningFrequency() {
+        return turningFrequency;
     }
 
     public String getSunlight() {
@@ -72,6 +78,10 @@ public class PlantCare implements Serializable {
 
     public void setWateringFrequency(int wateringFrequency) {
         this.wateringFrequency = wateringFrequency;
+    }
+
+    public void setTurningFrequency(int turningFrequency) {
+        this.turningFrequency = turningFrequency;
     }
 
     public void setSunlight(String sunlight) {

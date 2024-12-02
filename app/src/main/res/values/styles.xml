@@ -18,4 +18,8 @@
         <item name="android:fontFamily">@font/facultyglyphicregular</item>
         <item name="android:textColor">@color/black</item>
     </style>
+    <style name="CalendarMonthTitleTextAppearance" parent="TextAppearance.MaterialComponents.Headline6">
+        <item name="android:fontFamily">@font/facultyglyphicregular</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
 </resources>

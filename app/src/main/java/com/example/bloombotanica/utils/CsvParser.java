@@ -36,12 +36,13 @@ public class CsvParser {
                     String plantName = record.get("Plant Name").trim();
                     String scientificName = record.get("Scientific Name").trim();
                     int wateringFrequencyDays = Integer.parseInt(record.get("Watering Frequency (days)").trim());
+                    int rotatingFrequencyDays = Integer.parseInt(record.get("Turning Frequency (days)").trim());
                     String sunlight = record.get("Sunlight").trim();
                     String soilType = record.get("Soil Type").trim();
                     String plantDescription = record.get("Plant Description").trim();
 
                     // Create a PlantCare object
-                    PlantCare plant = new PlantCare(plantName, scientificName, wateringFrequencyDays, sunlight, soilType, plantDescription);
+                    PlantCare plant = new PlantCare(plantName, scientificName, wateringFrequencyDays, rotatingFrequencyDays, sunlight, soilType, plantDescription);
                     plantCareList.add(plant);
                 } catch (Exception e) {
                     Log.e("CsvParser", "Error parsing record: " + e.getMessage());

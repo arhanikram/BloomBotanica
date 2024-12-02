@@ -106,7 +106,7 @@ public class AddPlantNicknameDialog extends DialogFragment {
             calendar.setTime(today);
             calendar.add(Calendar.DAY_OF_YEAR, wateringFrequency);
 
-            UserPlant newPlant = new UserPlant(plantCare.getId(), plantNickname, today, null, false);
+            UserPlant newPlant = new UserPlant(plantCare.getId(), plantNickname, today);
             newPlant.setNextWateringDate(calendar.getTime());
             newPlant.setImagePath(imagePath);
 
@@ -117,7 +117,8 @@ public class AddPlantNicknameDialog extends DialogFragment {
 
 
             // Create tasks, journal entries, etc.
-            createTask(insertedPlant.getId(), calendar.getTime(), "Water");
+            createTask(insertedPlant.getId(), new Date(), "Water");
+            createTask(insertedPlant.getId(), new Date(), "Rotate");
 
             //log the plant added date in journal
             JournalEntry entry = new JournalEntry();
