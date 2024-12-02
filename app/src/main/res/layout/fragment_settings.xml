@@ -33,7 +33,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="General"
+                android:text="@string/general"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:layout_marginVertical="8dp"/>
@@ -53,20 +53,22 @@
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:src="@drawable/ic_person"/>
+                    android:src="@drawable/ic_person"
+                    app:tint="?attr/colorControlNormal"/>
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Account Information"
+                    android:text="@string/account_information"
                     android:textSize="16sp"
                     android:layout_marginStart="16dp"/>
 
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:src="@drawable/ic_chevron_right"/>
+                    android:src="@drawable/ic_chevron_right"
+                    app:tint="?attr/colorControlNormal"/>
             </LinearLayout>
 
             <!-- Appearance -->
@@ -84,20 +86,22 @@
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:src="@drawable/ic_palette"/>
+                    android:src="@drawable/ic_palette"
+                    app:tint="?attr/colorControlNormal"/>
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Appearance"
+                    android:text="@string/appearance"
                     android:textSize="16sp"
                     android:layout_marginStart="16dp"/>
 
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:src="@drawable/ic_chevron_right"/>
+                    android:src="@drawable/ic_chevron_right"
+                    app:tint="?attr/colorControlNormal"/>
             </LinearLayout>
 
             <!-- Notifications -->
@@ -115,27 +119,29 @@
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:src="@drawable/ic_notifications"/>
+                    android:src="@drawable/ic_notifications"
+                    app:tint="?attr/colorControlNormal"/>
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Notifications"
+                    android:text="@string/notifications"
                     android:textSize="16sp"
                     android:layout_marginStart="16dp"/>
 
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:src="@drawable/ic_chevron_right"/>
+                    android:src="@drawable/ic_chevron_right"
+                    app:tint="?attr/colorControlNormal"/>
             </LinearLayout>
 
             <!-- Support Section -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Support"
+                android:text="@string/support"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:layout_marginTop="24dp"
@@ -156,20 +162,22 @@
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:src="@drawable/ic_help"/>
+                    android:src="@drawable/ic_help"
+                    app:tint="?attr/colorControlNormal"/>
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Help"
+                    android:text="@string/help"
                     android:textSize="16sp"
                     android:layout_marginStart="16dp"/>
 
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:src="@drawable/ic_chevron_right"/>
+                    android:src="@drawable/ic_chevron_right"
+                    app:tint="?attr/colorControlNormal"/>
             </LinearLayout>
 
             <!-- About -->
@@ -187,7 +195,8 @@
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:src="@drawable/ic_info"/>
+                    android:src="@drawable/ic_info"
+                    app:tint="?attr/colorControlNormal"/>
 
                 <TextView
                     android:layout_width="0dp"
@@ -200,7 +209,8 @@
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:src="@drawable/ic_chevron_right"/>
+                    android:src="@drawable/ic_chevron_right"
+                    app:tint="?attr/colorControlNormal"/>
             </LinearLayout>
 
         </LinearLayout>

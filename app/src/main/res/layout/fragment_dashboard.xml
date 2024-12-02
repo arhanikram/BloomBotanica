@@ -47,7 +47,7 @@
                     android:id="@+id/weather_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Date"
+                    android:text="@string/date"
                     android:textSize="16sp"
                     android:textColor="@android:color/darker_gray"
                     android:textStyle="bold"
@@ -86,7 +86,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Humidity"
+                        android:text="@string/humidity"
                         android:textSize="14sp"
                         android:layout_marginStart="32dp" />
                 </LinearLayout>
@@ -114,7 +114,7 @@
                             android:id="@+id/temperature"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="..."
+                            android:text="@string/dots"
                             android:textSize="18sp"
                             android:textStyle="bold"
                             android:layout_marginStart="8dp" />
@@ -123,7 +123,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Temperature"
+                        android:text="@string/temperature"
                         android:textSize="14sp"
                         android:layout_marginStart="32dp" />
                 </LinearLayout>
@@ -150,7 +150,7 @@
                             android:id="@+id/sunlight"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="..."
+                            android:text="@string/dots"
                             android:textSize="18sp"
                             android:textStyle="bold"
                             android:layout_marginStart="8dp" />
@@ -159,7 +159,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Light"
+                        android:text="@string/light"
                         android:textSize="14sp"
                         android:layout_marginStart="32dp" />
                 </LinearLayout>

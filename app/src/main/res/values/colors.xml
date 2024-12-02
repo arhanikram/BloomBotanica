@@ -18,5 +18,6 @@
     <color name="unhealthy">#A52A2A</color>
     <color name="darkgreen">#243E36</color>
     <color name="lightergreen">#7CA982</color>
+    <color name="layout_background">#F1F7ED</color>
 
 </resources>

@@ -314,6 +314,7 @@ public class PlantsFragment extends Fragment implements PlantAdapter.OnPlantLong
             layoutManager.startSmoothScroll(smoothScroller);
         }
         Log.d("PlantsFragment", "onPlantAdded: New plant added to RecyclerView");
+        loadUserPlants();
     }
 
 

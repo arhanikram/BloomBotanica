@@ -19,6 +19,8 @@
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="actionOverflowButtonStyle">@style/OverflowMenuStyle</item>
+        <item name="android:windowBackground">@color/layout_background</item>
+        <item name="colorControlNormal">@android:color/black</item>
     </style>
 
 </resources>
