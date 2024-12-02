@@ -15,6 +15,8 @@ constraintlayout = "2.1.4"
 materialCalendarview = "1.4.3"
 materialVersion = "1.7.0"
 mockitoCore = "4.0.0"
+mockitoInline = "3.12.4"
+onnxruntimeAndroid = "1.16.0-rc1"
 onnxruntimeMobile = "1.15.0"
 photoview = "2.3.0"
 photoviewVersion = "2.0.0"
@@ -29,6 +31,7 @@ fragmentTesting = "1.8.5"
 runner = "1.5.2"
 rules = "1.5.0"
 workRuntime = "2.10.0"
+espressoIntents = "3.6.1"
 
 [libraries]
 cardview = { module = "androidx.cardview:cardview", version.ref = "cardview" }
@@ -47,6 +50,8 @@ constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayo
 material-calendarview = { module = "com.prolificinteractive:material-calendarview", version.ref = "materialCalendarview" }
 material-v170 = { module = "com.google.android.material:material", version.ref = "materialVersion" }
 mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockitoCore" }
+mockito-inline = { module = "org.mockito:mockito-inline", version.ref = "mockitoInline" }
+onnxruntime-android = { module = "com.microsoft.onnxruntime:onnxruntime-android", version.ref = "onnxruntimeAndroid" }
 onnxruntime-mobile = { module = "com.microsoft.onnxruntime:onnxruntime-mobile", version.ref = "onnxruntimeMobile" }
 photoview = { module = "com.github.chrisbanes:PhotoView", version.ref = "photoview" }
 photoview-v200 = { module = "com.github.chrisbanes:PhotoView", version.ref = "photoviewVersion" }
@@ -62,6 +67,7 @@ fragment-testing = { group = "androidx.fragment", name = "fragment-testing", ver
 rules = { module = "androidx.test:rules", version.ref = "rules" }
 runner = { module = "androidx.test:runner", version.ref = "runner" }
 work-runtime = { module = "androidx.work:work-runtime", version.ref = "workRuntime" }
+espresso-intents = { group = "androidx.test.espresso", name = "espresso-intents", version.ref = "espressoIntents" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

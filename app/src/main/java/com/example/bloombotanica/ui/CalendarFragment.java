@@ -90,7 +90,7 @@ public class CalendarFragment extends Fragment {
         }
     }
 
-    private void fetchTaskDates() {
+    public void fetchTaskDates() {
         Log.d("CalendarFragment", "fetchTaskDates called");
         new Thread(() -> {
             List<Task> allTasks = taskDao.getIncompleteTasks();
@@ -126,7 +126,7 @@ public class CalendarFragment extends Fragment {
         }).start();
     }
 
-    private void fetchTasksForDate(Date selectedDate) {
+    public void fetchTasksForDate(Date selectedDate) {
         new Thread(() -> {
             Pair<Date, Date> dayRange = getStartAndEndOfDay(selectedDate);
             Set<Task> uniqueTasks = new HashSet<>(taskDao.getIncompleteTasksForDate(dayRange.first, dayRange.second)); // Use a HashSet for uniqueness

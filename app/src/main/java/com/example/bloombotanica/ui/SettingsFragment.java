@@ -90,7 +90,7 @@ public class SettingsFragment extends Fragment {
     }
 
     // Show Account Info Dialog with Validation
-    private void showAccountInfoDialog() {
+    public void showAccountInfoDialog() {
         // Inflate the dialog layout
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_account_info, null);
         EditText editName = dialogView.findViewById(R.id.name_edit_text);
@@ -177,7 +177,10 @@ public class SettingsFragment extends Fragment {
 
         // Set the version information dynamically
         TextView versionText = dialogView.findViewById(R.id.versionTitle);
-        String versionStr = "      Version Name: " + BuildConfig.VERSION_NAME + "\n" + "   Version Code: " + BuildConfig.VERSION_CODE;
+        String versionStr = "Version Name: " + BuildConfig.VERSION_NAME + "\n" +
+                "Version Code: " + BuildConfig.VERSION_CODE + "\n\n" +
+                "Authors:\n" +
+                "JP Marques, Ethan D'Mello, Evan Ellig, Zorah Jawadi, Arhan Ikram";
         versionText.setText(versionStr);
 
         // Create the AlertDialog with the custom layout
@@ -191,7 +194,7 @@ public class SettingsFragment extends Fragment {
     }
 
     // Apply the saved theme from SharedPreferences
-    private void applySavedThemeMode() {
+    public void applySavedThemeMode() {
         // Retrieve the saved theme preference
         int themeMode = preferences.getInt("theme_mode", AppCompatDelegate.MODE_NIGHT_NO);
 

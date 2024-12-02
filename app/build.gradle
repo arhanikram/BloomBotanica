@@ -42,7 +42,9 @@ dependencies {
     implementation libs.firebase.crashlytics.buildtools
     implementation libs.preference
     implementation libs.fragment.testing
+    implementation libs.espresso.intents
     testImplementation libs.junit
+    testImplementation libs.ext.junit
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
     implementation libs.play.services.location
@@ -57,10 +59,11 @@ dependencies {
     annotationProcessor libs.compiler
     testImplementation libs.mockito.core
     implementation libs.photoview.v200
-    implementation 'com.microsoft.onnxruntime:onnxruntime-android:1.16.0-rc1'
+    implementation libs.onnxruntime.android
     implementation libs.material.v170
     androidTestImplementation libs.runner
     androidTestImplementation libs.rules
     androidTestImplementation libs.preference.ktx
     implementation libs.work.runtime
+    testImplementation libs.mockito.inline
 }

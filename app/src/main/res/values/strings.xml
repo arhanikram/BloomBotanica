@@ -70,6 +70,7 @@
     <string name="notifications">Notifications</string>
     <string name="support">Support</string>
     <string name="help">Help</string>
+    <string name="version">Version Name: 1.0.0\nVersion Code: 1\n\nAuthors\nJP Marques, Ethan D\'Mello,\nEvan Ellig, Zorah Jawadi,\n Arhan Ikram</string>
     <string-array name="languages_array">
         <item>English</item>
         <item>Spanish</item>
