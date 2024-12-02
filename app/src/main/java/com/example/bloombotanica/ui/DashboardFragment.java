@@ -130,24 +130,35 @@ public class DashboardFragment extends Fragment {
         new Thread(() -> {
             UserPlantDao userPlantDao = userpdb.userPlantDao();
             userPlants = userPlantDao.getAllUserPlants();
-            List<Integer> plantImageIds = new ArrayList<>();  // Make sure we use this list
+            List<Integer> plantImageIds = new ArrayList<>();  // Initialize a list for image IDs
 
-            // Fetch image resource IDs from plant IDs
-            for (UserPlant userPlant : userPlants) {
-                String imageName = "a" + userPlant.getPlantCareId();  // Construct the image name dynamically
-                if (isAdded() && getContext() != null) {
-                    int imageResId = getResources().getIdentifier(imageName, "drawable", getContext().getPackageName());
-                    Log.d("Image Debug", "Stored Image Path: " + userPlant.getImagePath());
+            // Check if there are no plants
+            if (userPlants.isEmpty()) {
+                // If no plants, use the fallback image
+                int fallbackImageResId = getResources().getIdentifier("bloom_botanica", "drawable", getContext().getPackageName());
+                if (fallbackImageResId != 0) {
+                    plantImageIds.add(fallbackImageResId);  // Add the fallback image
+                } else {
+                    // If the fallback image doesn't exist, add a default image
+                    plantImageIds.add(R.drawable.default_plant_image);  // Replace with your default image resource
+                }
+            } else {
+                // If there are plants, fetch their image resource IDs
+                for (UserPlant userPlant : userPlants) {
+                    String imageName = "a" + userPlant.getPlantCareId();  // Dynamically construct the image name
+                    if (isAdded() && getContext() != null) {
+                        int imageResId = getResources().getIdentifier(imageName, "drawable", getContext().getPackageName());
+                        Log.d("Image Debug", "Stored Image Path: " + userPlant.getImagePath());
 
-                    Log.d("DashboardFragment", "Plant ID: " + userPlant.getId() + ", Image Name: " + imageName + ", Image Res ID: " + imageResId);
+                        Log.d("DashboardFragment", "Plant ID: " + userPlant.getId() + ", Image Name: " + imageName + ", Image Res ID: " + imageResId);
 
-                    if (imageResId != 0) {
-                        plantImageIds.add(imageResId);  // Add valid image resource ID
-                    } else {
-                        Log.d("DashboardFragment", "Image not found for plant ID: " + userPlant.getId());
-                        plantImageIds.add(R.drawable.default_plant_image);  // Use a default image if resource not found
+                        if (imageResId != 0) {
+                            plantImageIds.add(imageResId);  // Add valid image resource ID
+                        } else {
+                            Log.d("DashboardFragment", "Image not found for plant ID: " + userPlant.getId());
+                            plantImageIds.add(R.drawable.bloom_botanica);  // Use a default image if resource not found
+                        }
                     }
-
                 }
             }
 
@@ -156,11 +167,12 @@ public class DashboardFragment extends Fragment {
                 requireActivity().runOnUiThread(() -> {
                     PlantGalleryAdapter plantGalleryAdapter = new PlantGalleryAdapter(getContext(), plantImageIds);
                     viewPager.setAdapter(plantGalleryAdapter);
-                    startAutoScrolling(plantImageIds);  // Pass the correct list here
+                    startAutoScrolling(plantImageIds);  // Pass the updated list to the auto-scrolling method
                 });
             }
         }).start();
     }
+
 
     private void startAutoScrolling(List<Integer> plantImageIds) {
         if (plantImageIds == null || plantImageIds.isEmpty()) return;
