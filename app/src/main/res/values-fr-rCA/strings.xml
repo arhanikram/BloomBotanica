@@ -5,7 +5,7 @@
     <string name="home">Accueil</string>
     <string name="dashboard">Tableau de bord</string>
     <string name="hello_blank_fragment">Bonjour fragment vide</string>
-    <string name="welcome_username">Bienvenue, %1$s</string>
+    <string name="welcome_username">Bienvenue, </string>
     <string name="enter_your_name">Entrez votre nom</string>
     <string name="welcome_onboard">Bienvenue sur Bloom Botanica!</string>
     <string name="continue_txt">Continuer</string>
@@ -37,9 +37,16 @@
     <string name="never_watered">Plante ajoutée, arrosez-la!</string>
     <string name="add_image">Ajouter une image</string>
     <string name="logo_desc">Logo de BloomBotanica</string>
-    <string name="plant_name">Plant Name</string>
+    <string name="plant_name">Nom de la plante</string>
     <string name="CardImage">Card Image</string>
-    <string name="AboutTitle">About us!</string>
+    <string name="plantSearch">Image de la carte</string>
+    <string name="add_question">Souhaitez-vous ajouter cette plante?</string>
+    <string name="captured_image">Image capturée</string>
+    <string name="care_instructions">Conseils d\'entretien</string>
+    <string name="model_confidence">Modèle de confiance</string>
+    <string name="AboutTitle">À propos de nous!</string>
+    <string name="AboutBlurb">\n\nNous sommes Bloom Botanica! Une application entièrement codée et gérée par des étudiants, conçue pour vous aider à gérer tous vos besoins en matière d\'entretien des plantes! \n\n Naviguez dans l\'application à l\'aide de la barre d\'outils en bas de l\'écran. Appuyez simplement sur chaque icône pour accéder à la page correspondante. \n Le tableau de bord est votre page d\'accueil. C\'est ici que vous verrez vos tâches en attente ou en retard. \n\n L\'onglet Calendrier est conçu pour vous aider à visualiser et à voir facilement toutes vos tâches à venir et en attente pour le mois en cours, ou vous pouvez utiliser les flèches pour vérifier les mois à venir! \n\n L\'onglet Appareil photo est un outil pratique qui peut vous aider à identifier les plantes en temps réel afin qu\'il n\'y ait aucun doute. \n\n L\'onglet Plantes est l\'endroit où vous ajoutez manuellement vos compagnons végétaux: vous aurez la possibilité de surnommer votre plante et d\'ajouter le type de plante. Une fois votre plante ajoutée, vous pouvez prendre une photo de la plante en appuyant sur l\'image de la plante générée. Pour arroser ou tailler votre plante, appuyez simplement sur les icônes respectives. Enfin, vous pouvez appuyer sur le bouton en bas de la page pour enregistrer un journal de bord de votre plante. \n\n L\'onglet Paramètres vous permet de personnaliser votre application, par exemple en modifiant le thème ou en apprenant l\'historique des versions. \n\n Profitez de Bloom Botanica! Bonne plantation :)</string>
+    <string name="back_button">Bouton Retour\n</string>
     <string-array name="languages_array">
         <item>Anglais</item>
         <item>Espagnol</item>
