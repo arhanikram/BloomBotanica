@@ -15,10 +15,10 @@
         android:layout_height="wrap_content"
         app:mcv_showOtherDates="all"
         app:mcv_selectionColor="@color/purple_200"
-        app:mcv_weekDayTextAppearance="@style/CalendarWeekDayTextAppearance"
-        app:mcv_dateTextAppearance="@style/CalendarDateTextAppearance"
-        app:mcv_arrowColor="?attr/colorOnPrimary" />
-
+        app:mcv_weekDayTextAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+        app:mcv_dateTextAppearance="@style/TextAppearance.MaterialComponents.Body1"
+        app:mcv_arrowColor="?attr/colorOnPrimary"
+        />
 
     <!-- Divider -->
     <View
