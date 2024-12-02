@@ -4,7 +4,7 @@ plugins {
 
 android {
     namespace "com.example.bloombotanica"
-    compileSdk 34
+    compileSdk 35
 
     defaultConfig {
         applicationId "com.example.bloombotanica"
@@ -62,4 +62,5 @@ dependencies {
     androidTestImplementation libs.runner
     androidTestImplementation libs.rules
     androidTestImplementation libs.preference.ktx
+    implementation libs.work.runtime
 }

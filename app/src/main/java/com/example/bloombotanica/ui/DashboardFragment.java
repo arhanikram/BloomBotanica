@@ -6,6 +6,7 @@ import static com.example.bloombotanica.utils.DateUtils.getStartAndEndOfDay;
 import android.Manifest;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -14,12 +15,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
+import androidx.work.Data;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
 
 import com.example.bloombotanica.R;
 import com.example.bloombotanica.adapters.PlantGalleryAdapter;
@@ -32,6 +39,7 @@ import com.example.bloombotanica.database.UserPlantDatabase;
 import com.example.bloombotanica.models.PlantCare;
 import com.example.bloombotanica.models.Task;
 import com.example.bloombotanica.models.UserPlant;
+import com.example.bloombotanica.utils.TaskNotificationWorker;
 import com.example.bloombotanica.utils.TaskUtils;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -50,6 +58,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 public class DashboardFragment extends Fragment {
 
@@ -67,6 +76,9 @@ public class DashboardFragment extends Fragment {
     private PlantCareDatabase plantCareDatabase;
     private PlantCareDao plantCareDao;
     private SharedPreferences sharedPreferences;
+    private Task memTask;
+
+    private boolean TESTING = false; //SET TO TRUE FOR TESTING INSTANT NOTIFICATIONS
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -338,9 +350,10 @@ public class DashboardFragment extends Fragment {
         TaskDao taskDao = userpdb.taskDao();
         UserPlantDao userPlantDao = userpdb.userPlantDao();
         PlantCareDatabase plantCareDatabase = PlantCareDatabase.getInstance(getContext());
-
         // Reload tasks after task completion
         TaskUtils.renewTask(task, taskDao, userPlantDao, plantCareDatabase, this::loadTasks);
+        memTask = task;
+        requestNotificationPermissionAndSchedule(memTask);
     }
 
     // Method to create a task with a past due date
@@ -365,5 +378,80 @@ public class DashboardFragment extends Fragment {
             requireActivity().runOnUiThread(this::loadTasks); // Refresh task list
         }).start();
     }
+
+    private void scheduleTaskNotification(Task task, boolean forTesting) {
+        Log.d("AddPlantDialogFragment", "scheduleTaskNotification called");
+
+        // Create a Calendar instance for scheduling the notification
+        Calendar calendar = Calendar.getInstance();
+        if (forTesting) {
+            calendar.setTime(new Date());  // Set to current date for testing
+        } else {
+            calendar.setTime(task.getDueDate());  // Set to task's due date
+        }
+
+        // Set the time to 12:00 PM (for consistency)
+        calendar.set(Calendar.HOUR_OF_DAY, 12);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+
+        long delayInMillis = forTesting ? 0 : calendar.getTimeInMillis() - System.currentTimeMillis();  // Delay until the due time
+
+        // Prepare the input data for the worker
+        Data inputData = new Data.Builder()
+                .putInt("taskId", task.getId())
+                .putString("taskType", task.getTaskType())
+                .putLong("dueDateMillis", task.getDueDate().getTime())
+                .build();
+
+        // Create a OneTimeWorkRequest to trigger the notification
+        OneTimeWorkRequest notificationWorkRequest = new OneTimeWorkRequest.Builder(TaskNotificationWorker.class)
+                .setInitialDelay(delayInMillis, TimeUnit.MILLISECONDS)
+                .setInputData(inputData)
+                .build();
+
+        // Enqueue the work request to WorkManager
+        WorkManager.getInstance(requireContext()).enqueue(notificationWorkRequest);
+
+        Log.d("TaskNotification", "Notification scheduled for task " + task.getId() + " at " + calendar.getTime());
+    }
+
+    private void requestNotificationPermissionAndSchedule(Task task) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {  // Android 13 or higher
+            if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.POST_NOTIFICATIONS)
+                    == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted, schedule the notification
+                scheduleTaskNotification(task, TESTING);
+            } else {
+                // Request permission if not granted
+                ActivityCompat.requestPermissions(getActivity(),
+                        new String[]{Manifest.permission.POST_NOTIFICATIONS}, 1);
+                if (isAdded() && getContext() != null) {
+                    requireActivity().runOnUiThread(() ->
+                            Toast.makeText(getContext(), "We need permission to send notifications for task reminders.", Toast.LENGTH_LONG).show());
+                }
+            }
+        } else {
+            // For API levels below 33, schedule without permission check
+            scheduleTaskNotification(task, TESTING);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == 1) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted, schedule the notification
+                scheduleTaskNotification(memTask, TESTING);
+            } else {
+                // Permission denied, show a toast
+                Toast.makeText(getContext(), "Notification permission denied.", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
 
 }

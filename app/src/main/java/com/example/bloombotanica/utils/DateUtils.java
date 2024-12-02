@@ -37,7 +37,7 @@ public class DateUtils {
         calendar.set(Calendar.SECOND, 59);
         calendar.set(Calendar.MILLISECOND, 999);
 
-        Log.d("DateUtils", "End of Day: " + calendar.getTime());
+//        Log.d("DateUtils", "End of Day: " + calendar.getTime());
 
         return calendar.getTime();
     }
@@ -52,7 +52,7 @@ public class DateUtils {
         calendar.set(Calendar.MILLISECOND, 0);
         Date startOfDay = calendar.getTime();
 
-        Log.d("DateUtils", "Start of Day: " + calendar.getTime());
+//        Log.d("DateUtils", "Start of Day: " + calendar.getTime());
 
         return startOfDay;
     }

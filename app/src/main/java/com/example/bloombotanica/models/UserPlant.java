@@ -20,6 +20,10 @@ public class UserPlant {
     private Date nextTurningDate; // New field to store the next turning date
     private Date lastTurned;
 
+//    private boolean isNotificationEnabled; // IDEA - toggle notifications per userplant
+    // (maybe user does not want notifs from plant A but only from plant B)
+
+
     public UserPlant(int plantCareId, String nickname, Date dateAdded) {
         this.plantCareId = plantCareId;
         this.nickname = nickname;

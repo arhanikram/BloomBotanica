@@ -3,6 +3,7 @@ package com.example.bloombotanica.ui;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -31,6 +32,9 @@ import android.provider.MediaStore;
 import android.widget.ImageView;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.work.Data;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
 
 
 import com.example.bloombotanica.R;
@@ -44,12 +48,14 @@ import com.example.bloombotanica.models.PlantCare;
 import com.example.bloombotanica.models.Task;
 import com.example.bloombotanica.models.UserPlant;
 import com.example.bloombotanica.utils.DateUtils;
+import com.example.bloombotanica.utils.TaskNotificationWorker;
 import com.example.bloombotanica.utils.TaskUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Date;
 import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
 
 public class UserPlantProfileActivity extends AppCompatActivity implements DeletePlantDialog.DeletePlantListener {
 
@@ -66,8 +72,9 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
     private ImageButton waterButton, turnButton;
     private Button journalButton;
     private TaskDao taskDao;
-    private Task task, turnTask, waterTask;
-    ;
+    private Task task, turnTask, waterTask, memTask;
+
+    private boolean TESTING = false; //SET TO TRUE FOR TESTING INSTANT NOTIFICATIONS
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -192,6 +199,8 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
 
                     task = taskDao.getTaskForUserPlantAndType(userPlant.getId(), "Rotate");
 
+                    requestNotificationPermissionAndSchedule(task);
+
                     TaskUtils.renewTask(task, taskDao, userPlantDao, plantCareDatabase, () -> {
                         runOnUiThread(() -> {
                             // Update UI to reflect changes
@@ -232,6 +241,7 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
                         userPlant.setNextTurningDate(nextTurningDate);
 //                        userPlant.setTurned(true);
 
+                        requestNotificationPermissionAndSchedule(task);
 
                         TaskUtils.renewTask(task, taskDao, userPlantDao, plantCareDatabase, () -> {
                             runOnUiThread(() -> {
@@ -402,7 +412,6 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
         return (int) (differenceInMillis / (1000 * 60 * 60 * 24)); // Convert milliseconds to days
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.user_plant_profile_menu, menu);
@@ -491,6 +500,14 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
                 // Permission denied, show a message to the user
                 Log.d("UserPlantProfileActivity", "onRequestPermissionsResult: Permission denied");
                 Toast.makeText(this, "Camera permission is required to take a photo", Toast.LENGTH_SHORT).show();
+            }
+        } else if (requestCode == 1) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted, schedule the notification
+                scheduleTaskNotification(memTask, TESTING);
+            } else {
+                // Permission denied, show a toast
+                Toast.makeText(this, "Notification permission denied.", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -601,6 +618,7 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
                     PlantCareDatabase plantCareDatabase = PlantCareDatabase.getInstance(this);
 
                     task = taskDao.getTaskForUserPlantAndType(plant.getId(), "Water");
+                    requestNotificationPermissionAndSchedule(task);
 
                     TaskUtils.renewTask(task, taskDao, userPlantDao, plantCareDatabase, () -> {
                         runOnUiThread(() -> {
@@ -722,6 +740,64 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
 
         return (int) differenceInDays;
     }
+
+    private void scheduleTaskNotification(Task task, boolean forTesting) {
+        Log.d("AddPlantDialogFragment", "scheduleTaskNotification called");
+
+        // Create a Calendar instance for scheduling the notification
+        Calendar calendar = Calendar.getInstance();
+        if (forTesting) {
+            calendar.setTime(new Date());  // Set to current date for testing
+        } else {
+            calendar.setTime(task.getDueDate());  // Set to task's due date
+        }
+
+        // Set the time to 12:00 PM (for consistency)
+        calendar.set(Calendar.HOUR_OF_DAY, 12);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+
+        long delayInMillis = forTesting ? 0 : calendar.getTimeInMillis() - System.currentTimeMillis();  // Delay until the due time
+
+        // Prepare the input data for the worker
+        Data inputData = new Data.Builder()
+                .putInt("taskId", task.getId())
+                .putString("taskType", task.getTaskType())
+                .putLong("dueDateMillis", task.getDueDate().getTime())
+                .build();
+
+        // Create a OneTimeWorkRequest to trigger the notification
+        OneTimeWorkRequest notificationWorkRequest = new OneTimeWorkRequest.Builder(TaskNotificationWorker.class)
+                .setInitialDelay(delayInMillis, TimeUnit.MILLISECONDS)
+                .setInputData(inputData)
+                .build();
+
+        // Enqueue the work request to WorkManager
+        WorkManager.getInstance(this).enqueue(notificationWorkRequest);
+
+        Log.d("TaskNotification", "Notification scheduled for task " + task.getId() + " at " + calendar.getTime());
+    }
+
+    private void requestNotificationPermissionAndSchedule(Task task) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {  // Android 13 or higher
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                    == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted, schedule the notification
+                scheduleTaskNotification(task, TESTING);
+            } else {
+                // Request permission if not granted
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.POST_NOTIFICATIONS}, 1);
+                    runOnUiThread(() ->
+                            Toast.makeText(this, "We need permission to send notifications for task reminders.", Toast.LENGTH_LONG).show());
+            }
+        } else {
+            // For API levels below 33, schedule without permission check
+            scheduleTaskNotification(task, TESTING);
+        }
+    }
+
+
 
 
 

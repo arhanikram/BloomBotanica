@@ -28,6 +28,7 @@ preference = "1.2.1"
 fragmentTesting = "1.8.5"
 runner = "1.5.2"
 rules = "1.5.0"
+workRuntime = "2.10.0"
 
 [libraries]
 cardview = { module = "androidx.cardview:cardview", version.ref = "cardview" }
@@ -60,6 +61,7 @@ preference = { group = "androidx.preference", name = "preference", version.ref =
 fragment-testing = { group = "androidx.fragment", name = "fragment-testing", version.ref = "fragmentTesting" }
 rules = { module = "androidx.test:rules", version.ref = "rules" }
 runner = { module = "androidx.test:runner", version.ref = "runner" }
+work-runtime = { module = "androidx.work:work-runtime", version.ref = "workRuntime" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
