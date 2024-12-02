@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:layout_marginVertical="32dp"
-    android:layout_marginHorizontal="16dp">
+    android:layout_marginTop="16dp"
+    android:padding="32dp">
 
     <!-- Material Calendar -->
     <com.prolificinteractive.materialcalendarview.MaterialCalendarView
@@ -47,5 +47,6 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:paddingBottom="56dp"
-        android:scrollbars="vertical" />
+        android:scrollbars="none"
+        android:clipToPadding="false"/>
 </LinearLayout>

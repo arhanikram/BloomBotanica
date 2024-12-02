@@ -1,11 +1,12 @@
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
     app:cardCornerRadius="16dp"
-    app:cardElevation="4dp">
+    app:cardElevation="6dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,7 +21,8 @@
             android:layout_height="40dp"
             android:src="@drawable/water_drop_svgrepo_com"
             android:contentDescription="@string/task_icon"
-            android:layout_marginEnd="16dp" />
+            android:layout_marginEnd="16dp"
+            android:layout_gravity="center"/>
 
         <!-- Center Content Section -->
         <LinearLayout
@@ -66,6 +68,7 @@
             android:src="@drawable/baseline_check_24"
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/mark_done"
-            android:layout_gravity="center" />
+            android:backgroundTint="?attr/colorOnPrimary"
+            android:layout_gravity="center"/>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

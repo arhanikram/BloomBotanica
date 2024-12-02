@@ -46,7 +46,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp"
+        android:padding="32dp"
         android:background="?attr/colorSurface">
 
         <!-- Plant Image -->
@@ -105,7 +105,7 @@
 
             <!-- Watering Section -->
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
@@ -123,8 +123,7 @@
                         android:indeterminate="false"
                         android:max="100"
                         android:progress="80"
-                        android:progressDrawable="@drawable/circular_progress_drawable"
-                        android:rotation="270" />
+                        android:progressDrawable="@drawable/circular_progress"/>
 
                     <ImageButton
                         android:id="@+id/water_button"
@@ -133,7 +132,7 @@
                         android:layout_gravity="center"
                         android:background="@null"
                         android:contentDescription="@string/mark_as_watered"
-                        android:src="@drawable/ic_watering" />
+                        android:src="@drawable/water_drop_svgrepo_com" />
                 </FrameLayout>
 
                 <TextView
@@ -147,7 +146,7 @@
 
             <!-- Rotate Section -->
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
@@ -164,9 +163,8 @@
                         android:layout_height="match_parent"
                         android:indeterminate="false"
                         android:max="100"
-                        android:progress="50"
-                        android:progressDrawable="@drawable/circular_progress_drawable"
-                        android:rotation="270" />
+                        android:progress="80"
+                        android:progressDrawable="@drawable/circular_progress"/>
 
                     <ImageButton
                         android:id="@+id/rotate_button"
@@ -193,12 +191,13 @@
         <!-- Open Journal Button at the bottom -->
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
     android:id="@+id/journal_button"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="16dp"
+    android:layout_margin="32dp"
     android:text="@string/open_journal"
+    android:gravity="center"
     android:textColor="@android:color/white"
-    app:backgroundTint="@android:color/holo_green_dark"
+    app:backgroundTint="@color/darkgreen"
     app:cornerRadius="24dp"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"

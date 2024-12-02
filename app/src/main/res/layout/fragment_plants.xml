@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
+    android:clipChildren="false"
     tools:context=".ui.PlantsFragment">
 
     <!-- Root layout with a gradient background -->
@@ -14,7 +15,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:clipToPadding="false"
+        android:clipChildren="false"
+        android:padding="32dp">
 
         <!-- Header Section with the title "My Plants" -->
         <TextView
@@ -79,10 +82,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="32dp"
         android:layout_marginBottom="100dp"
         android:contentDescription="@string/add_plant"
-        android:src="@drawable/ic_plus_sign"
-        android:backgroundTint="@color/lightergreen" />
+        android:src="@drawable/plus_svgrepo_com"
+        android:backgroundTint="@color/lightergreen"
+        app:borderWidth="0dp"/>
 
 </FrameLayout>

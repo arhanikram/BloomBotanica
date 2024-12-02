@@ -118,6 +118,9 @@ public class DashboardFragment extends Fragment {
         taskAdapter = new TaskAdapter(new ArrayList<>(), this::markTaskAsCompleted, userpdb.userPlantDao());
         tasksRecyclerView.setAdapter(taskAdapter);
 
+        //TESTING
+//        createOverdueTask(0, "Water", 1);
+
         return view;
     }
 
@@ -131,8 +134,6 @@ public class DashboardFragment extends Fragment {
         userName = sharedPreferences.getString("username", "");
         welcomeText = getString(R.string.welcome_username);
         welcomeMessage.setText(welcomeText + " " + userName);
-        //TESTING
-//        createOverdueTask(0, "Watering", 3); // Creates an overdue task due 3 days ago
 
         loadTasks(); // Load tasks
     }
@@ -358,6 +359,7 @@ public class DashboardFragment extends Fragment {
 
     // Method to create a task with a past due date
     private void createOverdueTask(int userPlantId, String taskType, int daysPastDue) {
+        Log.d("DashboardFragment", "createOverdueTask Called");
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DAY_OF_YEAR, -daysPastDue); // Subtract days to set a past due date
         Date pastDueDate = calendar.getTime();
@@ -380,7 +382,7 @@ public class DashboardFragment extends Fragment {
     }
 
     private void scheduleTaskNotification(Task task, boolean forTesting) {
-        Log.d("AddPlantDialogFragment", "scheduleTaskNotification called");
+        Log.d("DashboardFragment", "scheduleTaskNotification called");
 
         // Create a Calendar instance for scheduling the notification
         Calendar calendar = Calendar.getInstance();

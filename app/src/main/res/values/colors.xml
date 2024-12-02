@@ -7,17 +7,26 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="dim_overlay">#80000000</color>
     <color name="gray">#FF888888</color>
+    <color name="dim_overlay">#80000000</color>
     <color name="red_tint">#FF0000</color>
     <color name="brown">#A0522D</color>
     <color name="green">#32CD32</color>
     <color name="red">#FF4500</color>
-    <color name="weather_card_background">#FDF6E3</color>
     <color name="healthy_green">#4CAF50</color>
-    <color name="unhealthy">#A52A2A</color>
+
+<!-- main color palette possibly?-->
+
     <color name="darkgreen">#243E36</color>
     <color name="lightergreen">#7CA982</color>
     <color name="layout_background">#F1F7ED</color>
-
+    <color name="darkgreen_accent">#2D5E48</color>
+    <color name="softgreen">#A3C9A8</color>
+    <color name="olive_green">#6B7C3E</color>
+    <color name="warm_yellow">#FFD56D</color>
+    <color name="soft_coral">#F6A9A3</color>
+    <color name="muted_terracotta">#D88C6C</color>
+    <color name="light_gray">#D1D1D1</color>
+    <color name="soft_white">#FFFFFF</color>
+    <color name="blue">#4F9A94</color>
 </resources>

@@ -2,6 +2,7 @@ package com.example.bloombotanica.adapters;
 
 import android.util.Log;
 import android.util.Pair;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.bloombotanica.R;
@@ -39,7 +41,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         taskIconMap = new HashMap<>();
         taskIconMap.put("Water", new Pair<>(R.drawable.water_drop_svgrepo_com, R.color.teal_700));
         taskIconMap.put("Rotate", new Pair<>(R.drawable.rotate_svgrepo_com, R.color.lightergreen));
-
     }
 
     @NonNull
@@ -73,7 +74,17 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         holder.dueDate.setText(dateFormat.format(task.getDueDate()));
 
         if (task.isOverdue()) {
-            holder.itemView.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.red_tint));
+            float elevationInPx = TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP, 6, holder.itemView.getResources().getDisplayMetrics());
+
+            float radiusInPx = TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP, 16, holder.itemView.getResources().getDisplayMetrics());
+
+            holder.cardView.setCardBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.soft_coral));
+            holder.cardView.setCardElevation(elevationInPx);
+            holder.cardView.setRadius(radiusInPx);
+            holder.taskIcon.setImageResource(R.drawable.triangle_warning_svgrepo_com);
+            holder.taskIcon.setImageTintList(ContextCompat.getColorStateList(holder.itemView.getContext(), R.color.black));
         } else {
 //            holder.itemView.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.white));
         }
@@ -118,6 +129,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         TextView taskName, dueDate, plantName;
         ImageButton markAsDoneButton;
         ImageView taskIcon;
+        CardView cardView;
 
         public TaskViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -126,6 +138,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             plantName = itemView.findViewById(R.id.task_plant_name);
             markAsDoneButton = itemView.findViewById(R.id.mark_as_done_button);
             taskIcon = itemView.findViewById(R.id.task_icon);
+            cardView = itemView.findViewById(R.id.card_view);
         }
     }
 
