@@ -47,7 +47,9 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/prediction_header"
-                app:shapeAppearanceOverlay="@style/RoundedCorner"/>
+                app:shapeAppearanceOverlay="@style/RoundedCorner"
+                android:elevation="16dp"
+                />
 
 
             <!-- TextView to display the prediction result (Plant Name) -->
@@ -117,7 +119,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:gravity="start"
-                android:text="Tips to care for your plant"
+                android:text="@string/tips_to_care_for_your_plant"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:paddingHorizontal="24dp"
@@ -141,7 +143,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
-                    android:text="Watering: Loading....."
+                    android:text="@string/watering_loading"
                     android:textSize="14sp" />
 
                 <TextView
@@ -149,7 +151,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
-                    android:text="Sunlight: Loading....."
+                    android:text="@string/sunlight_loading"
                     android:textSize="14sp" />
 
                 <TextView
@@ -157,7 +159,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
-                    android:text="Soil Type: Loading....."
+                    android:text="@string/soil_type_loading"
                     android:textSize="14sp" />
             </LinearLayout>
 
@@ -172,10 +174,13 @@
         android:layout_margin="16dp"
         android:elevation="6dp"
         android:gravity="center"
-        android:text="Click here to add plant"
+        android:text="@string/click_here_to_add_plant"
         app:cornerRadius="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:backgroundTint="@color/darkgreen"
+        android:textColor="@color/white"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -47,6 +47,23 @@
     <string name="AboutTitle">About us!</string>
     <string name="AboutBlurb">\n\nWe are Bloom Botanica! An entirely student coded and student run app designed to help manage all your plant care needs! \n\n Navigate the app using the toolbar at the bottom of the screen. Just tap each icon to be taken to the respective page. \n The Dashboard is your home page. This is where you will see your pending or overdue tasks. \n\n The Calendar tab is designed to help visualize and easily see all your upcoming and pending tasks for the current month, or you can use the arrows to check on future months! \n\n The Camera tab is a handy tool that can help you identify plants in real-time so there’s never any doubt. \n\n The Plants tab is where you manually add your plant companions: you will be given the opportunity to nickname your plant and add the plant type. Once your plant is added, you can take a picture of the plant by tapping on the generate plant picture. To water or prune your plant, just tap on the respective icons. Finally, you can tap the button on the bottom of the page to record a journal of your plant journey. \n\n The Settings tab is where you can customize your app, such as changing the theme or learning the version history. \n\n Enjoy Bloom Botanica! Happy planting :)</string>
     <string name="back_button">Back Button\n</string>
+    <string name="humidity">Humidity</string>
+    <string name="date">Date</string>
+    <string name="dots">...</string>
+    <string name="temperature">Temperature</string>
+    <string name="light">Light</string>
+    <string name="please_pick_your_preferred_language">Please pick your preferred language:</string>
+    <string name="click_here_to_add_plant">Click here to add plant</string>
+    <string name="sunlight_loading">Sunlight: Loading.....</string>
+    <string name="soil_type_loading">Soil Type: Loading.....</string>
+    <string name="watering_loading">Watering: Loading.....</string>
+    <string name="tips_to_care_for_your_plant">Tips to care for your plant</string>
+    <string name="general">General</string>
+    <string name="account_information">Account Information</string>
+    <string name="appearance">Appearance</string>
+    <string name="notifications">Notifications</string>
+    <string name="support">Support</string>
+    <string name="help">Help</string>
     <string-array name="languages_array">
         <item>English</item>
         <item>Spanish</item>
