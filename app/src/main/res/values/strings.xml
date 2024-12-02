@@ -53,6 +53,24 @@
     <string name="plant_added_turn_it">Plant added, rotate it!</string>
     <string name="due_1_d_days_ago">Due %1$d days ago!</string>
     <string name="open_journal">Open Journal</string>
+    <string name="back_button">Back Button\n</string>
+    <string name="humidity">Humidity</string>
+    <string name="date">Date</string>
+    <string name="dots">...</string>
+    <string name="temperature">Temperature</string>
+    <string name="light">Light</string>
+    <string name="please_pick_your_preferred_language">Please pick your preferred language:</string>
+    <string name="click_here_to_add_plant">Click here to add plant</string>
+    <string name="sunlight_loading">Sunlight: Loading.....</string>
+    <string name="soil_type_loading">Soil Type: Loading.....</string>
+    <string name="watering_loading">Watering: Loading.....</string>
+    <string name="tips_to_care_for_your_plant">Tips to care for your plant</string>
+    <string name="general">General</string>
+    <string name="account_information">Account Information</string>
+    <string name="appearance">Appearance</string>
+    <string name="notifications">Notifications</string>
+    <string name="support">Support</string>
+    <string name="help">Help</string>
     <string-array name="languages_array">
         <item>English</item>
         <item>Spanish</item>

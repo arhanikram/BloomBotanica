@@ -20,7 +20,7 @@
                 android:innerRadiusRatio="3"
                 android:shape="ring"
                 android:thicknessRatio="12">
-                <solid android:color="@color/teal_200" />
+                <solid android:color="#7CA982" />
             </shape>
         </rotate>
     </item>
