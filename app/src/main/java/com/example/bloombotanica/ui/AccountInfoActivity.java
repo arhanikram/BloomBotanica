@@ -16,7 +16,7 @@ import com.example.bloombotanica.R;
 public class AccountInfoActivity extends DialogFragment {
 
     private EditText nameEditText;
-    private Button saveButton;
+    public Button saveButton;
     private SharedPreferences sharedPreferences;
 
     @Override

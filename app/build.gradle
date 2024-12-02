@@ -41,6 +41,7 @@ dependencies {
     implementation libs.recyclerview
     implementation libs.firebase.crashlytics.buildtools
     implementation libs.preference
+    implementation libs.fragment.testing
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
@@ -51,11 +52,14 @@ dependencies {
     annotationProcessor libs.room.compiler
     implementation libs.gson.v288
     implementation libs.commons.csv
-
+    testImplementation libs.robolectric
     implementation libs.glide
     annotationProcessor libs.compiler
-
+    testImplementation libs.mockito.core
     implementation libs.photoview.v200
     implementation 'com.microsoft.onnxruntime:onnxruntime-android:1.16.0-rc1'
     implementation libs.material.v170
+    androidTestImplementation libs.runner
+    androidTestImplementation libs.rules
+    androidTestImplementation libs.preference.ktx
 }

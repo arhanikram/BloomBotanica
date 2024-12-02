@@ -16,7 +16,7 @@ import androidx.preference.PreferenceManager;
 
 public class AppearanceActivity extends AppCompatActivity {
 
-    private SharedPreferences preferences;
+    public SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +62,7 @@ public class AppearanceActivity extends AppCompatActivity {
 
     }
 
-    private void saveThemeMode(int mode) {
+    public void saveThemeMode(int mode) {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt("theme_mode", mode);
         editor.apply();
