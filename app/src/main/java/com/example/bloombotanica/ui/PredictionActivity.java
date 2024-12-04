@@ -151,8 +151,8 @@ public class PredictionActivity extends AppCompatActivity implements AddPlantNic
             if (plantCare != null) {
                 commonName = plantCare.getCommonName();
                 watering = "Water every " + plantCare.getWateringFrequency() + " days";
-                sunlight = plantCare.getSunlight() + "is preferred";
-                soil = "Use " + plantCare.getSoilType();
+                sunlight = plantCare.getSunlight() + " is preferred";
+                soil = "Use " + plantCare.getSoilType().toLowerCase();
                 confidence = (int) (result.getConfidencePercentage() * 100);
             } else {
                 commonName = "Unknown Plant"; // Fallback if no plant care data found

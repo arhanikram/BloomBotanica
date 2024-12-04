@@ -31,7 +31,7 @@ public abstract class PlantCareDatabase extends RoomDatabase {
     public static synchronized PlantCareDatabase getInstance(Context context) {
         Log.d("PlantCareDatabase", "Getting the database instance" + context.toString());
         if (instance == null) {
-            context.deleteDatabase("plant_care_database");
+//            context.deleteDatabase("plant_care_database");
 
             instance = Room.databaseBuilder(context.getApplicationContext(),
                             PlantCareDatabase.class, "plant_care_database")
@@ -135,6 +135,9 @@ public abstract class PlantCareDatabase extends RoomDatabase {
                 Log.d("PlantCareDatabase", "First inserted plant ID: " + insertedPlants.get(0).getId());
             }
             Log.d("PlantCareDatabase", "Database populated.");
+
+            String newFileHash = getFileHash(context, "plant_care.csv");
+            saveFileHash(context, newFileHash);
         } else {
             Log.e("PlantCareDatabase", "CSV data is empty or failed to parse.");
         }

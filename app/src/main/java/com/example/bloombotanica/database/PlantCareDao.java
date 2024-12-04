@@ -14,7 +14,7 @@ import java.util.List;
 @Dao
 public interface PlantCareDao {
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(PlantCare plantCare);
 
     @Update

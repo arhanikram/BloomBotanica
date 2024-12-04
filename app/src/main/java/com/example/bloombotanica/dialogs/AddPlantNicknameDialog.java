@@ -133,11 +133,6 @@ public class AddPlantNicknameDialog extends DialogFragment {
 
             UserPlant insertedPlant = userpdb.userPlantDao().getUserPlantByNickname(plantNickname);
 
-
-            // Create tasks, journal entries, etc.
-            createTask(insertedPlant.getId(), new Date(), "Water");
-            createTask(insertedPlant.getId(), new Date(), "Rotate");
-
             //log the plant added date in journal
             JournalEntry entry = new JournalEntry();
             entry.setPlantId(insertedPlant.getId());
@@ -155,7 +150,9 @@ public class AddPlantNicknameDialog extends DialogFragment {
                     OnPlantAddedListener listener = (OnPlantAddedListener) requireActivity();
                     listener.onPlantAdded(newPlant);  // Notify the listener (MainActivity)
                 }
-                dismiss();  // Close the dialog
+                createTask(insertedPlant.getId(), new Date(), "Water");
+                createTask(insertedPlant.getId(), new Date(), "Rotate");
+//                dismiss();  // Close the dialog
             });
 
         }).start();
@@ -177,7 +174,7 @@ public class AddPlantNicknameDialog extends DialogFragment {
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
 
-        long delayInMillis = forTesting ? 0 : calendar.getTimeInMillis() - System.currentTimeMillis();  // Delay until the due time
+        long delayInMillis = forTesting ? 5000 : calendar.getTimeInMillis() - System.currentTimeMillis();  // Delay until the due time
 
         // Prepare the input data for the worker
         Data inputData = new Data.Builder()
@@ -195,7 +192,7 @@ public class AddPlantNicknameDialog extends DialogFragment {
         // Enqueue the work request to WorkManager
         WorkManager.getInstance(requireContext()).enqueue(notificationWorkRequest);
 
-        Log.d("TaskNotification", "Notification scheduled for task " + task.getId() + " at " + calendar.getTime());
+        Log.d("TaskNotificationPrediction", "Notification scheduled for task " + task.getId() + " at " + calendar.getTime());
     }
 
     private void requestNotificationPermissionAndSchedule(Task task) {
@@ -204,18 +201,22 @@ public class AddPlantNicknameDialog extends DialogFragment {
                     == PackageManager.PERMISSION_GRANTED) {
                 // Permission granted, schedule the notification
                 scheduleTaskNotification(task, TESTING);
+                dismiss();
             } else {
                 // Request permission if not granted
                 ActivityCompat.requestPermissions(getActivity(),
                         new String[]{Manifest.permission.POST_NOTIFICATIONS}, 1);
                 if (isAdded() && getContext() != null) {
-                    requireActivity().runOnUiThread(() ->
-                            Toast.makeText(getContext(), "We need permission to send notifications for task reminders.", Toast.LENGTH_LONG).show());
+                    requireActivity().runOnUiThread(() -> {
+                        Toast.makeText(getActivity(), "We need permission to send notifications for task reminders.", Toast.LENGTH_LONG).show();
+                        dismiss();
+                    });
                 }
             }
         } else {
             // For API levels below 33, schedule without permission check
             scheduleTaskNotification(task, TESTING);
+            dismiss();
         }
     }
 
@@ -228,9 +229,11 @@ public class AddPlantNicknameDialog extends DialogFragment {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permission granted, schedule the notification
                 scheduleTaskNotification(memTask, TESTING);
+                dismiss();
             } else {
                 // Permission denied, show a toast
                 Toast.makeText(getContext(), "Notification permission denied.", Toast.LENGTH_SHORT).show();
+                dismiss();
             }
         }
     }

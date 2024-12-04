@@ -43,7 +43,7 @@ public class TaskNotificationWorker extends Worker {
         // Validate input data and show the notification
         if (taskId != -1 && taskType != null && dueDateMillis != -1) {
             Log.d("TaskNotificationWorker", "Sending notification for task " + taskId);
-            sendTaskNotification(taskId, taskType, new Date(dueDateMillis));
+            sendTaskNotification(taskId, taskType, dueDateMillis);
         } else {
             Log.e("TaskNotificationWorker", "Invalid input data");
             Log.d("TaskNotificationWorker", "taskId: " + taskId);
@@ -73,7 +73,7 @@ public class TaskNotificationWorker extends Worker {
         notificationManager.createNotificationChannel(channel);
     }
 
-    private void sendTaskNotification(int taskId, String taskType, Date dueDate) {
+    private void sendTaskNotification(int taskId, String taskType, long dueDate) {
         Log.d("TaskNotificationWorker", "sendTaskNotification called");
 
         // Fallback title if taskType is null
@@ -91,10 +91,13 @@ public class TaskNotificationWorker extends Worker {
                 .setSmallIcon(R.drawable.bloom_botanica) // Use your app's icon
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setAutoCancel(true)
+                .setWhen(dueDate)
                 .build();
 
         // Show the notification
         notificationManager.notify(taskId, notification);
         Log.d("TaskNotificationWorker", "Notification sent for task " + taskId);
+        //log when
+        Log.d("TaskNotificationWorker", "Notification due at " + new Date(dueDate));
     }
 }

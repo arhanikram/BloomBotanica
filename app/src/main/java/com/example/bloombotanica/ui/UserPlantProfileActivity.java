@@ -167,6 +167,7 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
     }
 
     private void markPlantAsTurned(UserPlant userPlant) {
+        Log.d("markPlantAsTurned", "Marking plant as turned");
         // Use TaskUtils.renewTask to handle task completion and plant turning updates
         new Thread(() -> {
             try {
@@ -204,17 +205,20 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
                     PlantCareDatabase plantCareDatabase = PlantCareDatabase.getInstance(this);
 
                     task = taskDao.getTaskForUserPlantAndType(userPlant.getId(), "Rotate");
-
-                    requestNotificationPermissionAndSchedule(task);
+                    Log.d("markPlantAsTurned", "currently turning: " + task.toString());
 
                     TaskUtils.renewTask(task, taskDao, userPlantDao, plantCareDatabase, () -> {
                         runOnUiThread(() -> {
                             // Update UI to reflect changes
-                            updateTurnProgress(task.isOverdue()); // Update the turning progress bar
+//                            updateTurnProgress(task.isOverdue()); // Update the turning progress bar
                             lastTurnedText.setText(R.string.last_turned_today); // Update "last turned" text
                             Toast.makeText(this, "Plant turned successfully!", Toast.LENGTH_SHORT).show();
                         });
+                        task = taskDao.getLatestTask();
+                        Log.d("markPlantAsTurned", "currently turning: " + task.toString());
+                        requestNotificationPermissionAndSchedule(task);
                     });
+
 
                     Log.d("markPlantAsTurned", "First time turning plant");
                 } else {
@@ -247,8 +251,6 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
                         userPlant.setNextTurningDate(nextTurningDate);
 //                        userPlant.setTurned(true);
 
-                        requestNotificationPermissionAndSchedule(task);
-
                         TaskUtils.renewTask(task, taskDao, userPlantDao, plantCareDatabase, () -> {
                             runOnUiThread(() -> {
                                 // Update UI to reflect changes
@@ -257,6 +259,8 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
                                 Toast.makeText(this, "Plant turned successfully!", Toast.LENGTH_SHORT).show();
                             });
                         });
+                        task = taskDao.getLatestTask();
+                        requestNotificationPermissionAndSchedule(task);
                     }
                 }
             } catch (Exception e) {
@@ -273,7 +277,7 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
             return;
         }
         new Thread(() -> {
-            if(isOverdue) {
+            if (isOverdue) {
                 runOnUiThread(() -> turnProgress.setProgress(100));
                 return;
             }
@@ -586,11 +590,12 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
     }
 
     //looks messy but it works
-    private void markPlantAsWatered(UserPlant plant) {
+    private void markPlantAsWatered(UserPlant userPlant) {
+        Log.d("markPlantAsWatered", "Marking plant as watered");
         // Use TaskUtils.renewTask to handle task completion and plant watering updates
         new Thread(() -> {
             try {
-                int wateringFrequency = plantCaredb.plantCareDao().getWateringFrequencyById(plant.getPlantCareId());
+                int wateringFrequency = plantCaredb.plantCareDao().getWateringFrequencyById(userPlant.getPlantCareId());
                 Date today = new Date();
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(today);
@@ -598,18 +603,18 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
                 Date nextWateringDate = calendar.getTime();
 
                 //first time watering plant
-                if (plant.getLastWatered() == null) {
+                if (userPlant.getLastWatered() == null) {
 
                     // Update in-memory userPlant object
-                    plant.setLastWatered(today);
-                    plant.setNextWateringDate(nextWateringDate);
-                    plant.setWatered(true);
+                    userPlant.setLastWatered(today);
+                    userPlant.setNextWateringDate(nextWateringDate);
+//                    userPlant.setWatered(true);
                     userPlantDatabase.userPlantDao().updateWateringDates(userPlantId, today, nextWateringDate);
 
                     runOnUiThread(() -> {
                         Toast.makeText(this, "Plant watered successfully!", Toast.LENGTH_SHORT).show();
                         Log.d("markPlantAsWatered", "Next Watering Date: " + nextWateringDate);
-                        updateWaterProgress(false);
+                        updateWaterProgress(waterTask.isOverdue());
                         lastWateredText.setText(R.string.last_watered_today);
                     });
 
@@ -623,17 +628,20 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
                     UserPlantDao userPlantDao = UserPlantDatabase.getInstance(this).userPlantDao();
                     PlantCareDatabase plantCareDatabase = PlantCareDatabase.getInstance(this);
 
-                    task = taskDao.getTaskForUserPlantAndType(plant.getId(), "Water");
-                    requestNotificationPermissionAndSchedule(task);
+                    task = taskDao.getTaskForUserPlantAndType(userPlant.getId(), "Water");
 
                     TaskUtils.renewTask(task, taskDao, userPlantDao, plantCareDatabase, () -> {
                         runOnUiThread(() -> {
                             // Update UI to reflect changes
-                            updateWaterProgress(false); // Update the watering progress bar
+                            updateWaterProgress(task.isOverdue()); // Update the watering progress bar
                             lastWateredText.setText(R.string.last_watered_today); // Update "last watered" text
                             Toast.makeText(this, "Plant watered for the first time successfully!", Toast.LENGTH_SHORT).show();
                         });
                     });
+
+                    task = taskDao.getLatestTask();
+                    Log.d("markPlantAsWatered", "task: " + task.toString());
+                    requestNotificationPermissionAndSchedule(task);
 
                     Log.d("markPlantAsWatered", "First time watering plant");
                 } else {
@@ -641,7 +649,7 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
                     int currentDay = currentDate.get(Calendar.DAY_OF_YEAR);
                     int currentYear = currentDate.get(Calendar.YEAR);
 
-                    Date lastWatered = plant.getLastWatered();
+                    Date lastWatered = userPlant.getLastWatered();
                     currentDate.setTime(lastWatered);
                     int lastWateredDay = currentDate.get(Calendar.DAY_OF_YEAR);
                     int lastWateredYear = currentDate.get(Calendar.YEAR);
@@ -657,14 +665,14 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
                         UserPlantDao userPlantDao = UserPlantDatabase.getInstance(this).userPlantDao();
                         PlantCareDatabase plantCareDatabase = PlantCareDatabase.getInstance(this);
 
-                        task = taskDao.getTaskForUserPlantAndType(plant.getId(), "Water");
+                        task = taskDao.getTaskForUserPlantAndType(userPlant.getId(), "Water");
 
                         Log.d("markPlantAsWatered", "currently watering: " + task.toString());
 
                         // Update in-memory userPlant object
-                        plant.setLastWatered(today);
-                        plant.setNextWateringDate(nextWateringDate);
-                        plant.setWatered(true);
+                        userPlant.setLastWatered(today);
+                        userPlant.setNextWateringDate(nextWateringDate);
+                        userPlant.setWatered(true);
 
                         TaskUtils.renewTask(task, taskDao, userPlantDao, plantCareDatabase, () -> {
                             runOnUiThread(() -> {
@@ -673,6 +681,8 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
                                 lastWateredText.setText(R.string.last_watered_today); // Update "last watered" text
                                 Toast.makeText(this, "Plant watered successfully!", Toast.LENGTH_SHORT).show();
                             });
+                            task = taskDao.getLatestTask();
+                            requestNotificationPermissionAndSchedule(task);
                         });
                     }
                 }
@@ -781,7 +791,7 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
         // Enqueue the work request to WorkManager
         WorkManager.getInstance(this).enqueue(notificationWorkRequest);
 
-        Log.d("TaskNotification", "Notification scheduled for task " + task.getId() + " at " + calendar.getTime());
+        Log.d("TaskNotificationProfile", "Notification scheduled for task " + task.getId() + " at " + calendar.getTime());
     }
 
     private void requestNotificationPermissionAndSchedule(Task task) {
@@ -794,17 +804,14 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
                 // Request permission if not granted
                 ActivityCompat.requestPermissions(this,
                         new String[]{Manifest.permission.POST_NOTIFICATIONS}, 1);
-                    runOnUiThread(() ->
-                            Toast.makeText(this, "We need permission to send notifications for task reminders.", Toast.LENGTH_LONG).show());
+                runOnUiThread(() ->
+                        Toast.makeText(this, "We need permission to send notifications for task reminders.", Toast.LENGTH_LONG).show());
             }
         } else {
             // For API levels below 33, schedule without permission check
             scheduleTaskNotification(task, TESTING);
         }
     }
-
-
-
 
 
 }

@@ -48,6 +48,7 @@ public class TaskUtils {
                         userPlantDao.updateWateringDates(userPlant.getId(), today, userPlant.getNextWateringDate());
                         journalTitle.set("Watered");
                         taskUpdated = true;
+                        Log.d("TaskUtils", "Task updated: " + task.toString());
                     } else if ("Rotate".equals(task.getTaskType())) {
                         // Renew the turning task
                         int turningFrequency = plantCare.getTurningFrequency();
@@ -58,6 +59,7 @@ public class TaskUtils {
                         userPlantDao.updateTurningDates(userPlant.getId(), today, userPlant.getNextTurningDate());
                         journalTitle.set("Rotated");
                         taskUpdated = true;
+                        Log.d("TaskUtils", "Task updated: " + task.toString());
                     }
 
                     if(taskUpdated) {
@@ -70,6 +72,8 @@ public class TaskUtils {
                         );
                         // Insert the new task into the database
                         taskDao.insert(newTask);
+
+                        Log.d("TaskUtils", "New task created: " + newTask.toString());
 
                         UserPlantDatabase userPlantDatabase = UserPlantDatabase.getInstance(null);
 

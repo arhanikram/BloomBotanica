@@ -77,6 +77,7 @@ public class DashboardFragment extends Fragment {
     private PlantCareDao plantCareDao;
     private SharedPreferences sharedPreferences;
     private Task memTask;
+    private boolean isLocationFetched;
 
     private boolean TESTING = false; //SET TO TRUE FOR TESTING INSTANT NOTIFICATIONS
 
@@ -88,6 +89,8 @@ public class DashboardFragment extends Fragment {
 
         plantCareDatabase = PlantCareDatabase.getInstance(requireContext());
         plantCareDao = plantCareDatabase.plantCareDao();
+
+        isLocationFetched = false;
 
         // Get username from SharedPreferences
         sharedPreferences = requireActivity().getSharedPreferences("UserPrefs", MODE_PRIVATE);
@@ -128,7 +131,11 @@ public class DashboardFragment extends Fragment {
     public void onResume() {
         super.onResume();
         Log.d("DashboardFragment", "OnResumeCalled");
-        fetchUserLocation(); // Fetch weather data based on location
+        // Only fetch location if it hasn't been fetched yet or if there's an error
+        Log.d("DashboardFragment", "isLocationFetched: " + isLocationFetched);
+        if (!isLocationFetched) {
+            fetchUserLocation();  // Fetch weather data based on location
+        }
         loadUserPlants();   // Load user plants for image scrolling
         sharedPreferences = requireActivity().getSharedPreferences("UserPrefs", MODE_PRIVATE);
         userName = sharedPreferences.getString("username", "");
@@ -203,18 +210,36 @@ public class DashboardFragment extends Fragment {
 
     private void fetchUserLocation() {
         Log.d("DashboardFragment", "fetchUserLocation Called");
-        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 100);
+
+        // Check if we've already requested permission or fetched location
+        if (isLocationFetched) {
             return;
         }
 
+        // Check and request location permission
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            // Request permission and set a flag to prevent repeated requests
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 100);
+            return;
+        }
+
+        // If permission is granted, proceed with location fetching
         fusedLocationClient.getLastLocation()
                 .addOnSuccessListener(location -> {
+                    isLocationFetched = true;
                     if (location != null) {
                         fetchWeatherData(location.getLatitude(), location.getLongitude());
+                    } else {
+                        Log.e("DashboardFragment", "Location is null");
+                        Toast.makeText(getContext(), "Unable to fetch precise location.", Toast.LENGTH_SHORT).show();
                     }
                 })
-                .addOnFailureListener(e -> Log.e("DashboardFragment", "Location fetch failed", e));
+                .addOnFailureListener(e -> {
+                    isLocationFetched = true;
+                    Log.e("DashboardFragment", "Location fetch failed", e);
+                    Toast.makeText(getContext(), "Location retrieval failed.", Toast.LENGTH_SHORT).show();
+                });
     }
 
     private void fetchWeatherData(double latitude, double longitude) {
@@ -316,6 +341,14 @@ public class DashboardFragment extends Fragment {
 
             taskDao.removeTasksForDeletedPlants();
 
+            Task latestTask = taskDao.getLatestTask();
+
+            if(latestTask != null) {
+                Log.d("loadTasks", latestTask.toString());
+                requestNotificationPermissionAndSchedule(latestTask);
+            }
+
+
             taskDao.removeCompletedTasks();
 
             combinedTasks.sort((task1, task2) -> {
@@ -353,8 +386,7 @@ public class DashboardFragment extends Fragment {
         PlantCareDatabase plantCareDatabase = PlantCareDatabase.getInstance(getContext());
         // Reload tasks after task completion
         TaskUtils.renewTask(task, taskDao, userPlantDao, plantCareDatabase, this::loadTasks);
-        memTask = task;
-        requestNotificationPermissionAndSchedule(memTask);
+//        requestNotificationPermissionAndSchedule(memTask);
     }
 
     // Method to create a task with a past due date
@@ -390,6 +422,7 @@ public class DashboardFragment extends Fragment {
             calendar.setTime(new Date());  // Set to current date for testing
         } else {
             calendar.setTime(task.getDueDate());  // Set to task's due date
+            Log.d("DashboardFragment", "Task due date: " + task.getDueDate());
         }
 
         // Set the time to 12:00 PM (for consistency)
@@ -415,7 +448,7 @@ public class DashboardFragment extends Fragment {
         // Enqueue the work request to WorkManager
         WorkManager.getInstance(requireContext()).enqueue(notificationWorkRequest);
 
-        Log.d("TaskNotification", "Notification scheduled for task " + task.getId() + " at " + calendar.getTime());
+        Log.d("TaskNotificationDashboard", "Notification scheduled for task " + task.getId() + " at " + calendar.getTime());
     }
 
     private void requestNotificationPermissionAndSchedule(Task task) {
@@ -451,6 +484,15 @@ public class DashboardFragment extends Fragment {
             } else {
                 // Permission denied, show a toast
                 Toast.makeText(getContext(), "Notification permission denied.", Toast.LENGTH_SHORT).show();
+            }
+        } else if (requestCode == 100){
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted, try to fetch location again
+                fetchUserLocation();
+            } else {
+                // Permission denied
+                isLocationFetched = true;
+                Toast.makeText(getContext(), "Location permission denied.", Toast.LENGTH_SHORT).show();
             }
         }
     }

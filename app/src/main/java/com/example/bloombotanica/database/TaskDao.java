@@ -27,6 +27,9 @@ public interface TaskDao {
     @Query("UPDATE tasks SET isCompleted = 1 WHERE id = :taskId")
     void markTaskAsCompleted(int taskId);
 
+    @Query("SELECT * FROM tasks ORDER BY id DESC LIMIT 1")
+    Task getLatestTask();
+
     @Query("DELETE FROM tasks WHERE isCompleted = 1")
     void removeCompletedTasks();
 
