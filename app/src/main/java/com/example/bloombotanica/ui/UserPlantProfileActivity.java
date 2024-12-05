@@ -430,11 +430,12 @@ public class UserPlantProfileActivity extends AppCompatActivity implements Delet
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.edit_user_plant) {
-            // Handle edit user plant action
-            Toast.makeText(this, "Edit User Plant", Toast.LENGTH_SHORT).show();
-            return true;
-        } else if (item.getItemId() == R.id.delete_user_plant) {
+//        if (item.getItemId() == R.id.edit_user_plant) {
+//            // Handle edit user plant action
+//            Toast.makeText(this, "Edit User Plant", Toast.LENGTH_SHORT).show();
+//            return true;
+//        }
+        if (item.getItemId() == R.id.delete_user_plant) {
             showDeleteDialog();
             return true;
         }

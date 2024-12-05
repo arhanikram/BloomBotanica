@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Bloom Botanica</string>
+    <string name="app_name" translatable="false">Bloom Botanica</string>
     <string name="calendar">Calendar</string>
     <string name="plants">Plants</string>
     <string name="home">Home</string>
@@ -71,6 +71,17 @@
     <string name="support">Support</string>
     <string name="help">Help</string>
     <string name="version">Version Name: 1.0.0\nVersion Code: 1\n\nAuthors\nJP Marques, Ethan D\'Mello,\nEvan Ellig, Zorah Jawadi,\n Arhan Ikram</string>
+    <string name="dark_mode">Dark Mode</string>
+    <string name="light_mode">Light Mode</string>
+    <string name="change_account_information">Change Account Information</string>
+    <string name="enter_your_new_name">Enter your new name</string>
+    <string name="save">Save</string>
+    <string name="name">Name:</string>
+    <string name="we_think_it_is">We think it is...</string>
+    <string name="task_count_home">Task Count</string>
+    <string name="you_have_no_tasks_today">You have no tasks today!</string>
+    <string name="my_plants">My Plants</string>
+    <string name="about">About</string>
     <string-array name="languages_array">
         <item>English</item>
         <item>Spanish</item>

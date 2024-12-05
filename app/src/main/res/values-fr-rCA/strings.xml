@@ -1,13 +1,12 @@
 <resources>
-    <string name="app_name">Bloom Botanica</string>
     <string name="calendar">Calendrier</string>
     <string name="plants">Plantes</string>
     <string name="home">Accueil</string>
-    <string name="dashboard">Tableau de bord</string>
+    <string name="dashboard">Accueil</string>
     <string name="hello_blank_fragment">Bonjour fragment vide</string>
-    <string name="welcome_username">Bienvenue, </string>
-    <string name="enter_your_name">Entrez votre nom</string>
-    <string name="welcome_onboard">Bienvenue sur Bloom Botanica!</string>
+    <string name="welcome_username">"Salut, "</string>
+    <string name="enter_your_name">"  Entrez votre nom"</string>
+    <string name="welcome_onboard">Bienvenue à Bloom Botanica!</string>
     <string name="continue_txt">Continuer</string>
     <string name="add_plant">Ajouter une nouvelle plante</string>
     <string name="plant_nickname_hint">Entrez le surnom de votre plante</string>
@@ -15,10 +14,10 @@
     <string name="delete_plant">Supprimer la plante</string>
     <string name="edit_user_plant">Modifier la plante</string>
     <string name="delete_user_plant">Supprimer la plante</string>
-    <string name="plant_scientific_name_hint">Quel type de plante est-ce?</string>
-    <string name="add_plant_title">Ajouter une plante</string>
+    <string name="plant_scientific_name_hint">De quel type de plante s\'agit-il?</string>
+    <string name="add_plant_title">Ajouter la plante</string>
     <string name="mark_as_done">Marquer comme terminé</string>
-    <string name="task_count">Tâches en attente : %1$d</string>
+    <string name="task_count">Tâches en cours : %1$d</string>
     <string name="task_icon">Icône pour le type de tâche</string>
     <string name="mark_done">Marquer la tâche comme terminée</string>
     <string name="empty_task_calendar">Rien à voir ici!</string>
@@ -29,24 +28,22 @@
     <string name="settings">Paramètres</string>
     <string name="take_picture">Prendre une photo</string>
     <string name="placeholder">" "</string>
-    <string name="camera">Appareil photo</string>
-    <string name="mark_as_watered">Marquer comme arrosée</string>
-    <string name="last_watered_today">Dernière fois arrosée aujourd\'hui</string>
-    <string name="last_watered_yesterday">Dernière fois arrosée hier</string>
-    <string name="last_watered">Dernière fois arrosée il y a %1$d jours</string>
+    <string name="camera">Caméra</string>
+    <string name="mark_as_watered">Marquer comme arrosé</string>
+    <string name="last_watered_today">Arrosé aujourd\'hui</string>
+    <string name="last_watered_yesterday">Arrosé hier</string>
+    <string name="last_watered">Arrosé il y a %1$d jours</string>
     <string name="never_watered">Plante ajoutée, arrosez-la!</string>
     <string name="add_image">Ajouter une image</string>
-    <string name="logo_desc">Logo de BloomBotanica</string>
+    <string name="logo_desc">Logo BloomBotanica</string>
     <string name="plant_name">Nom de la plante</string>
-    <string name="CardImage">Card Image</string>
-    <string name="plantSearch">Image de la carte</string>
+    <string name="CardImage">Image de la carte</string>
+    <string name="plantSearch">Rechercher des plantes</string>
     <string name="add_question">Souhaitez-vous ajouter cette plante?</string>
     <string name="captured_image">Image capturée</string>
-    <string name="care_instructions">Conseils d\'entretien</string>
-    <string name="model_confidence">Modèle de confiance</string>
+    <string name="care_instructions">Instructions d\'entretien</string>
+    <string name="model_confidence">Confiance du modèle</string>
     <string name="AboutTitle">À propos de nous!</string>
-    <string name="AboutBlurb">\n\nNous sommes Bloom Botanica! Une application entièrement codée et gérée par des étudiants, conçue pour vous aider à gérer tous vos besoins en matière d\'entretien des plantes! \n\n Naviguez dans l\'application à l\'aide de la barre d\'outils en bas de l\'écran. Appuyez simplement sur chaque icône pour accéder à la page correspondante. \n Le tableau de bord est votre page d\'accueil. C\'est ici que vous verrez vos tâches en attente ou en retard. \n\n L\'onglet Calendrier est conçu pour vous aider à visualiser et à voir facilement toutes vos tâches à venir et en attente pour le mois en cours, ou vous pouvez utiliser les flèches pour vérifier les mois à venir! \n\n L\'onglet Appareil photo est un outil pratique qui peut vous aider à identifier les plantes en temps réel afin qu\'il n\'y ait aucun doute. \n\n L\'onglet Plantes est l\'endroit où vous ajoutez manuellement vos compagnons végétaux: vous aurez la possibilité de surnommer votre plante et d\'ajouter le type de plante. Une fois votre plante ajoutée, vous pouvez prendre une photo de la plante en appuyant sur l\'image de la plante générée. Pour arroser ou tailler votre plante, appuyez simplement sur les icônes respectives. Enfin, vous pouvez appuyer sur le bouton en bas de la page pour enregistrer un journal de bord de votre plante. \n\n L\'onglet Paramètres vous permet de personnaliser votre application, par exemple en modifiant le thème ou en apprenant l\'historique des versions. \n\n Profitez de Bloom Botanica! Bonne plantation :)</string>
-    <string name="back_button">Bouton Retour\n</string>
     <string-array name="languages_array">
         <item>Anglais</item>
         <item>Espagnol</item>
@@ -54,4 +51,41 @@
         <item>Allemand</item>
         <item>Italien</item>
     </string-array>
+    <string name="AboutBlurb">Nous sommes Bloom Botanica! Une application entièrement codée et gérée par des étudiants, conçue pour vous aider à gérer tous vos besoins en matière de soins des plantes! Naviguez dans l\'application en utilisant la barre d\'outils en bas de l\'écran. Il suffit de taper sur chaque icône pour accéder à la page correspondante. Le Tableau de bord est votre page d\'accueil. C\'est là que vous verrez vos tâches en cours ou en retard. L\'onglet Calendrier est conçu pour vous aider à visualiser et à voir facilement toutes vos tâches à venir et en cours pour le mois en cours, ou vous pouvez utiliser les flèches pour vérifier les mois futurs! L\'onglet Caméra est un outil pratique qui peut vous aider à identifier les plantes en temps réel afin que vous ne doutiez jamais. L\'onglet Plantes est l\'endroit où vous ajoutez manuellement vos compagnons de plantes: vous aurez l\'opportunité de donner un surnom à votre plante et d\'ajouter le type de plante. Une fois votre plante ajoutée, vous pouvez prendre une photo de la plante en tapant sur le bouton générer l\'image de la plante. Pour arroser ou tailler votre plante, il suffit de taper sur les icônes respectives. Enfin, vous pouvez taper sur le bouton en bas de la page pour enregistrer un journal de votre parcours de plante. L\'onglet Paramètres est l\'endroit où vous pouvez personnaliser votre application, comme changer le thème ou découvrir l\'historique des versions. Profitez de Bloom Botanica! Joyeuse plantation :)</string>
+    <string name="back_button">Bouton Retour</string>
+    <string name="last_turned">Dernière rotation il y a %1$d jours</string>
+    <string name="last_turned_yesterday">Dernière rotation hier</string>
+    <string name="last_turned_today">Dernière rotation aujourd\'hui</string>
+    <string name="plant_added_turn_it">Plante ajoutée, faites-la pivoter!</string>
+    <string name="due_1_d_days_ago">En retard de %1$d jours!</string>
+    <string name="open_journal">Ouvrir le journal</string>
+    <string name="humidity">Humidité</string>
+    <string name="date">Date</string>
+    <string name="dots">...</string>
+    <string name="temperature">Température</string>
+    <string name="light">Lumière</string>
+    <string name="please_pick_your_preferred_language">Veuillez choisir votre langue préférée :</string>
+    <string name="click_here_to_add_plant">Cliquez ici pour ajouter une plante</string>
+    <string name="sunlight_loading">Ensoleillement : Chargement.....</string>
+    <string name="soil_type_loading">Type de sol : Chargement.....</string>
+    <string name="watering_loading">Arrosage : Chargement.....</string>
+    <string name="tips_to_care_for_your_plant">Conseils pour prendre soin de votre plante</string>
+    <string name="general">Général</string>
+    <string name="account_information">Informations sur le compte</string>
+    <string name="appearance">Apparence</string>
+    <string name="notifications">Notifications</string>
+    <string name="support">Assistance</string>
+    <string name="help">Aide</string>
+    <string name="version">Nom de la version : 1.0.0</string>
+    <string name="dark_mode">Mode Sombre</string>
+    <string name="light_mode">Mode Clair</string>
+    <string name="change_account_information">Modifier les informations du compte</string>
+    <string name="enter_your_new_name">Entrez votre nouveau nom</string>
+    <string name="save">Enregistrer</string>
+    <string name="name">Nom:</string>
+    <string name="we_think_it_is">Nous pensons que c\'est...</string>
+    <string name="task_count_home">Nombre de tâches</string>
+    <string name="you_have_no_tasks_today">Vous n\'avez aucune tâche aujourd\'hui!</string>
+    <string name="my_plants">Mes Plantes</string>
+    <string name="about">À propos</string>
 </resources>

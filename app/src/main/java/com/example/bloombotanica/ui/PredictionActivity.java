@@ -146,6 +146,7 @@ public class PredictionActivity extends AppCompatActivity implements AddPlantNic
         new Thread(() -> {
             plantCaredb = PlantCareDatabase.getInstance(this);
             plantCare = plantCaredb.plantCareDao().getPlantCareById(result.getPredictedClassIndex());
+            Log.d("PredictionActivity", "PlantCare: " + plantCare.getCommonName());
 
             // Check if plantCare is null to prevent NullPointerException
             if (plantCare != null) {

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item
-        android:id="@+id/edit_user_plant"
-        android:title="@string/edit_user_plant"
-        android:icon="@drawable/edit_pencil_line_01_svgrepo_com"
-        />
+<!--    <item-->
+<!--        android:id="@+id/edit_user_plant"-->
+<!--        android:title="@string/edit_user_plant"-->
+<!--        android:icon="@drawable/edit_pencil_line_01_svgrepo_com"-->
+<!--        />-->
     <item
         android:id="@+id/delete_user_plant"
         android:title="@string/delete_user_plant"

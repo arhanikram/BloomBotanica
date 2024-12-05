@@ -68,10 +68,10 @@ public class SettingsFragment extends Fragment {
 
         });
 
-        // Notifications Section Click Listener (Popup for Push Notifications)
-        rootView.findViewById(R.id.notifications_layout).setOnClickListener(v -> {
-            showNotificationPreferencesDialog();
-        });
+//        // Notifications Section Click Listener (Popup for Push Notifications)
+//        rootView.findViewById(R.id.notifications_layout).setOnClickListener(v -> {
+//            showNotificationPreferencesDialog();
+//        });
 
         // Help Section Click Listener (Popup with Help Message)
         rootView.findViewById(R.id.help_layout).setOnClickListener(v -> {

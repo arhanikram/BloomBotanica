@@ -13,7 +13,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Settings"
+        android:text="@string/settings"
         android:layout_marginTop="64dp"
         android:textSize="40sp"
         android:textStyle="bold"
@@ -104,38 +104,38 @@
                     app:tint="?attr/colorControlNormal"/>
             </LinearLayout>
 
-            <!-- Notifications -->
-            <LinearLayout
-                android:id="@+id/notifications_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="16dp"
-                android:background="@drawable/settings_item_background"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:clickable="true"
-                android:focusable="true">
+<!--            &lt;!&ndash; Notifications &ndash;&gt;-->
+<!--            <LinearLayout-->
+<!--                android:id="@+id/notifications_layout"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:padding="16dp"-->
+<!--                android:background="@drawable/settings_item_background"-->
+<!--                android:orientation="horizontal"-->
+<!--                android:gravity="center_vertical"-->
+<!--                android:clickable="true"-->
+<!--                android:focusable="true">-->
 
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_notifications"
-                    app:tint="?attr/colorControlNormal"/>
+<!--                <ImageView-->
+<!--                    android:layout_width="24dp"-->
+<!--                    android:layout_height="24dp"-->
+<!--                    android:src="@drawable/ic_notifications"-->
+<!--                    app:tint="?attr/colorControlNormal"/>-->
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/notifications"
-                    android:textSize="16sp"
-                    android:layout_marginStart="16dp"/>
+<!--                <TextView-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_weight="1"-->
+<!--                    android:text="@string/notifications"-->
+<!--                    android:textSize="16sp"-->
+<!--                    android:layout_marginStart="16dp"/>-->
 
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_chevron_right"
-                    app:tint="?attr/colorControlNormal"/>
-            </LinearLayout>
+<!--                <ImageView-->
+<!--                    android:layout_width="24dp"-->
+<!--                    android:layout_height="24dp"-->
+<!--                    android:src="@drawable/ic_chevron_right"-->
+<!--                    app:tint="?attr/colorControlNormal"/>-->
+<!--            </LinearLayout>-->
 
             <!-- Support Section -->
             <TextView
@@ -202,7 +202,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="About"
+                    android:text="@string/about"
                     android:textSize="16sp"
                     android:layout_marginStart="16dp"/>
 

@@ -2,6 +2,7 @@ package com.example.bloombotanica.utils;
 
 import android.util.Log;
 
+import com.example.bloombotanica.R;
 import com.example.bloombotanica.database.PlantCareDatabase;
 import com.example.bloombotanica.database.TaskDao;
 import com.example.bloombotanica.database.UserPlantDao;
@@ -19,7 +20,6 @@ public class TaskUtils {
 
     public static void renewTask(Task task, TaskDao taskDao, UserPlantDao userPlantDao, PlantCareDatabase plantCareDatabase, Runnable onComplete) {
         AtomicReference<String> journalTitle = new AtomicReference<>("");
-
 
         new Thread(() -> {
             // Mark the current task as completed
