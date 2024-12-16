@@ -2,75 +2,86 @@
 
 ### By [Joao Pedro Marques](https://github.com/jp-marques), [Ethan D'Mello](https://github.com/ethan-dmello), [Evan Ellig](https://github.com/ellig0130), [Arhan Ikram](https://github.com/arhanikram), and [Zorah Jawadi](https://github.com/ZJawadi)
 
+**BloomBotanica** is an Android app designed to simplify plant care for enthusiasts, beginners, and casual gardeners. Whether you have one succulent or an entire collection of plants, BloomBotanica helps you manage essential care tasks efficiently. With personalized reminders, an intuitive interface, and a historical log of completed tasks, users can ensure their plants stay healthy and thriving.
 
-**BloomBotanica** is an Android app designed to simplify plant care for busy individuals who struggle to keep track of the unique needs of each plant. From succulents to flowering plants and cacti, each plant has its own specific requirements to stay healthy and vibrant. BloomBotanica aims to be a reliable assistant for plant owners, providing timely reminders and an organized interface that ensures each plant receives the right care at the right time. With BloomBotanica, users can easily manage watering schedules, view a history of plant care, and record observations for each plant, helping prevent common care mistakes and keeping their plants happy and thriving.
+---
+
+<img src="https://github.com/user-attachments/assets/d327cebf-e856-4e3f-bdf9-23cdedf65a4c" alt="Onboarding" width="400"/>
+<img src="https://github.com/user-attachments/assets/4e75986b-32fd-479d-be7f-127d69dd0fa4" alt="Home" width="400"/>
+<img src="https://github.com/user-attachments/assets/7a96f5d2-4931-43f9-8e34-f7428cf56227" alt="HomePopulated" width="400"/>
+<img src="https://github.com/user-attachments/assets/e42b9f41-698d-46be-9e90-6bb6558ffd7a" alt="Calendar" width="400"/>
+<img src="https://github.com/user-attachments/assets/0e54a931-6987-42b0-9d92-2b6c77f9d8f4" alt="Prediction" width="400"/>
+<img src="https://github.com/user-attachments/assets/fc038599-79cc-48c0-a0a6-0189f6b8a86f" alt="MyPlants" width="400"/>
+<img src="https://github.com/user-attachments/assets/62e80e1e-c0f9-4374-a35b-1351ad6b2f19" alt="PlantProfile" width="400"/>
+<img src="https://github.com/user-attachments/assets/05a7a914-8ee8-46a1-908a-c2eae8e94fab" alt="Journal" width="400"/>
+<img src="https://github.com/user-attachments/assets/d954f652-b7e3-41f3-9634-a21ed74bb353" alt="NewLog" width="400"/>
+<img src="https://github.com/user-attachments/assets/0c63ff5e-8533-4a82-ae60-faf61e19e8fe" alt="Settings" width="400"/>
 
 ---
 
 ## 📋 **Project Status**
 
-### Currently Implemented
+### **Current Features**
 
 - **Onboarding**:
-  - The app begins with an onboarding screen where users enter their name, which is saved in `SharedPreferences` for personalized messages.
+  - Welcome screen where users enter their name and preferred language (saved using `SharedPreferences`).
+
 - **Dashboard**:
-  - A `DashboardFragment` displays a welcome message that includes the user’s name and a RecyclerView list of daily plant care tasks.
-  - (__*Layout is there but tasks and backend are not yet implemented*__)
+  - Displays personalized greetings with the user's name.
+  - Shows care reminders for plants scheduled for today.
+
 - **Plant List**:
-  - The `PlantsFragment` displays plants in a RecyclerView as square cards in a grid layout. Users can add new plants to their collection, which are saved in the database, and view all plants in the list. Users can also delete plants from their collection.
-  - Editing and reordering features are not yet implemented.
-- **Calendar View**:
-  - `CalendarFragment` integrates a calendar view that highlights dates with scheduled plant care tasks
-  - (__*not fully implemented, only have calendar with placeholder icons*__).
-- **Persistent Data Storage**:
-  - Utilizes a Room database to save user-added plants and their care schedules, ensuring data persists across app sessions.
-- **Simple Plant Profile**:
-  - A dedicated view for each plant displays its nickname and an image. While users cannot yet view the care schedule or care history, the backend for watering date updates is nearly complete.
-- **Add Plant**:
-  - Users can add plants from the Plant List, choosing a plant nickname and selecting what plant it is based on our Plant Care Database.
-- **Plant Suggestions**:
-  - Provides name suggestions when adding a plant, querying a database of plant information.
-  - Filters and prioritizes suggestions based on the user’s input.
-- **Mark Plant as Watered**:
-  - Updates the plant's last watered and next watering date when users mark a plant as watered. The backend implementation is fully functional.
-- **Bottom Navigation**:
-  - `MainActivity` provides bottom navigation, allowing smooth switching between Dashboard, Plants, and Calendar fragments.
+  - Add, view, edit, and delete plants.
+  - Displays all added plants in a clean layout.
+  - Supports uploading plant photos and displaying them.
 
-## 🚀 **Planned Features (Not Yet Implemented)**
+- **Plant Details**:
+  - Detailed view for each plant, including:
+    - Nickname, species name, description, last watered date, and care history.
+    - Users can upload journal entries and observations with photos.
 
-### **Core Features**
-- **Detailed Plant Profiles**:
-  - Enhance the plant profile view to include editing options, task completion marking, and more detailed information.
-- **Edit Plant Details**:
-  - Enable users to edit a plant's nickname, care schedule, soil type, and other editable attributes (based on the design document).
-- **Task Notifications**:
-  - Push notifications to remind users of essential plant care tasks, including daily summaries and follow-ups for missed tasks.
-- **Calendar Integration**:
-  - Link water schedules and other tasks to the calendar. Highlight days with tasks, and allow users to view tasks for a specific date.
-- **Dashboard Enhancements**:
-  - Add sections for overdue tasks, today’s tasks, completed tasks, and weather updates.
-- **Plant List Enhancements**:
-  - Prioritize plants with tasks to-do and put them above plants that have no pending tasks in the plant list.
+- **Care Reminders**:
+  - Users can set notifications for watering and rotating plants.
+  - Completed reminders are logged in the plant’s historical journal.
 
-### **Advanced Features**
-- **Plant Timeline and Journal**:
-  - A unified feature to track past care tasks (e.g., watering, fertilizing) and allow users to log notes, observations, and photos for each plant over time.
 - **Historical Logs**:
-  - Provide logs of completed tasks for specific plants or an overall view for all plants.
-- **Dynamic Task Adjustments**:
-  - Automatically adjust schedules if a user misses a task (e.g., rescheduling overdue tasks).
-- **Weather Integration**:
-  - Incorporate weather data to offer tailored care recommendations based on conditions like humidity and temperature, as well as displaying in dashboard.
+  - Users can view completed care tasks and add personal journal entries for plants.
 
-### **General Improvements**
-- **Settings**:
-  - Add a settings page for customization options like notification preferences and task scheduling.
-- **Dark Theme**:
-  - Implement a dark mode for better user accessibility and aesthetics.
-- **UI Refinements**:
-  - Polish the user interface to improve overall usability and aesthetics.
-- **Tasks Across All Sections**:
-  - Ensure each area (Dashboard, Calendar, Plant List) supports task management, allowing users to complete tasks from anywhere in the app.
-- **Multilingual Support**
+- **Calendar Integration**:
+  - A calendar view highlights dates with upcoming plant care tasks.
+
+- **Plant Identification**:
+  - Upload a photo to identify plant species using an AI model based on PyTorch EfficientNet architecture with **94% accuracy**.
+  - Real-time, on-device species identification and care suggestions.
+
+- **Dark Mode**:
+  - Supports light and dark themes for enhanced user experience.
+
+- **Persistent Data Storage**:
+  - Uses a Room database to store plant information, reminders, and user entries, ensuring data persists across app sessions.
+
+- **Notifications**:
+  - Users receive reminders for scheduled care tasks (watering, rotating, etc.).
+
+- **Settings Page**:
+  - Includes customization options for notifications, theme preferences, and user information.
 
 ---
+
+## 🌿 **Tech Stack**
+- **Languages**: Java
+- **Frameworks**: Android Studio, ONNX Runtime (AI Model Integration)
+- **Database**: Room Database
+- **Testing**: JUnit, Espresso
+- **AI Model**: PyTorch EfficientNet (converted to ONNX for mobile compatibility)
+- **Version Control**: Git and GitHub
+
+---
+
+## 📊 **Contributors**
+
+- [Joao Pedro Marques](https://github.com/jp-marques)
+- [Ethan D'Mello](https://github.com/ethan-dmello)
+- [Evan Ellig](https://github.com/ellig0130)
+- [Arhan Ikram](https://github.com/arhanikram)
+- [Zorah Jawadi](https://github.com/ZJawadi)
